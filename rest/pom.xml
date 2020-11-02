@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  
+  <parent>
+    <groupId>com.epam.esm</groupId>
+    <artifactId>gift-service</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  
+  <groupId>com.epam.esm</groupId>
+  <artifactId>rest</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>war</packaging>
+  
+  <name>rest Maven Webapp</name>
+  
+  <dependencies>
+  
+    <dependency>
+   		<groupId>com.epam.esm</groupId>
+   		<artifactId>core</artifactId>
+   		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  
+  	<dependency>
+   		<groupId>com.epam.esm</groupId>
+   		<artifactId>service</artifactId>
+   		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+    
+  </dependencies>
+  
+  <build>
+    <finalName>gift-service</finalName>
+  </build>
+  
+</project>
