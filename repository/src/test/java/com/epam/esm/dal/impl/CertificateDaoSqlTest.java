@@ -43,9 +43,10 @@ class CertificateDaoSqlTest {
 	 * {@link com.epam.esm.dal.impl.CertificateDaoSql#addCertificate(com.epam.esm.entity.GiftCertificate)}.
 	 */
 	@Test
-	void testAddCertificate_PositiveResult() {
+	void testAddCertificate() {
 
 		CertificateDaoSql certificateDao = getCertificateDao();
+
 		GiftCertificate savedCertificate = certificateDao.addCertificate(getCertificate());
 
 		assertNotNull(savedCertificate);
@@ -59,7 +60,7 @@ class CertificateDaoSqlTest {
 	 * {@link com.epam.esm.dal.impl.CertificateDaoSql#updateCertificate(com.epam.esm.entity.GiftCertificate)}.
 	 */
 	@Test
-	void testUpdateCertificate_PositiveResult() {
+	void testUpdateCertificate() {
 
 		CertificateDaoSql certificateDao = getCertificateDao();
 		GiftCertificate certificate = getCertificate();
@@ -73,16 +74,6 @@ class CertificateDaoSqlTest {
 
 	}
 
-	@Test
-	void testUpdateCertificate_NegativeResult_NotUpdated() {
-
-		CertificateDaoSql certificateDao = getCertificateDao();
-		GiftCertificate certificate = getCertificate();
-		certificate.setId(9999);
-		GiftCertificate updatedCertificate = certificateDao.updateCertificate(certificate);
-
-		assertNull(updatedCertificate);
-	}
 
 	/**
 	 * Test method for
@@ -136,8 +127,8 @@ class CertificateDaoSqlTest {
 
 		CertificateDaoSql certificateDao = getCertificateDao();
 		int[] affectedRowsActual = certificateDao.deleteCertificate(9999);
-		int[] expected = new int[] {0, 0};
-		
+		int[] expected = new int[] { 0, 0 };
+
 		assertArrayEquals(expected, affectedRowsActual);
 
 	}
@@ -146,18 +137,26 @@ class CertificateDaoSqlTest {
 
 		JdbcTemplate template = new JdbcTemplate(db);
 		CertificateDaoSql certificateDao = new CertificateDaoSql(template);
+		certificateDao.setTagDao(getTagDao());
 		return certificateDao;
 	}
 
+	private TagDaoSql getTagDao() {
+
+		JdbcTemplate template = new JdbcTemplate(db);
+		TagDaoSql tagDao = new TagDaoSql(template);
+		return tagDao;
+	}
+
 	private GiftCertificate getCertificate() {
-		
+
 		ZonedDateTime zoneEuropeMinsk = ZonedDateTime.now(ZoneId.of("Europe/Minsk"));
 		String formatPattern = "yyyy-MM-dd HH:mm:ss";
 
-	    LocalDateTime stamp = zoneEuropeMinsk.toLocalDateTime();
-	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatPattern);
-	    zoneEuropeMinsk.format(formatter);
-				
+		LocalDateTime stamp = zoneEuropeMinsk.toLocalDateTime();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatPattern);
+		zoneEuropeMinsk.format(formatter);
+
 		List<Tag> tags = new ArrayList<Tag>();
 		tags.add(new Tag(2, "#Romance"));
 

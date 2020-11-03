@@ -19,6 +19,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.epam.esm.dal.CertificateDao;
+import com.epam.esm.dal.TagDao;
 import com.epam.esm.dal.mapper.CertificateMapper;
 import com.epam.esm.dal.mapper.CertificateWithTagsMapper;
 import com.epam.esm.dal.util.DuplicateResultsRemover;
@@ -36,6 +37,9 @@ public class CertificateDaoSql implements CertificateDao {
 	@Autowired
 	private SqlQueryBuilder sqlBuilder;
 
+	@Autowired
+	TagDao tagDao;
+
 	private static final String sqlFindCertificateById = "SELECT * FROM GiftService.GiftCertificate WHERE Id = (?)";
 	private static final String sqlAddCertificate = "INSERT INTO GiftService.GiftCertificate (Name, Description, Price, CreateDate, LastUpdateDate, Duration) VALUES (?,?,?,?,?,?);";
 	private static final String sqlInsertIntoM2M = "INSERT INTO GiftService.`Tag-Certificate` VALUES (?,?);";
@@ -46,6 +50,10 @@ public class CertificateDaoSql implements CertificateDao {
 	@Autowired
 	public CertificateDaoSql(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
+	}
+
+	public void setTagDao(TagDao tagDao) {
+		this.tagDao = tagDao;
 	}
 
 	@Transactional
@@ -80,6 +88,8 @@ public class CertificateDaoSql implements CertificateDao {
 
 		long newSertificateId = keyHolder.getKey().longValue();
 		certificate.setId(newSertificateId);
+		
+		updateTagsBoundedWithCertificate(certificate);
 
 		// add tagId and certificateId to the M2M table;
 		for (Tag tag : certificate.getTags()) {
@@ -88,13 +98,28 @@ public class CertificateDaoSql implements CertificateDao {
 		return certificate;
 	}
 
+	@Transactional
 	@Override
 	public GiftCertificate updateCertificate(GiftCertificate certificate) {
 
-		int affectedRows = jdbcTemplate.update(sqlUpdateCertificate, certificate.getName(), certificate.getDescription(),
-				certificate.getPrice(), certificate.getLastUpdateDate(), certificate.getDuration(),
-				certificate.getId());
-		
+		int affectedRows = jdbcTemplate.update(sqlUpdateCertificate, certificate.getName(),
+				certificate.getDescription(), certificate.getPrice(), certificate.getLastUpdateDate(),
+				certificate.getDuration(), certificate.getId());
+
+		// if certificate contains the list of tags - update M2M table to bound
+		// the certificate with the given tags;
+		if (certificate.getTags() != null && !certificate.getTags().isEmpty()) {
+
+			jdbcTemplate.update(sqlDeleteFromM2M, certificate.getId());
+			
+			updateTagsBoundedWithCertificate(certificate);
+
+			// add tagId and certificateId to the M2M table;
+			for (Tag tag : certificate.getTags()) {
+				jdbcTemplate.update(sqlInsertIntoM2M, tag.getId(), certificate.getId());
+			}
+
+		}
 		if (affectedRows == 0) {
 			return null;
 		}
@@ -142,9 +167,24 @@ public class CertificateDaoSql implements CertificateDao {
 
 		// delete the certificate from giftCetrificate table;
 		int affectedRows2 = jdbcTemplate.update(sqlDeleteCertificateById, new Object[] { id }, types);
-		
-		return new int[]{affectedRows1, affectedRows2};
 
+		return new int[] { affectedRows1, affectedRows2 };
+
+	}
+
+	private void updateTagsBoundedWithCertificate(GiftCertificate certificate) {
+
+		// check the list of tags;
+		// if the tag from the list isn't found in DB - create new Tag;
+		for (Tag tag : certificate.getTags()) {
+
+			Tag tagToBoundCertificateWith = tagDao.findTagByName(tag.getName());
+
+			if (tagToBoundCertificateWith == null) {
+				tagToBoundCertificateWith = tagDao.addTag(tag);
+			}
+			tag.setId(tagToBoundCertificateWith.getId());
+		}
 	}
 
 }

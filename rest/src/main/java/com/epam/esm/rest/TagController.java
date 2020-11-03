@@ -82,12 +82,12 @@ public class TagController {
 	 */
 	@PutMapping("/tags")
 	public TagDTO updateTag(@Valid @RequestBody TagDTO theTag) {
-		
+
 		// check if the tag exists;
-				TagDTO tag = tagService.getTag(theTag.getId());
-				if (tag == null) {
-					throw new NotFoundException("The tag with given Id wasn't found and can't be updated");
-				}
+		TagDTO tag = tagService.getTag(theTag.getId());
+		if (tag == null) {
+			throw new NotFoundException("The tag with given Id wasn't found and can't be updated");
+		}
 
 		tagService.updateTag(theTag);
 
@@ -116,7 +116,7 @@ public class TagController {
 		} catch (IllegalOperationServiceException e) {
 			log.log(Level.WARN,
 					"The tag couldn't be deleted as it's bounded with one or more certificates - tagId" + tagId, e);
-			return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).body(e.getMessage());
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
 		}
 
 		return ResponseEntity.status(HttpStatus.OK).body("The tag was successfully deleted, id - " + tagId);

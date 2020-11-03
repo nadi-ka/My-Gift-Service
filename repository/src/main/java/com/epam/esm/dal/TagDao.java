@@ -13,6 +13,8 @@ public interface TagDao {
 	List<Tag> findAllTags();
 	
 	Tag findTag(long id);
+	
+	Tag findTagByName(String name);
 
 	int deleteTag(long id);
 	

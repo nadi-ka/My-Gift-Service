@@ -28,6 +28,7 @@ public class TagDaoSql implements TagDao {
 
 	private static final String sqlFindAllTags = "SELECT * FROM GiftService.Tag;";
 	private static final String sqlFindTagById = "SELECT * FROM GiftService.Tag WHERE Id = (?)";
+	private static final String sqlFindTagByName = "SELECT * FROM GiftService.Tag WHERE Name = (?);";
 	private static final String sqlAddTag = "INSERT INTO GiftService.Tag (Name) VALUES (?)";
 	private static final String sqlUpdateTag = "Update GiftService.Tag set Name = (?) where Id = (?);";
 	private static final String sqlDeleteTagById = "DELETE FROM  GiftService.Tag WHERE Id = (?);";
@@ -125,6 +126,18 @@ public class TagDaoSql implements TagDao {
 			certificateId = 0;
 		}
 		return certificateId;
+	}
+	
+	@Override
+	public Tag findTagByName(String name) {
+
+		Tag tag;
+		try {
+			tag = jdbcTemplate.queryForObject(sqlFindTagByName, new Object[] { name }, ROW_MAPPER);
+		} catch (DataAccessException e) {
+			tag = null;
+		}
+		return tag;
 	}
 
 	RowMapper<Tag> ROW_MAPPER = (ResultSet resultSet, int rowNum) -> {
