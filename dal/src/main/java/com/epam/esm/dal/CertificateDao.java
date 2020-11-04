@@ -3,8 +3,8 @@ package com.epam.esm.dal;
 import java.util.List;
 
 import com.epam.esm.entity.GiftCertificate;
-import com.epam.esm.util.parameter.FilterParam;
-import com.epam.esm.util.parameter.OrderParam;
+import com.epam.esm.transferobj.FilterParam;
+import com.epam.esm.transferobj.OrderParam;
 
 public interface CertificateDao {
 

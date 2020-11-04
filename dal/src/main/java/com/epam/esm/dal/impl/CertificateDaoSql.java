@@ -26,8 +26,8 @@ import com.epam.esm.dal.util.DuplicateResultsRemover;
 import com.epam.esm.dal.util.SqlQueryBuilder;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.util.parameter.FilterParam;
-import com.epam.esm.util.parameter.OrderParam;
+import com.epam.esm.transferobj.FilterParam;
+import com.epam.esm.transferobj.OrderParam;
 
 @Repository
 public class CertificateDaoSql implements CertificateDao {
@@ -41,9 +41,11 @@ public class CertificateDaoSql implements CertificateDao {
 	TagDao tagDao;
 
 	private static final String sqlFindCertificateById = "SELECT * FROM GiftService.GiftCertificate WHERE Id = (?)";
-	private static final String sqlAddCertificate = "INSERT INTO GiftService.GiftCertificate (Name, Description, Price, CreateDate, LastUpdateDate, Duration) VALUES (?,?,?,?,?,?);";
+	private static final String sqlAddCertificate = "INSERT INTO GiftService.GiftCertificate (Name, Description, "
+			+ "Price, CreateDate, LastUpdateDate, Duration) VALUES (?,?,?,?,?,?);";
 	private static final String sqlInsertIntoM2M = "INSERT INTO GiftService.`Tag-Certificate` VALUES (?,?);";
-	private static final String sqlUpdateCertificate = "Update GiftService.GiftCertificate set Name = (?), Description = (?), Price = (?), LastUpdateDate = (?), Duration = (?) where Id = (?);";
+	private static final String sqlUpdateCertificate = "Update GiftService.GiftCertificate set Name = (?), "
+			+ "Description = (?), Price = (?), LastUpdateDate = (?), Duration = (?) where Id = (?);";
 	private static final String sqlDeleteCertificateById = "DELETE FROM GiftService.GiftCertificate WHERE Id = (?);";
 	private static final String sqlDeleteFromM2M = "DELETE FROM GiftService.`Tag-Certificate` WHERE IdCertificate = (?);";
 
@@ -88,7 +90,7 @@ public class CertificateDaoSql implements CertificateDao {
 
 		long newSertificateId = keyHolder.getKey().longValue();
 		certificate.setId(newSertificateId);
-		
+
 		updateTagsBoundedWithCertificate(certificate);
 
 		// add tagId and certificateId to the M2M table;
@@ -111,7 +113,7 @@ public class CertificateDaoSql implements CertificateDao {
 		if (certificate.getTags() != null && !certificate.getTags().isEmpty()) {
 
 			jdbcTemplate.update(sqlDeleteFromM2M, certificate.getId());
-			
+
 			updateTagsBoundedWithCertificate(certificate);
 
 			// add tagId and certificateId to the M2M table;

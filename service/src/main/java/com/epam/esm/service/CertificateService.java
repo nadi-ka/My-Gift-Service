@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.epam.esm.dto.GiftCertificateCreateUpdateDTO;
 import com.epam.esm.dto.GiftCertificateGetDTO;
-import com.epam.esm.util.parameter.FilterParam;
-import com.epam.esm.util.parameter.OrderParam;
+import com.epam.esm.transferobj.FilterParam;
+import com.epam.esm.transferobj.OrderParam;
 
 public interface CertificateService {
 

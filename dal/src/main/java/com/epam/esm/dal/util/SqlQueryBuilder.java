@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.epam.esm.util.parameter.FilterParam;
-import com.epam.esm.util.parameter.OrderParam;
+import com.epam.esm.transferobj.FilterParam;
+import com.epam.esm.transferobj.OrderParam;
 
 @Component
 public final class SqlQueryBuilder {
@@ -14,7 +14,11 @@ public final class SqlQueryBuilder {
 	@Autowired
 	private ColumnNameRequestParamMapper columnMapper;
 
-	private static final String sqlFindCertificatesWithTags = "SELECT GiftCertificate.Id, GiftCertificate.Name, Description, Price, CreateDate, LastUpdateDate, Duration, Tag.Id, Tag.Name FROM GiftService.GiftCertificate JOIN GiftService.`Tag-Certificate` ON GiftCertificate.Id = `Tag-Certificate`.IdCertificate JOIN GiftService.Tag ON Tag.Id = `Tag-Certificate`.IdTag";
+	private static final String sqlFindCertificatesWithTags = "SELECT GiftCertificate.Id, "
+			+ "GiftCertificate.Name, Description, Price, CreateDate, LastUpdateDate, Duration, "
+			+ "Tag.Id, Tag.Name FROM GiftService.GiftCertificate JOIN GiftService.`Tag-Certificate` "
+			+ "ON GiftCertificate.Id = `Tag-Certificate`.IdCertificate JOIN GiftService.Tag "
+			+ "ON Tag.Id = `Tag-Certificate`.IdTag";
 	private static final String WHERE = " WHERE ";
 	private static final String AND = " AND ";
 	private static final String OR = " OR ";

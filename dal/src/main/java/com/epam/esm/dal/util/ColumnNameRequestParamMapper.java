@@ -6,7 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 
 import com.epam.esm.dal.constant.ColumnNameHolder;
-import com.epam.esm.util.parameter.ParameterConstant;
+import com.epam.esm.transferobj.ParameterConstant;
 
 @Component
 public final class ColumnNameRequestParamMapper {

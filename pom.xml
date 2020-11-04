@@ -121,10 +121,10 @@
   
   <modules>
   
-    <module>repository</module>
+   	<module>core</module>
+    <module>dal</module>
     <module>service</module>
     <module>rest</module>
-    <module>core</module>
     
   </modules>
 </project>

@@ -13,11 +13,11 @@ import com.epam.esm.dal.CertificateDao;
 import com.epam.esm.dto.GiftCertificateCreateUpdateDTO;
 import com.epam.esm.dto.GiftCertificateGetDTO;
 import com.epam.esm.entity.GiftCertificate;
-import com.epam.esm.util.parameter.FilterParam;
-import com.epam.esm.util.parameter.OrderParam;
 import com.epam.esm.service.CertificateService;
 import com.epam.esm.service.util.DateTimeFormatterISO;
 import com.epam.esm.service.util.RequestOrderParamsChecker;
+import com.epam.esm.transferobj.FilterParam;
+import com.epam.esm.transferobj.OrderParam;
 
 @Service
 public class CertificateServiceImpl implements CertificateService {

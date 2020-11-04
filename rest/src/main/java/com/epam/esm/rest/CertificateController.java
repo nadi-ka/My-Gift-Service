@@ -23,13 +23,13 @@ import com.epam.esm.dto.GiftCertificateCreateUpdateDTO;
 import com.epam.esm.dto.GiftCertificateGetDTO;
 import com.epam.esm.rest.exception.InvalidRequestParametersException;
 import com.epam.esm.rest.exception.NotFoundException;
-import com.epam.esm.util.parameter.FilterParam;
-import com.epam.esm.util.parameter.OrderParam;
-import com.epam.esm.util.parameter.ParameterConstant;
 import com.epam.esm.service.CertificateService;
+import com.epam.esm.transferobj.FilterParam;
+import com.epam.esm.transferobj.OrderParam;
+import com.epam.esm.transferobj.ParameterConstant;
 
 @RestController
-@RequestMapping("/certificate-api")
+@RequestMapping("/api")
 public class CertificateController {
 
 	@Autowired
@@ -76,18 +76,17 @@ public class CertificateController {
 	 * Duration and the tags to bound with; In case of success, the method returns
 	 * Status Code = 200
 	 */
-	@PutMapping("/certificates")
-	public GiftCertificateGetDTO updateCertificate(@Valid @RequestBody GiftCertificateCreateUpdateDTO theCertificate) {
+	@PutMapping("/certificates/{certificateId}")
+	public GiftCertificateGetDTO updateCertificate(@PathVariable long certificateId, 
+			@Valid @RequestBody GiftCertificateCreateUpdateDTO theCertificate) {
 		
-		GiftCertificateGetDTO existingCertficate = certificateService.getCertificate(theCertificate.getId());
+		// check if the certificate with given Id exists;	
+		GiftCertificateGetDTO existingCertficate = certificateService.getCertificate(certificateId);
 		if (existingCertficate == null) {
-			throw new NotFoundException("The certificate with given Id wasn't found;");
+			throw new NotFoundException("The certificate with given Id wasn't found, id - " + certificateId);
 		}
 
 		GiftCertificateGetDTO certificateDTO = certificateService.updateCertificate(theCertificate);
-//		if (certificateDTO == null) {
-//			throw new NotFoundException("The certificate with given Id wasn't found;");
-//		}
 
 		return certificateDTO;
 	}

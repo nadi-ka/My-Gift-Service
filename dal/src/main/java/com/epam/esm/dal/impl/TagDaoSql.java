@@ -32,7 +32,8 @@ public class TagDaoSql implements TagDao {
 	private static final String sqlAddTag = "INSERT INTO GiftService.Tag (Name) VALUES (?)";
 	private static final String sqlUpdateTag = "Update GiftService.Tag set Name = (?) where Id = (?);";
 	private static final String sqlDeleteTagById = "DELETE FROM  GiftService.Tag WHERE Id = (?);";
-	private static final String sqlFindCertificateIdByTagId = "SELECT IdCertificate FROM  GiftService.`Tag-Certificate` WHERE IdTag = (?) LIMIT 1;";
+	private static final String sqlFindCertificateIdByTagId = "SELECT IdCertificate FROM  "
+			+ "GiftService.`Tag-Certificate` WHERE IdTag = (?) LIMIT 1;";
 
 	@Autowired
 	public TagDaoSql(JdbcTemplate jdbcTemplate) {

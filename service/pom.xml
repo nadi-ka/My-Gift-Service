@@ -28,7 +28,7 @@
   
   <dependency>
    	<groupId>com.epam.esm</groupId>
-   	<artifactId>repository</artifactId>
+   	<artifactId>dal</artifactId>
    	<version>0.0.1-SNAPSHOT</version>
   </dependency>
   

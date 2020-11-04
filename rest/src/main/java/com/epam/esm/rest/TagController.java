@@ -25,7 +25,7 @@ import com.epam.esm.service.TagService;
 import com.epam.esm.service.exception.IllegalOperationServiceException;
 
 @RestController
-@RequestMapping("/tag-api")
+@RequestMapping("/api")
 public class TagController {
 
 	private static final Logger log = LogManager.getLogger(TagController.class);
@@ -80,13 +80,14 @@ public class TagController {
 	 * PUT method which allows to change the tag's Name; In case of success, the
 	 * method returns Status Code = 200;
 	 */
-	@PutMapping("/tags")
-	public TagDTO updateTag(@Valid @RequestBody TagDTO theTag) {
+	@PutMapping("/tags/{tagId}")
+	public TagDTO updateTag(@PathVariable long tagId, 
+			@Valid @RequestBody TagDTO theTag) {
 
 		// check if the tag exists;
-		TagDTO tag = tagService.getTag(theTag.getId());
+		TagDTO tag = tagService.getTag(tagId);
 		if (tag == null) {
-			throw new NotFoundException("The tag with given Id wasn't found and can't be updated");
+			throw new NotFoundException("The tag with given Id wasn't found and can't be updated, id - " + tagId);
 		}
 
 		tagService.updateTag(theTag);

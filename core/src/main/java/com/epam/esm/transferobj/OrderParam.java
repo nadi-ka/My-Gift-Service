@@ -1,4 +1,4 @@
-package com.epam.esm.util.parameter;
+package com.epam.esm.transferobj;
 
 public class OrderParam {
 
