@@ -2,15 +2,43 @@ package com.epam.esm.dal.impl;
 
 import java.util.List;
 
-import com.epam.esm.dal.OrderDao;
-import com.epam.esm.entity.Order;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.epam.esm.dal.OrderDao;
+import com.epam.esm.entity.GiftCertificate;
+import com.epam.esm.entity.Order;
+import com.epam.esm.entity.User;
+
+@Repository
 public class OrderDaoImpl implements OrderDao {
+	
+	private static final Logger log = LogManager.getLogger(OrderDaoImpl.class);
+	
+	@Autowired
+	private SessionFactory sessionFactory;
 
 	@Override
-	public List<Order> findOrdersByUserId() {
-		// TODO Auto-generated method stub
-		return null;
+	@Transactional
+	public User findOrdersByUserId(long userId) {
+		
+		Session session = sessionFactory.getCurrentSession();
+		
+		User user = session.get(User.class, userId);
+		
+		List<Order> orders = user.getOrders();
+		
+		for (Order order: orders) {
+			
+			List<GiftCertificate> certificates = order.getCertificates();
+		}
+		
+		return user;
 	}
 
 }
