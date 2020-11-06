@@ -15,7 +15,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import com.epam.esm.entity.Tag;
 
-class TagDaoSqlTest {
+class TagDaoImplTest {
 
 	private EmbeddedDatabase db;
 

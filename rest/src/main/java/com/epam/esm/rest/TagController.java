@@ -64,9 +64,9 @@ public class TagController {
 	}
 
 	/**
-	 * POST method which adds new tag into the Database; In case of success, the
-	 * method returns Status Code = 200 and the response body contains new generated
-	 * tag's Id
+	 * POST method which creates new tag; In case of success, the
+	 * method returns Status Code = 200 and the response body contains 
+	 * the tag with the generated Id
 	 */
 	@PostMapping("/tags")
 	public TagDTO addTag(@Valid @RequestBody TagDTO theTag) {

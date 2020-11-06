@@ -20,7 +20,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Tag;
 
-class CertificateDaoSqlTest {
+class CertificateDaoImplTest {
 
 	private EmbeddedDatabase db;
 

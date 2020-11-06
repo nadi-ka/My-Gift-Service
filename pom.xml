@@ -76,6 +76,13 @@
     	<version>5.2.9.RELEASE</version>
 	</dependency>
 	
+	<!-- https://mvnrepository.com/artifact/org.springframework/spring-orm -->
+	<dependency>
+    	<groupId>org.springframework</groupId>
+    	<artifactId>spring-orm</artifactId>
+    	<version>5.2.10.RELEASE</version>
+	</dependency>
+		
 	<!-- https://mvnrepository.com/artifact/org.springframework/spring-test -->
 	<dependency>
     	<groupId>org.springframework</groupId>
