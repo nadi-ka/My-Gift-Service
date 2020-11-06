@@ -14,6 +14,10 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+/**
+ * @author Vadim
+ *
+ */
 @Entity
 @Table(name="User")
 public class User {
@@ -105,6 +109,7 @@ public class User {
 		theOrder.setUser(this);
 	}
 
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -114,6 +119,7 @@ public class User {
 		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
+		result = prime * result + ((orders == null) ? 0 : orders.hashCode());
 		return result;
 	}
 
@@ -147,6 +153,11 @@ public class User {
 			if (other.lastName != null)
 				return false;
 		} else if (!lastName.equals(other.lastName))
+			return false;
+		if (orders == null) {
+			if (other.orders != null)
+				return false;
+		} else if (!orders.equals(other.orders))
 			return false;
 		return true;
 	}

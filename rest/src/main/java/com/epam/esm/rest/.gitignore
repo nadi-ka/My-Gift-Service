@@ -1,0 +1,11 @@
+# Ignore directory
+.settings
+
+# Ignore output build directory
+target
+
+# Ignore directory
+.classpath
+
+# Ignore directory
+.project

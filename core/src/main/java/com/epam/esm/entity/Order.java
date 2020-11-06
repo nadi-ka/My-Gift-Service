@@ -25,9 +25,6 @@ public class Order {
 	@Column(name="Id")
 	private long id;
 	
-	@Column(name="Id_user")
-	private long userId;
-	
 	@Column(name="Creation_date")
 	private LocalDateTime creationDate;
 	
@@ -40,13 +37,6 @@ public class Order {
 	joinColumns = {@JoinColumn(name = "Id_order")}, 
 	inverseJoinColumns = {@JoinColumn(name = "Id_certificate")})
 	private List<GiftCertificate> certificates;
-	
-	public Order() {}
-
-	public Order(long userId, LocalDateTime creationDate) {
-		this.userId = userId;
-		this.creationDate = creationDate;
-	}
 
 	public long getId() {
 		return id;
@@ -54,14 +44,6 @@ public class Order {
 
 	public void setId(long id) {
 		this.id = id;
-	}
-
-	public long getUserId() {
-		return userId;
-	}
-
-	public void setUserId(long userId) {
-		this.userId = userId;
 	}
 
 	public LocalDateTime getCreationDate() {
@@ -100,10 +82,10 @@ public class Order {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-//		result = prime * result + ((certificates == null) ? 0 : certificates.hashCode());
+		result = prime * result + ((certificates == null) ? 0 : certificates.hashCode());
 		result = prime * result + ((creationDate == null) ? 0 : creationDate.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
-		result = prime * result + (int) (userId ^ (userId >>> 32));
+		result = prime * result + ((user == null) ? 0 : user.hashCode());
 		return result;
 	}
 
@@ -116,11 +98,11 @@ public class Order {
 		if (getClass() != obj.getClass())
 			return false;
 		Order other = (Order) obj;
-//		if (certificates == null) {
-//			if (other.certificates != null)
-//				return false;
-//		} else if (!certificates.equals(other.certificates))
-//			return false;
+		if (certificates == null) {
+			if (other.certificates != null)
+				return false;
+		} else if (!certificates.equals(other.certificates))
+			return false;
 		if (creationDate == null) {
 			if (other.creationDate != null)
 				return false;
@@ -128,14 +110,17 @@ public class Order {
 			return false;
 		if (id != other.id)
 			return false;
-		if (userId != other.userId)
+		if (user == null) {
+			if (other.user != null)
+				return false;
+		} else if (!user.equals(other.user))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Order [id=" + id + ", userId=" + userId + ", creationDate=" + creationDate + "]";
+		return "Order [id=" + id + ", creationDate=" + creationDate + ", user=" + user + "]";
 	}
 
 }

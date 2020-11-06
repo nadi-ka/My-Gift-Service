@@ -1,9 +1,17 @@
 package com.epam.esm.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
@@ -13,22 +21,39 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @Table(name = "GiftCertificate")
 public class GiftCertificate {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="Id")
 	private long id;
-	private String name;
-	private String description;
-	private double price;
 	
-	@ManyToMany(mappedBy = "orders")
-	private List<Order> orders;
+	@Column(name="Name")
+	private String name;
+	
+	@Column(name = "Description")
+	private String description;
+	
+	@Column(name = "Price")
+	private double price;
 
+	@Column(name = "CreateDate")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Minsk")
 	private LocalDateTime creationDate;
 
+	@Column(name = "LastUpdateDate")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Minsk")
 	private LocalDateTime lastUpdateDate;
 
+	@Column(name = "Duration")
 	private int duration;
+	
+	@ManyToMany(cascade = {CascadeType.ALL})
+	@JoinTable(name = "Tag-Certificate", 
+	joinColumns = {@JoinColumn(name = "IdCertificate")}, 
+	inverseJoinColumns = {@JoinColumn(name = "IdTag")})
 	private List<Tag> tags;
+	
+	@ManyToMany(mappedBy = "certificates")
+	private List<Order> orders;
 
 	public GiftCertificate() {
 	}
@@ -121,6 +146,14 @@ public class GiftCertificate {
 	public void setOrders(List<Order> orders) {
 		this.orders = orders;
 	}
+	
+	public void addTag(Tag tag) {
+		
+		if (tags == null) {
+			tags = new ArrayList<Tag>();
+		}
+		tags.add(tag);
+	}
 
 	@Override
 	public int hashCode() {
@@ -132,6 +165,7 @@ public class GiftCertificate {
 		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((lastUpdateDate == null) ? 0 : lastUpdateDate.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((orders == null) ? 0 : orders.hashCode());
 		long temp;
 		temp = Double.doubleToLongBits(price);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
@@ -171,6 +205,11 @@ public class GiftCertificate {
 			if (other.name != null)
 				return false;
 		} else if (!name.equals(other.name))
+			return false;
+		if (orders == null) {
+			if (other.orders != null)
+				return false;
+		} else if (!orders.equals(other.orders))
 			return false;
 		if (Double.doubleToLongBits(price) != Double.doubleToLongBits(other.price))
 			return false;
