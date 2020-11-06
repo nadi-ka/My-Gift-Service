@@ -1,12 +1,15 @@
 package com.epam.esm.service.impl;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.epam.esm.dal.OrderDao;
-import com.epam.esm.dto.UserDTO;
-import com.epam.esm.entity.User;
+import com.epam.esm.dto.OrderDTO;
+import com.epam.esm.entity.Order;
 import com.epam.esm.service.OrderService;
 
 @Service
@@ -23,29 +26,29 @@ public class OrderServiceImpl implements OrderService{
 	}
 
 	@Override
-	public UserDTO getUserOrdersById(long userId) {
+	public List<OrderDTO> getOrdersByUserId(long userId) {
 		
-		User user = orderDao.findOrdersByUserId(userId);
+		List<Order> orders = orderDao.findOrdersByUserId(userId);
 		
-		if (user == null) {
+		if (orders == null) {
 			return null;
 		}
 		
-		return convertToDto(user);
+		return orders.stream().map(this::convertToDto).collect(Collectors.toList());
 	}
 	
-	private UserDTO convertToDto(User user) {
+	private OrderDTO convertToDto(Order order) {
 
-		UserDTO userDTO = modelMapper.map(user, UserDTO.class);
+		OrderDTO orderDTO = modelMapper.map(order, OrderDTO.class);
 
-		return userDTO;
+		return orderDTO;
 	}
 
-	private User convertToEntity(UserDTO userDTO) {
+	private Order convertToEntity(OrderDTO orderDTO) {
 
-		User user = modelMapper.map(userDTO, User.class);
+		Order order = modelMapper.map(orderDTO, Order.class);
 
-		return user;
+		return order;
 	}
 
 }

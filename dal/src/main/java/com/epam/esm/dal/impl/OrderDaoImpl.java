@@ -25,20 +25,23 @@ public class OrderDaoImpl implements OrderDao {
 
 	@Override
 	@Transactional
-	public User findOrdersByUserId(long userId) {
+	public List<Order> findOrdersByUserId(long userId) {
 		
 		Session session = sessionFactory.getCurrentSession();
 		
 		User user = session.get(User.class, userId);
+		log.info("$$$$$$$$$$$$$$$$$$$$$$$$$$$: " + user);
 		
 		List<Order> orders = user.getOrders();
+		log.info("$$$$$$$$$$$$$$$$$$$$$$$$$$$: " + orders);
 		
-		for (Order order: orders) {
-			
-			List<GiftCertificate> certificates = order.getCertificates();
-		}
+//		for (Order order: orders) {
+//			
+//			List<GiftCertificate> certificates = order.getCertificates();
+//		}
+//		log.info("$$$$$$$$$$$$$$$$$$$$$$$$$$$: " + orders);
 		
-		return user;
+		return orders;
 	}
 
 }

@@ -1,9 +1,11 @@
 package com.epam.esm.dal;
 
-import com.epam.esm.entity.User;
+import java.util.List;
+
+import com.epam.esm.entity.Order;
 
 public interface OrderDao {
 	
-	User findOrdersByUserId(long userId);
+	List<Order> findOrdersByUserId(long userId);
 
 }

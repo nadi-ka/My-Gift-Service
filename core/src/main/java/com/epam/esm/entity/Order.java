@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -32,7 +33,8 @@ public class Order {
 	@JoinColumn(name = "Id_user")
 	private User user;
 	
-	@ManyToMany(cascade = {CascadeType.ALL})
+	@ManyToMany(fetch = FetchType.LAZY, 
+			cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
 	@JoinTable(name = "Order-Certificate", 
 	joinColumns = {@JoinColumn(name = "Id_order")}, 
 	inverseJoinColumns = {@JoinColumn(name = "Id_certificate")})

@@ -11,13 +11,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-/**
- * @author Vadim
- *
- */
 @Entity
 @Table(name="User")
 public class User {
@@ -41,6 +38,7 @@ public class User {
 	
 	@OneToMany(fetch = FetchType.LAZY, 
 			cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+	@JoinColumn(name = "Id_user")
 	private List<Order> orders;
 	
 	public User() {}

@@ -1,9 +1,11 @@
 package com.epam.esm.service;
 
-import com.epam.esm.dto.UserDTO;
+import java.util.List;
+
+import com.epam.esm.dto.OrderDTO;
 
 public interface OrderService {
 	
-	UserDTO getUserOrdersById(long userId);
+	List<OrderDTO> getOrdersByUserId(long userId);
 
 }

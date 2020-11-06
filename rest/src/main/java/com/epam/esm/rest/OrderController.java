@@ -1,5 +1,7 @@
 package com.epam.esm.rest;
 
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.epam.esm.dto.OrderDTO;
 import com.epam.esm.dto.UserDTO;
 import com.epam.esm.rest.exception.NotFoundException;
 import com.epam.esm.service.OrderService;
@@ -30,7 +33,7 @@ public class OrderController {
 	 * with the given Id is not found, the method returns Status Code = 404
 	 */
 	@GetMapping("/orders/{userId}")
-	public UserDTO getOrders(@PathVariable long userId) {
+	public List<OrderDTO> getOrders(@PathVariable long userId) {
 
 		UserDTO userDTO = userService.getUser(userId);
 
@@ -38,9 +41,9 @@ public class OrderController {
 			throw new NotFoundException("The user wasn't found, id - " + userId);
 		}
 		
-		UserDTO userWithOrders = orderService.getUserOrdersById(userId);
+		List<OrderDTO> orders = orderService.getOrdersByUserId(userId);
 		
-		return userWithOrders;
+		return orders;
 	}
 
 }
