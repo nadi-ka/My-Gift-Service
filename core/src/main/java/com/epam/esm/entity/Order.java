@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -29,12 +28,11 @@ public class Order {
 	@Column(name="Creation_date")
 	private LocalDateTime creationDate;
 	
-	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Id_user")
 	private User user;
 	
-	@ManyToMany(fetch = FetchType.LAZY, 
-			cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "Order-Certificate", 
 	joinColumns = {@JoinColumn(name = "Id_order")}, 
 	inverseJoinColumns = {@JoinColumn(name = "Id_certificate")})

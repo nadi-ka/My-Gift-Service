@@ -54,13 +54,7 @@ public class GiftCertificate {
 	inverseJoinColumns = @JoinColumn(name = "IdTag"))
 	private List<Tag> tags;
 	
-	@ManyToMany(fetch = FetchType.LAZY, 
-			cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-	@JoinTable(
-			name = "Order-Certificate", 
-			joinColumns = @JoinColumn(name = "Id_certificate"), 
-			inverseJoinColumns = @JoinColumn(name = "Id_order")
-			)
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "certificates")
 	private List<Order> orders;
 
 	public GiftCertificate() {

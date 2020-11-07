@@ -2,7 +2,6 @@ package com.epam.esm.entity;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,7 +26,7 @@ public class Tag {
 	private String name;
 	
 	@ManyToMany(fetch = FetchType.LAZY, 
-			cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+			mappedBy = "tags")
 	@JoinTable(name = "Tag-Certificate", 
 	joinColumns = @JoinColumn(name = "IdTag"), 
 	inverseJoinColumns = @JoinColumn(name = "IdCertificate"))
