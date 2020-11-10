@@ -1,4 +1,4 @@
-package com.epam.esm.config;
+package com.epam.esm.rest.config;
 
 import javax.naming.NamingException;
 
@@ -23,8 +23,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 @ComponentScan("com.epam.esm")
 @PropertySource("classpath:db.properties")
 public class SpringConfiq {
-
-  
+ 
 	@Autowired
 	private Environment env;
 
