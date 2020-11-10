@@ -2,7 +2,7 @@ package com.epam.esm.service.util;
 
 import java.util.List;
 
-import com.epam.esm.util.parameter.OrderParam;
+import com.epam.esm.transferobj.OrderParam;
 
 public final class RequestOrderParamsChecker {
 	

@@ -48,6 +48,13 @@
     	<version>8.0.18</version>
 	</dependency>
 	
+	<!-- https://mvnrepository.com/artifact/org.apache.tomcat/tomcat-dbcp -->
+	<dependency>
+    	<groupId>org.apache.tomcat</groupId>
+    	<artifactId>tomcat-dbcp</artifactId>
+    	<version>9.0.39</version>
+	</dependency>
+	
 	<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-validator -->
 	<dependency>
     	<groupId>org.hibernate</groupId>
@@ -63,4 +70,5 @@
 	</dependency>
 	
   </dependencies>
+  
 </project>

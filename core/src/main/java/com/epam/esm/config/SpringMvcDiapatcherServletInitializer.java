@@ -7,7 +7,6 @@ public class SpringMvcDiapatcherServletInitializer extends AbstractAnnotationCon
 
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

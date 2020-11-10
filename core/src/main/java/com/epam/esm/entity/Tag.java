@@ -6,6 +6,7 @@ public class Tag {
 
 	private long id;
 	private String name;
+
 	private List<GiftCertificate> certificates;
 
 	public Tag() {
