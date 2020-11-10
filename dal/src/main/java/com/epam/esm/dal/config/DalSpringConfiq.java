@@ -5,17 +5,15 @@ import javax.naming.NamingException;
 import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@EnableWebMvc
-@ComponentScan("com.epam.esm")
 @PropertySource("classpath:db.properties")
+@EnableTransactionManagement
 public class DalSpringConfiq {
  
 	@Autowired
