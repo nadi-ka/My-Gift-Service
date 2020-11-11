@@ -18,13 +18,13 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @PropertySource("classpath:db.properties")
 @ComponentScan("com.epam.esm")
 @EnableTransactionManagement
-public class DalSpringConfiq {
+public class DalSpringConfig {
 
 	@Autowired
 	private Environment env;
 
 	@Bean
-	public BasicDataSource gatDataSource() {
+	public BasicDataSource getDataSource() {
 		BasicDataSource ds = new BasicDataSource();
 		ds.setDriverClassName(env.getProperty("db.driver"));
 		ds.setUrl(env.getProperty("db.url"));
@@ -36,13 +36,13 @@ public class DalSpringConfiq {
 	}
 
 	@Bean
-	public JdbcTemplate jdbcTemplate() throws NamingException {
-		return new JdbcTemplate(gatDataSource());
+	public JdbcTemplate getJdbcTemplate() throws NamingException {
+		return new JdbcTemplate(getDataSource());
 	}
 
 	@Bean
-	public PlatformTransactionManager txManager() {
-		return new DataSourceTransactionManager(gatDataSource());
+	public PlatformTransactionManager getTxManager() {
+		return new DataSourceTransactionManager(getDataSource());
 	}
 
 }

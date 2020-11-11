@@ -7,10 +7,10 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @Configuration
-public class CoreSpringConfiq {
+public class CoreSpringConfig {
 
 	@Bean
-	public Jackson2ObjectMapperBuilder objectMapperBuilder() {
+	public Jackson2ObjectMapperBuilder getObjectMapperBuilder() {
 
 		Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
 		builder.modules(new JavaTimeModule());

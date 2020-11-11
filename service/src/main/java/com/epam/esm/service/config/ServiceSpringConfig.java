@@ -8,10 +8,10 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ComponentScan("com.epam.esm")
-public class ServiceSpringConfiq {
+public class ServiceSpringConfig {
 
 	@Bean
-	public ModelMapper modelMapper() {
+	public ModelMapper getModelMapper() {
 
 		ModelMapper mapper = new ModelMapper();
 		return mapper;

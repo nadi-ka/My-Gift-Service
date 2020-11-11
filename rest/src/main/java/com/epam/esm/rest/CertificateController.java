@@ -29,7 +29,7 @@ import com.epam.esm.transferobj.OrderParam;
 import com.epam.esm.transferobj.ParameterConstant;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/certificates")
 public class CertificateController {
 
 	private CertificateService certificateService;
@@ -43,7 +43,7 @@ public class CertificateController {
 	 * GET certificate by the long Id; In case when the certificate with the given
 	 * Id is not found, the method returns Status Code = 404
 	 */
-	@GetMapping("/certificates/{certificateId}")
+	@GetMapping("/{certificateId}")
 	public GiftCertificateGetDTO getSertificate(@PathVariable long certificateId) {
 
 		GiftCertificateGetDTO giftCertificate = certificateService.getCertificate(certificateId);
@@ -62,7 +62,7 @@ public class CertificateController {
 	 * theCertificate) should contains the List of tags to bound the certificate
 	 * with
 	 */
-	@PostMapping("/certificates")
+	@PostMapping
 	public GiftCertificateGetDTO addCertificate(@Valid @RequestBody GiftCertificateCreateUpdateDTO theCertificate) {
 
 		// the certificate can't exists without tag
@@ -80,7 +80,7 @@ public class CertificateController {
 	 * Duration and the tags to bound with; In case of success, the method returns
 	 * Status Code = 200
 	 */
-	@PutMapping("/certificates/{certificateId}")
+	@PutMapping("/{certificateId}")
 	public GiftCertificateGetDTO updateCertificate(@PathVariable long certificateId, 
 			@Valid @RequestBody GiftCertificateCreateUpdateDTO theCertificate) {
 		
@@ -99,7 +99,7 @@ public class CertificateController {
 	 * DELETE certificate by long Id; In case when the certificate with the given Id
 	 * is not found, the method returns Status Code = 200 OK
 	 */
-	@DeleteMapping("/certificates/{certificateId}")
+	@DeleteMapping("/{certificateId}")
 	public ResponseEntity<?> deleteCertificate(@PathVariable long certificateId) {
 
 		// check if the certificate with given Id exists;
@@ -121,7 +121,7 @@ public class CertificateController {
 	 * parameters tag, name, description, order, direction; parameters could be used
 	 * in conjunction;
 	 */
-	@GetMapping("/certificates")
+	@GetMapping
 	public @ResponseBody List<GiftCertificateGetDTO> getCertificates(@RequestParam(required = false) String tag,
 			@RequestParam(required = false) String name, @RequestParam(required = false) String description,
 			@RequestParam(required = false, defaultValue = "date") String order,

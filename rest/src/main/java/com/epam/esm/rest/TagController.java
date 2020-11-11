@@ -25,7 +25,7 @@ import com.epam.esm.service.TagService;
 import com.epam.esm.service.exception.IllegalOperationServiceException;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/tags")
 public class TagController {
 
 	private static final Logger log = LogManager.getLogger(TagController.class);
@@ -41,7 +41,7 @@ public class TagController {
 	 * GET method, which returns the List, which contains all tags from the
 	 * Database;
 	 */
-	@GetMapping("/tags")
+	@GetMapping
 	public List<TagDTO> getTags() {
 
 		List<TagDTO> tags = tagService.getTags();
@@ -53,7 +53,7 @@ public class TagController {
 	 * GET tag by the long Id; In case when the tag with the given Id is not found,
 	 * the method returns Status Code = 404
 	 */
-	@GetMapping("/tags/{tagId}")
+	@GetMapping("/{tagId}")
 	public TagDTO getTag(@PathVariable long tagId) {
 
 		TagDTO theTag = tagService.getTag(tagId);
@@ -69,7 +69,7 @@ public class TagController {
 	 * method returns Status Code = 200 and the response body contains 
 	 * the tag with the generated Id
 	 */
-	@PostMapping("/tags")
+	@PostMapping
 	public TagDTO addTag(@Valid @RequestBody TagDTO theTag) {
 
 		TagDTO newTag = tagService.saveTag(theTag);
@@ -81,7 +81,7 @@ public class TagController {
 	 * PUT method which allows to change the tag's Name; In case of success, the
 	 * method returns Status Code = 200;
 	 */
-	@PutMapping("/tags/{tagId}")
+	@PutMapping("/{tagId}")
 	public TagDTO updateTag(@PathVariable long tagId, 
 			@Valid @RequestBody TagDTO theTag) {
 
@@ -100,7 +100,7 @@ public class TagController {
 	 * the method returns Status Code = 200 Deleting the tags, which are bound with
 	 * certificates are not allowed (bounded certificates must be deleted primarily)
 	 */
-	@DeleteMapping("/tags/{tagId}")
+	@DeleteMapping("/{tagId}")
 	public ResponseEntity<?> deleteTag(@PathVariable long tagId) {
 
 		// check if the tag exists;
