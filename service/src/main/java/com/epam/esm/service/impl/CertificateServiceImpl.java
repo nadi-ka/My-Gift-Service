@@ -22,22 +22,18 @@ import com.epam.esm.transferobj.OrderParam;
 @Service
 public class CertificateServiceImpl implements CertificateService {
 
-	@Autowired
 	private CertificateDao certificateDao;
-
-	@Autowired
 	private ModelMapper modelMapper;
 
-	public CertificateServiceImpl() {
-	}
-
-	public CertificateServiceImpl(ModelMapper modelMapper) {
+	@Autowired
+	public CertificateServiceImpl(CertificateDao certificateDao, ModelMapper modelMapper) {
+		this.certificateDao = certificateDao;
 		this.modelMapper = modelMapper;
 	}
 
 	@Override
 	public List<GiftCertificateGetDTO> getCertificates(List<FilterParam> filterParams, List<OrderParam> orderParams) {
-		
+
 		// check and, if necessary, correct orderParams;
 		orderParams = RequestOrderParamsChecker.checkAndCorrectOrderParams(orderParams);
 
@@ -86,7 +82,6 @@ public class CertificateServiceImpl implements CertificateService {
 		if (updatedCertificate == null) {
 			return null;
 		}
-
 		return convertToDto(updatedCertificate);
 	}
 
@@ -103,7 +98,6 @@ public class CertificateServiceImpl implements CertificateService {
 		if (giftCertificate.getTags() == null) {
 			giftCertificate.setTags(Collections.emptyList());
 		}
-
 		GiftCertificateGetDTO certificateDTO = modelMapper.map(giftCertificate, GiftCertificateGetDTO.class);
 
 		return certificateDTO;

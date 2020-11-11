@@ -16,15 +16,12 @@ import com.epam.esm.service.exception.IllegalOperationServiceException;
 @Service
 public class TagServiceImpl implements TagService {
 
-	@Autowired
 	private TagDao tagDao;
+	private ModelMapper modelMapper;
 
 	@Autowired
-	private ModelMapper modelMapper;
-	
-	public  TagServiceImpl() {}
-	
-	public TagServiceImpl(ModelMapper modelMapper) {
+	public TagServiceImpl(TagDao tagDao, ModelMapper modelMapper) {
+		this.tagDao = tagDao;
 		this.modelMapper = modelMapper;
 	}
 
@@ -59,9 +56,9 @@ public class TagServiceImpl implements TagService {
 	@Override
 	public int updateTag(TagDTO theTag) {
 
-		 int affectedRows = tagDao.updateTag(convertToEntity(theTag));
-		 
-		 return affectedRows;
+		int affectedRows = tagDao.updateTag(convertToEntity(theTag));
+
+		return affectedRows;
 
 	}
 

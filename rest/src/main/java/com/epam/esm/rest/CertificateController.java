@@ -31,9 +31,13 @@ import com.epam.esm.transferobj.ParameterConstant;
 @RestController
 @RequestMapping("/api")
 public class CertificateController {
+
+	private CertificateService certificateService;
 	
 	@Autowired
-	private CertificateService certificateService;
+	public CertificateController(CertificateService certificateService) {
+		this.certificateService = certificateService;
+	}
 
 	/**
 	 * GET certificate by the long Id; In case when the certificate with the given
@@ -138,15 +142,10 @@ public class CertificateController {
 		if (description != null && !description.isEmpty()) {
 			filterParams.add(new FilterParam(ParameterConstant.DESCRIPTION, description));
 		}
-
 		orderParams.add(new OrderParam(order, direction));
 
 		certificates = certificateService.getCertificates(filterParams, orderParams);
 
-		// if List is empty - exception is handled as 404NotFound;
-		if (certificates.isEmpty()) {
-			throw new NotFoundException("Nothing was found by the request");
-		}
 		return certificates;
 	}
 

@@ -26,7 +26,7 @@ class TagServiceImplTest {
 	private TagDao tagDao;
 	
 	@InjectMocks
-	private TagService tagService = new TagServiceImpl(new ModelMapper());
+	private TagService tagService = new TagServiceImpl(tagDao, new ModelMapper());
 
 	/**
 	 * Test method for {@link com.epam.esm.service.impl.TagServiceImpl#getTags()}.

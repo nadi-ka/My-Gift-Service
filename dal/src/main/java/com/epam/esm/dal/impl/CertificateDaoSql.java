@@ -33,12 +33,8 @@ import com.epam.esm.transferobj.OrderParam;
 public class CertificateDaoSql implements CertificateDao {
 
 	private final JdbcTemplate jdbcTemplate;
-
-	@Autowired
 	private SqlQueryBuilder sqlBuilder;
-
-	@Autowired
-	TagDao tagDao;
+	private TagDao tagDao;
 
 	private static final String sqlFindCertificateById = "SELECT * FROM GiftService.GiftCertificate WHERE Id = (?)";
 	private static final String sqlAddCertificate = "INSERT INTO GiftService.GiftCertificate (Name, Description, "
@@ -54,8 +50,14 @@ public class CertificateDaoSql implements CertificateDao {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
+	@Autowired
 	public void setTagDao(TagDao tagDao) {
 		this.tagDao = tagDao;
+	}
+	
+	@Autowired
+	public void setSqlBuilder(SqlQueryBuilder sqlBuilder) {
+		this.sqlBuilder = sqlBuilder;
 	}
 
 	@Transactional
@@ -120,12 +122,10 @@ public class CertificateDaoSql implements CertificateDao {
 			for (Tag tag : certificate.getTags()) {
 				jdbcTemplate.update(sqlInsertIntoM2M, tag.getId(), certificate.getId());
 			}
-
 		}
 		if (affectedRows == 0) {
 			return null;
 		}
-
 		return certificate;
 	}
 
@@ -171,7 +171,6 @@ public class CertificateDaoSql implements CertificateDao {
 		int affectedRows2 = jdbcTemplate.update(sqlDeleteCertificateById, new Object[] { id }, types);
 
 		return new int[] { affectedRows1, affectedRows2 };
-
 	}
 
 	private void updateTagsBoundedWithCertificate(GiftCertificate certificate) {

@@ -33,7 +33,7 @@ class CertificateServiceImplTest {
 	private CertificateDao certificateDao;
 
 	@InjectMocks
-	private CertificateService certificateService = new CertificateServiceImpl(new ModelMapper());
+	private CertificateService certificateService = new CertificateServiceImpl(certificateDao, new ModelMapper());
 
 	private static LocalDateTime stamp;
 

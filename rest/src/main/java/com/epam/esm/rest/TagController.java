@@ -30,8 +30,12 @@ public class TagController {
 
 	private static final Logger log = LogManager.getLogger(TagController.class);
 
-	@Autowired
 	private TagService tagService;
+	
+	@Autowired
+	public TagController(TagService tagService) {
+		this.tagService = tagService;
+	}
 
 	/**
 	 * GET method, which returns the List, which contains all tags from the
@@ -42,9 +46,6 @@ public class TagController {
 
 		List<TagDTO> tags = tagService.getTags();
 
-		if (tags.isEmpty()) {
-			throw new NotFoundException("Nothing was found by the request");
-		}
 		return tags;
 	}
 
@@ -89,7 +90,6 @@ public class TagController {
 		if (tag == null) {
 			throw new NotFoundException("The tag with given Id wasn't found and can't be updated, id - " + tagId);
 		}
-
 		tagService.updateTag(theTag);
 
 		return theTag;
@@ -109,11 +109,8 @@ public class TagController {
 			return ResponseEntity.status(HttpStatus.OK).body("The tag doesn't exist in base, id - " + tagId);
 		}
 		// tag was found and will be deleted;
-
 		try {
-
 			tagService.deleteTag(tagId);
-
 		} catch (IllegalOperationServiceException e) {
 			log.log(Level.WARN,
 					"The tag couldn't be deleted as it's bounded with one or more certificates - tagId" + tagId, e);
