@@ -33,21 +33,22 @@ import com.epam.esm.transferobj.ParameterConstant;
 public class CertificateController {
 
 	private CertificateService certificateService;
-	
+
 	@Autowired
 	public CertificateController(CertificateService certificateService) {
 		this.certificateService = certificateService;
 	}
 
 	/**
-	 * GET certificate by the long Id; In case when the certificate with the given
-	 * Id is not found, the method returns Status Code = 404
+	 * GET certificate by the long Id;
+	 * 
+	 * @param long certificateId
+	 * @return (in case when the certificate with the given Id is not found, the
+	 *         method returns Status Code = 404)
 	 */
 	@GetMapping("/{certificateId}")
 	public GiftCertificateGetDTO getSertificate(@PathVariable long certificateId) {
-
 		GiftCertificateGetDTO giftCertificate = certificateService.getCertificate(certificateId);
-
 		if (giftCertificate == null) {
 			throw new NotFoundException("The certificate wasn't found, id - " + certificateId);
 		}
@@ -55,89 +56,80 @@ public class CertificateController {
 	}
 
 	/**
-	 * POST method which adds new certificate into the Database; In case of success,
-	 * the method returns Status Code = 200 and the response body contains new
-	 * generated certificates's Id; The method also bounds new certificate with
-	 * appropriate tags in M2M table; The argument (GiftCertificateCreateUpdateDTO
-	 * theCertificate) should contains the List of tags to bound the certificate
-	 * with
+	 * POST method which adds new certificate into the Database;
+	 * 
+	 * @param GiftCertificateCreateUpdateDTO The argument should contains the List
+	 *                                       of tags to bound the certificate with
+	 * @return GiftCertificateGetDTO (in case of success, the method returns Status
+	 *         Code = 200 and the response body contains new generated
+	 *         certificates's Id); The method also bounds new certificate with
+	 *         appropriate tags in M2M table;
 	 */
 	@PostMapping
 	public GiftCertificateGetDTO addCertificate(@Valid @RequestBody GiftCertificateCreateUpdateDTO theCertificate) {
-
-		// the certificate can't exists without tag
 		if (theCertificate.getTags() == null || theCertificate.getTags().isEmpty()) {
 			throw new InvalidRequestParametersException("The certificate should be bounded at least with one tag");
 		}
-
 		GiftCertificateGetDTO certificateGetDTO = certificateService.saveCertificate(theCertificate);
-
 		return certificateGetDTO;
 	}
 
 	/**
 	 * PUT method which allows to change the certificate's Name, Description, Price,
-	 * Duration and the tags to bound with; In case of success, the method returns
-	 * Status Code = 200
+	 * Duration and the tags to bound with;
+	 * 
+	 * @param long certificateId, GiftCertificateCreateUpdateDTO
+	 * @return GiftCertificateGetDTO (in case of success, the method returns Status
+	 *         Code = 200)
 	 */
 	@PutMapping("/{certificateId}")
-	public GiftCertificateGetDTO updateCertificate(@PathVariable long certificateId, 
+	public GiftCertificateGetDTO updateCertificate(@PathVariable long certificateId,
 			@Valid @RequestBody GiftCertificateCreateUpdateDTO theCertificate) {
-		
-		// check if the certificate with given Id exists;	
 		GiftCertificateGetDTO existingCertficate = certificateService.getCertificate(certificateId);
 		if (existingCertficate == null) {
 			throw new NotFoundException("The certificate with given Id wasn't found, id - " + certificateId);
 		}
-
 		GiftCertificateGetDTO certificateDTO = certificateService.updateCertificate(theCertificate);
-
 		return certificateDTO;
 	}
 
 	/**
-	 * DELETE certificate by long Id; In case when the certificate with the given Id
-	 * is not found, the method returns Status Code = 200 OK
+	 * DELETE certificate by long Id;
+	 * 
+	 * @param long certificateId
+	 * @return ResponseEntity (in case when the certificate with the given Id is not
+	 *         found, the method returns Status Code = 200 OK)
 	 */
 	@DeleteMapping("/{certificateId}")
 	public ResponseEntity<?> deleteCertificate(@PathVariable long certificateId) {
-
-		// check if the certificate with given Id exists;
 		GiftCertificateGetDTO certificate = certificateService.getCertificate(certificateId);
 		if (certificate == null) {
 			return ResponseEntity.status(HttpStatus.OK)
 					.body("The certificate doesn't exist in base, id - " + certificateId);
 		}
-
-		// certificate was found and will be deleted;
 		certificateService.deleteCertificate(certificateId);
-
 		return ResponseEntity.status(HttpStatus.OK)
 				.body("The certificate was successfully deleted, id - " + certificateId);
 	}
 
 	/**
-	 * GET method, which returns the List of GiftCertificates; accepts optional
-	 * parameters tag, name, description, order, direction; parameters could be used
-	 * in conjunction;
+	 * @return returns List<GiftCertificateGetDTO>;
+	 * @param accepts optional parameters tag, name, description, order, direction;
+	 *                parameters could be used in conjunction;
 	 */
 	@GetMapping
 	public @ResponseBody List<GiftCertificateGetDTO> getCertificates(@RequestParam(required = false) String tag,
 			@RequestParam(required = false) String name, @RequestParam(required = false) String description,
 			@RequestParam(required = false, defaultValue = "date") String order,
 			@RequestParam(required = false, defaultValue = "desc") String direction) {
-
 		List<GiftCertificateGetDTO> certificates = new ArrayList<GiftCertificateGetDTO>();
-
 		List<FilterParam> filterParams = new ArrayList<FilterParam>();
 		List<OrderParam> orderParams = new ArrayList<OrderParam>();
-
 		if (tag != null && !tag.isEmpty()) {
 			filterParams.add(new FilterParam(ParameterConstant.TAG, tag));
 		}
 		if (name != null && !name.isEmpty()) {
 			filterParams.add(new FilterParam(ParameterConstant.CERTIFICATE_NAME, name));
-			
 		}
 		if (description != null && !description.isEmpty()) {
 			filterParams.add(new FilterParam(ParameterConstant.DESCRIPTION, description));
@@ -145,7 +137,6 @@ public class CertificateController {
 		orderParams.add(new OrderParam(order, direction));
 
 		certificates = certificateService.getCertificates(filterParams, orderParams);
-
 		return certificates;
 	}
 

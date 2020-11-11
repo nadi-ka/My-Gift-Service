@@ -45,24 +45,26 @@ public class TagController {
 	/**
 	 * GET method, which returns the List, which contains all tags from the
 	 * Database;
+	 * 
+	 * @return List<TagDTO>; in the case, when nothing was found, returns empty
+	 *         list;
 	 */
 	@GetMapping
 	public List<TagDTO> getTags() {
-
 		List<TagDTO> tags = tagService.getTags();
-
 		return tags;
 	}
 
 	/**
-	 * GET tag by the long Id; In case when the tag with the given Id is not found,
-	 * the method returns Status Code = 404
+	 * GET tag by the long Id;
+	 * 
+	 * @param long tagId
+	 * @return TagDTO (in case when the tag with the given Id is not found, the
+	 *         method returns Status Code = 404)
 	 */
 	@GetMapping("/{tagId}")
 	public TagDTO getTag(@PathVariable long tagId) {
-
 		TagDTO theTag = tagService.getTag(tagId);
-
 		if (theTag == null) {
 			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.TAG_NOT_FOUND_KEY),
 					new Object[] { tagId }, Locale.getDefault()));
@@ -71,49 +73,48 @@ public class TagController {
 	}
 
 	/**
-	 * POST method which creates new tag; In case of success, the method returns
-	 * Status Code = 200 and the response body contains the tag with the generated
-	 * Id
+	 * POST method which creates new tag;
+	 * 
+	 * @param TagDTO
+	 * @return TagDTO (in case of success, the method returns Status Code = 200 and
+	 *         the response body contains the tag with the generated Id)
 	 */
 	@PostMapping
 	public TagDTO addTag(@Valid @RequestBody TagDTO theTag) {
-
 		TagDTO newTag = tagService.saveTag(theTag);
-
 		return newTag;
 	}
 
 	/**
-	 * PUT method which allows to change the tag's Name; In case of success, the
-	 * method returns Status Code = 200;
+	 * PUT method which allows to change the tag's Name;
+	 * 
+	 * @param long tagId TagDTO
+	 * @return TagDTO (in case of success, the method returns Status Code = 200)
 	 */
 	@PutMapping("/{tagId}")
 	public TagDTO updateTag(@PathVariable long tagId, @Valid @RequestBody TagDTO theTag) {
-
-		// check if the tag exists;
 		TagDTO tag = tagService.getTag(tagId);
 		if (tag == null) {
 			throw new NotFoundException("The tag with given Id wasn't found and can't be updated, id - " + tagId);
 		}
 		tagService.updateTag(theTag);
-
 		return theTag;
 	}
 
 	/**
-	 * DELETE tag by long Id; In case when the tag with the given Id is not found,
-	 * the method returns Status Code = 200 Deleting the tags, which are bound with
-	 * certificates are not allowed (bounded certificates must be deleted primarily)
+	 * DELETE tag by long Id; Deleting the tags, which are bound with certificates
+	 * are not allowed (bounded certificates must be deleted primarily)
+	 * 
+	 * @param long tagId
+	 * @return ResponseEntity (in case when the tag with the given Id is not found,
+	 *         the method returns Status Code = 200)
 	 */
 	@DeleteMapping("/{tagId}")
 	public ResponseEntity<?> deleteTag(@PathVariable long tagId) {
-
-		// check if the tag exists;
 		TagDTO tag = tagService.getTag(tagId);
 		if (tag == null) {
 			return ResponseEntity.status(HttpStatus.OK).body("The tag doesn't exist in base, id - " + tagId);
 		}
-		// tag was found and will be deleted;
 		try {
 			tagService.deleteTag(tagId);
 		} catch (IllegalOperationServiceException e) {
@@ -121,7 +122,6 @@ public class TagController {
 					"The tag couldn't be deleted as it's bounded with one or more certificates - tagId" + tagId, e);
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
 		}
-
 		return ResponseEntity.status(HttpStatus.OK).body("The tag was successfully deleted, id - " + tagId);
 	}
 
