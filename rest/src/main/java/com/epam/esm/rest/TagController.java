@@ -1,6 +1,7 @@
 package com.epam.esm.rest;
 
 import java.util.List;
+import java.util.Locale;
 
 import javax.validation.Valid;
 
@@ -8,6 +9,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.epam.esm.dto.TagDTO;
 import com.epam.esm.rest.exception.NotFoundException;
+import com.epam.esm.rest.messagekey.MessageKeyHolder;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.exception.IllegalOperationServiceException;
 
@@ -31,10 +34,12 @@ public class TagController {
 	private static final Logger log = LogManager.getLogger(TagController.class);
 
 	private TagService tagService;
-	
+	private MessageSource messageSource;
+
 	@Autowired
-	public TagController(TagService tagService) {
+	public TagController(TagService tagService, MessageSource messageSource) {
 		this.tagService = tagService;
+		this.messageSource = messageSource;
 	}
 
 	/**
@@ -59,15 +64,16 @@ public class TagController {
 		TagDTO theTag = tagService.getTag(tagId);
 
 		if (theTag == null) {
-			throw new NotFoundException("The tag wasn't found, id - " + tagId);
+			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.TAG_NOT_FOUND_KEY),
+					new Object[] { tagId }, Locale.getDefault()));
 		}
 		return theTag;
 	}
 
 	/**
-	 * POST method which creates new tag; In case of success, the
-	 * method returns Status Code = 200 and the response body contains 
-	 * the tag with the generated Id
+	 * POST method which creates new tag; In case of success, the method returns
+	 * Status Code = 200 and the response body contains the tag with the generated
+	 * Id
 	 */
 	@PostMapping
 	public TagDTO addTag(@Valid @RequestBody TagDTO theTag) {
@@ -82,8 +88,7 @@ public class TagController {
 	 * method returns Status Code = 200;
 	 */
 	@PutMapping("/{tagId}")
-	public TagDTO updateTag(@PathVariable long tagId, 
-			@Valid @RequestBody TagDTO theTag) {
+	public TagDTO updateTag(@PathVariable long tagId, @Valid @RequestBody TagDTO theTag) {
 
 		// check if the tag exists;
 		TagDTO tag = tagService.getTag(tagId);
