@@ -10,11 +10,9 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 public class CoreSpringConfig {
 
 	@Bean
-	public Jackson2ObjectMapperBuilder getObjectMapperBuilder() {
+	public Jackson2ObjectMapperBuilder objectMapperBuilder() {
 		Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
 		builder.modules(new JavaTimeModule());
 		return builder;
 	}
-
-
 }

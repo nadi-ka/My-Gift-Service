@@ -2,10 +2,12 @@ package com.epam.esm.rest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,6 +25,7 @@ import com.epam.esm.dto.GiftCertificateCreateUpdateDTO;
 import com.epam.esm.dto.GiftCertificateGetDTO;
 import com.epam.esm.rest.exception.InvalidRequestParametersException;
 import com.epam.esm.rest.exception.NotFoundException;
+import com.epam.esm.rest.messagekey.MessageKeyHolder;
 import com.epam.esm.service.CertificateService;
 import com.epam.esm.transferobj.FilterParam;
 import com.epam.esm.transferobj.OrderParam;
@@ -33,10 +36,12 @@ import com.epam.esm.transferobj.ParameterConstant;
 public class CertificateController {
 
 	private CertificateService certificateService;
+	private MessageSource messageSource;
 
 	@Autowired
-	public CertificateController(CertificateService certificateService) {
+	public CertificateController(CertificateService certificateService, MessageSource messageSource) {
 		this.certificateService = certificateService;
+		this.messageSource = messageSource;
 	}
 
 	/**
@@ -46,11 +51,12 @@ public class CertificateController {
 	 * @return (in case when the certificate with the given Id is not found, the
 	 *         method returns Status Code = 404)
 	 */
-	@GetMapping("/{certificateId}")
+	@GetMapping("{certificateId}")
 	public GiftCertificateGetDTO getSertificate(@PathVariable long certificateId) {
 		GiftCertificateGetDTO giftCertificate = certificateService.getCertificate(certificateId);
 		if (giftCertificate == null) {
-			throw new NotFoundException("The certificate wasn't found, id - " + certificateId);
+			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.CERTIFICATE_NOT_FOUND_KEY),
+					new Object[] { certificateId }, Locale.getDefault()));
 		}
 		return giftCertificate;
 	}
@@ -68,7 +74,8 @@ public class CertificateController {
 	@PostMapping
 	public GiftCertificateGetDTO addCertificate(@Valid @RequestBody GiftCertificateCreateUpdateDTO theCertificate) {
 		if (theCertificate.getTags() == null || theCertificate.getTags().isEmpty()) {
-			throw new InvalidRequestParametersException("The certificate should be bounded at least with one tag");
+			throw new InvalidRequestParametersException(messageSource.getMessage((MessageKeyHolder.CERTIFICATE_INVALID_TAGS_KEY),
+					null, Locale.getDefault()));
 		}
 		GiftCertificateGetDTO certificateGetDTO = certificateService.saveCertificate(theCertificate);
 		return certificateGetDTO;
@@ -82,12 +89,13 @@ public class CertificateController {
 	 * @return GiftCertificateGetDTO (in case of success, the method returns Status
 	 *         Code = 200)
 	 */
-	@PutMapping("/{certificateId}")
+	@PutMapping("{certificateId}")
 	public GiftCertificateGetDTO updateCertificate(@PathVariable long certificateId,
 			@Valid @RequestBody GiftCertificateCreateUpdateDTO theCertificate) {
 		GiftCertificateGetDTO existingCertficate = certificateService.getCertificate(certificateId);
 		if (existingCertficate == null) {
-			throw new NotFoundException("The certificate with given Id wasn't found, id - " + certificateId);
+			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.CERTIFICATE_NOT_UPDATED_KEY),
+					new Object[] { certificateId }, Locale.getDefault()));
 		}
 		GiftCertificateGetDTO certificateDTO = certificateService.updateCertificate(theCertificate);
 		return certificateDTO;
@@ -100,16 +108,18 @@ public class CertificateController {
 	 * @return ResponseEntity (in case when the certificate with the given Id is not
 	 *         found, the method returns Status Code = 200 OK)
 	 */
-	@DeleteMapping("/{certificateId}")
+	@DeleteMapping("{certificateId}")
 	public ResponseEntity<?> deleteCertificate(@PathVariable long certificateId) {
 		GiftCertificateGetDTO certificate = certificateService.getCertificate(certificateId);
 		if (certificate == null) {
 			return ResponseEntity.status(HttpStatus.OK)
-					.body("The certificate doesn't exist in base, id - " + certificateId);
+					.body(messageSource.getMessage((MessageKeyHolder.CERTIFICATE_ABSENT_KEY),
+							new Object[] { certificateId }, Locale.getDefault()));
 		}
 		certificateService.deleteCertificate(certificateId);
 		return ResponseEntity.status(HttpStatus.OK)
-				.body("The certificate was successfully deleted, id - " + certificateId);
+				.body(messageSource.getMessage((MessageKeyHolder.CERTIFICATE_DELETED_KEY),
+						new Object[] { certificateId }, Locale.getDefault()));
 	}
 
 	/**
@@ -122,9 +132,8 @@ public class CertificateController {
 			@RequestParam(required = false) String name, @RequestParam(required = false) String description,
 			@RequestParam(required = false, defaultValue = "date") String order,
 			@RequestParam(required = false, defaultValue = "desc") String direction) {
-		List<GiftCertificateGetDTO> certificates = new ArrayList<GiftCertificateGetDTO>();
-		List<FilterParam> filterParams = new ArrayList<FilterParam>();
-		List<OrderParam> orderParams = new ArrayList<OrderParam>();
+		List<FilterParam> filterParams = new ArrayList<>();
+		List<OrderParam> orderParams = new ArrayList<>();
 		if (tag != null && !tag.isEmpty()) {
 			filterParams.add(new FilterParam(ParameterConstant.TAG, tag));
 		}
@@ -135,8 +144,7 @@ public class CertificateController {
 			filterParams.add(new FilterParam(ParameterConstant.DESCRIPTION, description));
 		}
 		orderParams.add(new OrderParam(order, direction));
-
-		certificates = certificateService.getCertificates(filterParams, orderParams);
+		List<GiftCertificateGetDTO> certificates = certificateService.getCertificates(filterParams, orderParams);
 		return certificates;
 	}
 

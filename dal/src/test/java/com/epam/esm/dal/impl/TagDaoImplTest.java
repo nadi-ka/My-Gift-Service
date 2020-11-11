@@ -159,9 +159,9 @@ class TagDaoImplTest {
 	void testFindCertificateIdByTagId_Found() {
 		
 		TagDaoSql tagDao = getTagDao();
-		long idExpected = tagDao.findCertificateIdByTagId(1);
+		boolean id = tagDao.findCertificateIdByTagId(1);
 		
-		assertTrue(idExpected != 0);
+		assertTrue(id);
 	}
 	
 	@Test
@@ -169,9 +169,9 @@ class TagDaoImplTest {
 		
 		TagDaoSql tagDao = getTagDao();
 		tagDao.addTag(new Tag(3, "SPA"));
-		long idExpected = tagDao.findCertificateIdByTagId(3);
+		boolean id = tagDao.findCertificateIdByTagId(3);
 		
-		assertTrue(idExpected == 0);
+		assertFalse(id);
 	}
 	
 	private TagDaoSql getTagDao() {

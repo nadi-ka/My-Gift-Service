@@ -62,7 +62,7 @@ public class TagController {
 	 * @return TagDTO (in case when the tag with the given Id is not found, the
 	 *         method returns Status Code = 404)
 	 */
-	@GetMapping("/{tagId}")
+	@GetMapping("{tagId}")
 	public TagDTO getTag(@PathVariable long tagId) {
 		TagDTO theTag = tagService.getTag(tagId);
 		if (theTag == null) {
@@ -91,11 +91,12 @@ public class TagController {
 	 * @param long tagId TagDTO
 	 * @return TagDTO (in case of success, the method returns Status Code = 200)
 	 */
-	@PutMapping("/{tagId}")
+	@PutMapping("{tagId}")
 	public TagDTO updateTag(@PathVariable long tagId, @Valid @RequestBody TagDTO theTag) {
 		TagDTO tag = tagService.getTag(tagId);
 		if (tag == null) {
-			throw new NotFoundException("The tag with given Id wasn't found and can't be updated, id - " + tagId);
+			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.TAG_NOT_UPDATED_KEY),
+					new Object[] { tagId }, Locale.getDefault()));
 		}
 		tagService.updateTag(theTag);
 		return theTag;
@@ -109,20 +110,23 @@ public class TagController {
 	 * @return ResponseEntity (in case when the tag with the given Id is not found,
 	 *         the method returns Status Code = 200)
 	 */
-	@DeleteMapping("/{tagId}")
+	@DeleteMapping("{tagId}")
 	public ResponseEntity<?> deleteTag(@PathVariable long tagId) {
 		TagDTO tag = tagService.getTag(tagId);
 		if (tag == null) {
-			return ResponseEntity.status(HttpStatus.OK).body("The tag doesn't exist in base, id - " + tagId);
+			return ResponseEntity.status(HttpStatus.OK).body(messageSource.getMessage((MessageKeyHolder.TAG_ABSENT_KEY),
+					new Object[] { tagId }, Locale.getDefault()));
 		}
 		try {
 			tagService.deleteTag(tagId);
 		} catch (IllegalOperationServiceException e) {
 			log.log(Level.WARN,
 					"The tag couldn't be deleted as it's bounded with one or more certificates - tagId" + tagId, e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(messageSource.getMessage((MessageKeyHolder.TAG_BOUNDED_KEY),
+					new Object[] { tagId }, Locale.getDefault()));
 		}
-		return ResponseEntity.status(HttpStatus.OK).body("The tag was successfully deleted, id - " + tagId);
+		return ResponseEntity.status(HttpStatus.OK).body(messageSource.getMessage((MessageKeyHolder.TAG_DELETED_KEY),
+				new Object[] { tagId }, Locale.getDefault()));
 	}
 
 }

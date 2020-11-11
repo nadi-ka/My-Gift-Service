@@ -16,16 +16,13 @@ public class RestExceptionHandler {
 
 	@ExceptionHandler
 	public ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException exc) {
-
 		ErrorResponse error = new ErrorResponse(HttpStatus.NOT_FOUND.value(), exc.getMessage(),
 				System.currentTimeMillis());
-
 		return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler
 	public ResponseEntity<ErrorResponse> handleException(Exception exc) {
-
 		ErrorResponse error = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), exc.getMessage(),
 				System.currentTimeMillis());
 
@@ -34,7 +31,6 @@ public class RestExceptionHandler {
 
 	@ExceptionHandler
 	public ResponseEntity<ErrorResponse> handleInvalidParamsException(MethodArgumentNotValidException exc) {
-
 		ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), exc.getMessage(),
 				System.currentTimeMillis());
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
@@ -42,7 +38,6 @@ public class RestExceptionHandler {
 	
 	@ExceptionHandler
 	public ResponseEntity<ErrorResponse> handleInvalidParamsException(MethodArgumentTypeMismatchException exc) {
-
 		ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), exc.getMessage(),
 				System.currentTimeMillis());
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
@@ -50,15 +45,13 @@ public class RestExceptionHandler {
 	
 	@ExceptionHandler
 	public ResponseEntity<ErrorResponse> handleInvalidParamsException(HttpRequestMethodNotSupportedException exc) {
-
-		ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), exc.getMessage(),
+		ErrorResponse error = new ErrorResponse(HttpStatus.METHOD_NOT_ALLOWED.value(), exc.getMessage(),
 				System.currentTimeMillis());
-		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(error, HttpStatus.METHOD_NOT_ALLOWED);
 	}
 	
 	@ExceptionHandler
 	public ResponseEntity<ErrorResponse> handleInvalidParamsException(InvalidRequestParametersException exc) {
-
 		ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), exc.getMessage(),
 				System.currentTimeMillis());
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);

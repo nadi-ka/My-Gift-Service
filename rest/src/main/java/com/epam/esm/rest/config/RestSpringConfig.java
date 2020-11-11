@@ -13,12 +13,12 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 public class RestSpringConfig {
 	
 	@Bean
-	public MessageSource getMessageSource() {
+	public MessageSource messageSource() {
 		ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
 		messageSource.setBasename("classpath:messages");
 		messageSource.setDefaultEncoding("UTF-8");
-		messageSource.setDefaultLocale(new Locale("en"));
 		messageSource.setCacheMillis(500);
+		Locale.setDefault(new Locale("en"));
 		return messageSource;
 	}
 

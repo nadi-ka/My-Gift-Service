@@ -10,8 +10,7 @@ import org.springframework.context.annotation.Configuration;
 public class ServiceSpringConfig {
 
 	@Bean
-	public ModelMapper getModelMapper() {
-
+	public ModelMapper modelMapper() {
 		ModelMapper mapper = new ModelMapper();
 		return mapper;
 	}

@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,11 +42,8 @@ public class TagDaoSql implements TagDao {
 
 	@Override
 	public Tag addTag(Tag tag) {
-
 		KeyHolder keyHolder = new GeneratedKeyHolder();
-
 		jdbcTemplate.update(new PreparedStatementCreator() {
-
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 
@@ -58,67 +55,47 @@ public class TagDaoSql implements TagDao {
 				return preparedStatement;
 			}
 		}, keyHolder);
-
 		long newTagId = keyHolder.getKey().longValue();
 		tag.setId(newTagId);
-
 		return tag;
 	}
 
 	@Override
 	public int updateTag(Tag tag) {
-
 		int affectedRows = 0;
-
 		affectedRows = jdbcTemplate.update(sqlUpdateTag, tag.getName(), tag.getId());
-
 		return affectedRows;
-
 	}
 
 	@Override
 	public List<Tag> findAllTags() {
-
-		List<Tag> tags = new ArrayList<Tag>();
 		try {
-			tags = jdbcTemplate.query(sqlFindAllTags, ROW_MAPPER);
+			List<Tag> tags = jdbcTemplate.query(sqlFindAllTags, ROW_MAPPER);
+			return tags;
 		} catch (DataAccessException e) {
 			// nothing was found by the request
-			return tags;
+			return Collections.emptyList();
 		}
-		return tags;
 	}
 
 	@Override
 	public Tag findTag(long id) {
-
-		Tag tag;
 		try {
-			tag = jdbcTemplate.queryForObject(sqlFindTagById, new Object[] { id }, ROW_MAPPER);
+			return jdbcTemplate.queryForObject(sqlFindTagById, new Object[] { id }, ROW_MAPPER);
 		} catch (DataAccessException e) {
-			tag = null;
+			return null;
 		}
-		return tag;
 	}
 
 	@Override
 	public int deleteTag(long id) {
-
-		int affectedRows = 0;
-
 		int[] types = { Types.BIGINT };
-		affectedRows = jdbcTemplate.update(sqlDeleteTagById, new Object[] { id }, types);
-
+		int affectedRows = jdbcTemplate.update(sqlDeleteTagById, new Object[] { id }, types);
 		return affectedRows;
-
 	}
 
-	// The method is used for checking, if there is at least one certificate,
-	// bounded with given tag's Id
-
 	@Override
-	public long findCertificateIdByTagId(long tagId) {
-
+	public boolean findCertificateIdByTagId(long tagId) {
 		long certificateId;
 		try {
 			certificateId = (Long) jdbcTemplate.queryForObject(sqlFindCertificateIdByTagId, new Object[] { tagId },
@@ -126,12 +103,11 @@ public class TagDaoSql implements TagDao {
 		} catch (DataAccessException e) {
 			certificateId = 0;
 		}
-		return certificateId;
+		return (certificateId != 0);
 	}
-	
+
 	@Override
 	public Tag findTagByName(String name) {
-
 		Tag tag;
 		try {
 			tag = jdbcTemplate.queryForObject(sqlFindTagByName, new Object[] { name }, ROW_MAPPER);

@@ -119,7 +119,7 @@ class TagServiceImplTest {
 	@Test
 	void testDeleteTag_SuccessfullyDeleted() {
 		
-		Mockito.when(tagDao.findCertificateIdByTagId(1)).thenReturn(0L);
+		Mockito.when(tagDao.findCertificateIdByTagId(1)).thenReturn(false);
 		Mockito.when(tagDao.deleteTag(1)).thenReturn(1);
 		
 		int affectedRows = tagService.deleteTag(1);
@@ -130,7 +130,7 @@ class TagServiceImplTest {
 	@Test
 	void testDeleteTag_NotDeleted_AsBoundWithCertificate() {
 		
-		Mockito.when(tagDao.findCertificateIdByTagId(1)).thenReturn(1L);
+		Mockito.when(tagDao.findCertificateIdByTagId(1)).thenReturn(true);
 		
 		IllegalOperationServiceException thrown = assertThrows(IllegalOperationServiceException.class, () -> tagService.deleteTag(1),
 				"Expected deleteTag() to throw, but it didn't");

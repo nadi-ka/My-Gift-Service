@@ -24,7 +24,7 @@ public class DalSpringConfig {
 	private Environment env;
 
 	@Bean
-	public BasicDataSource getDataSource() {
+	public BasicDataSource dataSource() {
 		BasicDataSource ds = new BasicDataSource();
 		ds.setDriverClassName(env.getProperty("db.driver"));
 		ds.setUrl(env.getProperty("db.url"));
@@ -36,13 +36,13 @@ public class DalSpringConfig {
 	}
 
 	@Bean
-	public JdbcTemplate getJdbcTemplate() throws NamingException {
-		return new JdbcTemplate(getDataSource());
+	public JdbcTemplate jdbcTemplate() throws NamingException {
+		return new JdbcTemplate(dataSource());
 	}
 
 	@Bean
-	public PlatformTransactionManager getTxManager() {
-		return new DataSourceTransactionManager(getDataSource());
+	public PlatformTransactionManager txManager() {
+		return new DataSourceTransactionManager(dataSource());
 	}
 
 }
