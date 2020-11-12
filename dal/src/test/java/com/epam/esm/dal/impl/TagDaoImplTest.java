@@ -132,7 +132,6 @@ class TagDaoImplTest {
 	void testDeleteTag_PositiveResult_DeletedSuccessfully() {
 		
 		TagDaoSql tagDao = getTagDao();
-		
 		tagDao.addTag(new Tag(3, "SPA"));
 		int affectedRowsActual = tagDao.deleteTag(3);
 		
@@ -144,7 +143,6 @@ class TagDaoImplTest {
 	void testDeleteTag_NegativeResult_TagAbsent() {
 		
 		TagDaoSql tagDao = getTagDao();
-		
 		int affectedRowsActual = tagDao.deleteTag(999);
 		
 		assertEquals(0, affectedRowsActual);
@@ -153,23 +151,23 @@ class TagDaoImplTest {
 
 	/**
 	 * Test method for
-	 * {@link com.epam.esm.dal.impl.TagDaoSql#findCertificateIdByTagId(long)}.
+	 * {@link com.epam.esm.dal.impl.TagDaoSql#certificatesExistForTag(long)}.
 	 */
 	@Test
-	void testFindCertificateIdByTagId_Found() {
+	void testCertificatesExistForTag_Found() {
 		
 		TagDaoSql tagDao = getTagDao();
-		boolean id = tagDao.findCertificateIdByTagId(1);
+		boolean id = tagDao.certificatesExistForTag(1);
 		
 		assertTrue(id);
 	}
 	
 	@Test
-	void testFindCertificateIdByTagId_NotFound() {
+	void testCertificatesExistForTag_NotFound() {
 		
 		TagDaoSql tagDao = getTagDao();
 		tagDao.addTag(new Tag(3, "SPA"));
-		boolean id = tagDao.findCertificateIdByTagId(3);
+		boolean id = tagDao.certificatesExistForTag(3);
 		
 		assertFalse(id);
 	}

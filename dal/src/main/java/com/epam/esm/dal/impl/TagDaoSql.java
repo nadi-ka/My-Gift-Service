@@ -62,8 +62,7 @@ public class TagDaoSql implements TagDao {
 
 	@Override
 	public int updateTag(Tag tag) {
-		int affectedRows = 0;
-		affectedRows = jdbcTemplate.update(sqlUpdateTag, tag.getName(), tag.getId());
+		int affectedRows = jdbcTemplate.update(sqlUpdateTag, tag.getName(), tag.getId());
 		return affectedRows;
 	}
 
@@ -95,7 +94,7 @@ public class TagDaoSql implements TagDao {
 	}
 
 	@Override
-	public boolean findCertificateIdByTagId(long tagId) {
+	public boolean certificatesExistForTag(long tagId) {
 		long certificateId;
 		try {
 			certificateId = (Long) jdbcTemplate.queryForObject(sqlFindCertificateIdByTagId, new Object[] { tagId },

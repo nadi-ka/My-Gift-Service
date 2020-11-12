@@ -12,6 +12,6 @@ public interface TagDao {
 	Tag findTag(long id);
 	Tag findTagByName(String name);
 	int deleteTag(long id);
-	boolean findCertificateIdByTagId(long tagId);
+	boolean certificatesExistForTag(long tagId);
 
 }
