@@ -39,8 +39,8 @@ public class CertificateServiceImpl implements CertificateService {
 	}
 
 	@Override
-	public GiftCertificateGetDTO getCertificate(long theId) {
-		GiftCertificate certificate = certificateDao.findCertificate(theId);
+	public GiftCertificateGetDTO getCertificate(long id) {
+		GiftCertificate certificate = certificateDao.findCertificate(id);
 		if (certificate == null) {
 			return null;
 		}
@@ -48,8 +48,8 @@ public class CertificateServiceImpl implements CertificateService {
 	}
 
 	@Override
-	public GiftCertificateGetDTO saveCertificate(GiftCertificateCreateUpdateDTO theCertificate) {
-		GiftCertificate certificateToAdd = convertToEntity(theCertificate);
+	public GiftCertificateGetDTO saveCertificate(GiftCertificateCreateUpdateDTO certificate) {
+		GiftCertificate certificateToAdd = convertToEntity(certificate);
 		LocalDateTime creationTime = DateTimeFormatterISO.createAndformatDateTime();
 		certificateToAdd.setCreationDate(creationTime);
 		certificateToAdd.setLastUpdateDate(creationTime);
@@ -58,8 +58,8 @@ public class CertificateServiceImpl implements CertificateService {
 	}
 
 	@Override
-	public GiftCertificateGetDTO updateCertificate(GiftCertificateCreateUpdateDTO theCertificate) {
-		GiftCertificate certificateToUpdate = convertToEntity(theCertificate);
+	public GiftCertificateGetDTO updateCertificate(GiftCertificateCreateUpdateDTO certificate) {
+		GiftCertificate certificateToUpdate = convertToEntity(certificate);
 		certificateToUpdate.setLastUpdateDate(DateTimeFormatterISO.createAndformatDateTime());
 		GiftCertificate updatedCertificate = certificateDao.updateCertificate(certificateToUpdate);
 		if (updatedCertificate == null) {
@@ -69,8 +69,8 @@ public class CertificateServiceImpl implements CertificateService {
 	}
 
 	@Override
-	public int[] deleteCertificate(long theId) {
-		int[] affectedRows = certificateDao.deleteCertificate(theId);
+	public int[] deleteCertificate(long id) {
+		int[] affectedRows = certificateDao.deleteCertificate(id);
 		return affectedRows;
 	}
 

@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,12 +46,9 @@ public class TagDaoSql implements TagDao {
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-
 				String paramToReturn = "Id";
-
 				PreparedStatement preparedStatement = con.prepareStatement(sqlAddTag, new String[] { paramToReturn });
 				preparedStatement.setString(1, tag.getName());
-
 				return preparedStatement;
 			}
 		}, keyHolder);
@@ -73,7 +70,7 @@ public class TagDaoSql implements TagDao {
 			return tags;
 		} catch (DataAccessException e) {
 			// nothing was found by the request
-			return Collections.emptyList();
+			return new ArrayList<Tag>();
 		}
 	}
 

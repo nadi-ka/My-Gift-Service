@@ -8,9 +8,9 @@ import com.epam.esm.service.exception.IllegalOperationServiceException;
 public interface TagService {
 	
 	List<TagDTO> getTags();
-	TagDTO getTag(long theId);
-	TagDTO saveTag(TagDTO theTag);
-	int updateTag(TagDTO theTag);
-	int deleteTag(long theId) throws IllegalOperationServiceException;
+	TagDTO getTag(long id);
+	TagDTO saveTag(TagDTO tag);
+	int updateTag(TagDTO tag);
+	int deleteTag(long id) throws IllegalOperationServiceException;
 
 }

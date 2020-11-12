@@ -47,9 +47,9 @@ public class CertificateController {
 	/**
 	 * GET certificate by the long Id;
 	 * 
-	 * @param long certificateId
-	 * @return (in case when the certificate with the given Id is not found, the
-	 *         method returns Status Code = 404)
+	 * @param certificateId
+	 * @return {@link GiftCertificateGetDTO} (in case when the certificate with the
+	 *         given Id is not found, the method returns Status Code = 404)
 	 */
 	@GetMapping("{certificateId}")
 	public GiftCertificateGetDTO getSertificate(@PathVariable long certificateId) {
@@ -64,68 +64,65 @@ public class CertificateController {
 	/**
 	 * POST method which adds new certificate into the Database;
 	 * 
-	 * @param GiftCertificateCreateUpdateDTO The argument should contains the List
-	 *                                       of tags to bound the certificate with
-	 * @return GiftCertificateGetDTO (in case of success, the method returns Status
-	 *         Code = 200 and the response body contains new generated
-	 *         certificates's Id); The method also bounds new certificate with
-	 *         appropriate tags in M2M table;
+	 * @param certificate The argument should contains the List of tags to bound the
+	 *                    certificate with
+	 * @return {@link GiftCertificateGetDTO} (in case of success, the method returns
+	 *         Status Code = 200 and the response body contains new generated
+	 *         certificates's Id)
 	 */
 	@PostMapping
-	public GiftCertificateGetDTO addCertificate(@Valid @RequestBody GiftCertificateCreateUpdateDTO theCertificate) {
-		if (theCertificate.getTags() == null || theCertificate.getTags().isEmpty()) {
-			throw new InvalidRequestParametersException(messageSource.getMessage((MessageKeyHolder.CERTIFICATE_INVALID_TAGS_KEY),
-					null, Locale.getDefault()));
+	public GiftCertificateGetDTO addCertificate(@Valid @RequestBody GiftCertificateCreateUpdateDTO certificate) {
+		if (certificate.getTags() == null || certificate.getTags().isEmpty()) {
+			throw new InvalidRequestParametersException(messageSource
+					.getMessage((MessageKeyHolder.CERTIFICATE_INVALID_TAGS_KEY), null, Locale.getDefault()));
 		}
-		GiftCertificateGetDTO certificateGetDTO = certificateService.saveCertificate(theCertificate);
-		return certificateGetDTO;
+		return certificateService.saveCertificate(certificate);
 	}
 
 	/**
 	 * PUT method which allows to change the certificate's Name, Description, Price,
 	 * Duration and the tags to bound with;
 	 * 
-	 * @param long certificateId, GiftCertificateCreateUpdateDTO
-	 * @return GiftCertificateGetDTO (in case of success, the method returns Status
-	 *         Code = 200)
+	 * @param certificateId, certificate
+	 * @return {@link GiftCertificateGetDTO} (in case of success, the method returns
+	 *         Status Code = 200)
 	 */
 	@PutMapping("{certificateId}")
 	public GiftCertificateGetDTO updateCertificate(@PathVariable long certificateId,
-			@Valid @RequestBody GiftCertificateCreateUpdateDTO theCertificate) {
-		GiftCertificateGetDTO existingCertficate = certificateService.getCertificate(certificateId);
-		if (existingCertficate == null) {
+			@Valid @RequestBody GiftCertificateCreateUpdateDTO certificate) {
+		GiftCertificateGetDTO giftCertificateGetDTO = certificateService.getCertificate(certificateId);
+		if (giftCertificateGetDTO == null) {
 			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.CERTIFICATE_NOT_UPDATED_KEY),
 					new Object[] { certificateId }, Locale.getDefault()));
 		}
-		GiftCertificateGetDTO certificateDTO = certificateService.updateCertificate(theCertificate);
+		GiftCertificateGetDTO certificateDTO = certificateService.updateCertificate(certificate);
 		return certificateDTO;
 	}
 
 	/**
 	 * DELETE certificate by long Id;
 	 * 
-	 * @param long certificateId
-	 * @return ResponseEntity (in case when the certificate with the given Id is not
-	 *         found, the method returns Status Code = 200 OK)
+	 * @param certificateId
+	 * @return {@link ResponseEntity} (in case when the certificate with the given
+	 *         Id is not found, the method returns Status Code = 200 OK)
 	 */
 	@DeleteMapping("{certificateId}")
 	public ResponseEntity<?> deleteCertificate(@PathVariable long certificateId) {
 		GiftCertificateGetDTO certificate = certificateService.getCertificate(certificateId);
 		if (certificate == null) {
-			return ResponseEntity.status(HttpStatus.OK)
-					.body(messageSource.getMessage((MessageKeyHolder.CERTIFICATE_ABSENT_KEY),
-							new Object[] { certificateId }, Locale.getDefault()));
+			return ResponseEntity.status(HttpStatus.OK).body(messageSource.getMessage(
+					(MessageKeyHolder.CERTIFICATE_ABSENT_KEY), new Object[] { certificateId }, Locale.getDefault()));
 		}
 		certificateService.deleteCertificate(certificateId);
-		return ResponseEntity.status(HttpStatus.OK)
-				.body(messageSource.getMessage((MessageKeyHolder.CERTIFICATE_DELETED_KEY),
-						new Object[] { certificateId }, Locale.getDefault()));
+		return ResponseEntity.status(HttpStatus.OK).body(messageSource.getMessage(
+				(MessageKeyHolder.CERTIFICATE_DELETED_KEY), new Object[] { certificateId }, Locale.getDefault()));
 	}
 
 	/**
-	 * @return returns List<GiftCertificateGetDTO>;
 	 * @param accepts optional parameters tag, name, description, order, direction;
 	 *                parameters could be used in conjunction;
+	 * @return {@link List<GiftCertificateGetDTO>} in the case, when nothing was
+	 *         found, returns empty list;
 	 */
 	@GetMapping
 	public @ResponseBody List<GiftCertificateGetDTO> getCertificates(@RequestParam(required = false) String tag,

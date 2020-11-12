@@ -10,9 +10,9 @@ import com.epam.esm.transferobj.OrderParam;
 public interface CertificateService {
 
 	List<GiftCertificateGetDTO> getCertificates(List<FilterParam> filterParams, List<OrderParam> orderParams);
-	GiftCertificateGetDTO getCertificate(long theId);
-	GiftCertificateGetDTO saveCertificate(GiftCertificateCreateUpdateDTO theCertificate);
-	GiftCertificateGetDTO updateCertificate(GiftCertificateCreateUpdateDTO theCertificate);
-	int[] deleteCertificate(long theId);
+	GiftCertificateGetDTO getCertificate(long id);
+	GiftCertificateGetDTO saveCertificate(GiftCertificateCreateUpdateDTO certificate);
+	GiftCertificateGetDTO updateCertificate(GiftCertificateCreateUpdateDTO certificate);
+	int[] deleteCertificate(long id);
 
 }

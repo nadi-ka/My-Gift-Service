@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.time.LocalDateTime;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,7 +118,7 @@ public class CertificateDaoSql implements CertificateDao {
 			return certificates;
 		} catch (DataAccessException e) {
 			// nothing was found by the request;
-			return Collections.emptyList();
+			return new ArrayList<GiftCertificate>();
 		}
 	}
 
