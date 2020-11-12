@@ -65,14 +65,14 @@ public class CertificateServiceImpl implements CertificateService {
 	}
 
 	@Override
-	public GiftCertificateGetDTO updateCertificate(GiftCertificateCreateUpdateDTO certificate) {
+	public GiftCertificateGetDTO updateCertificate(long certificateId, GiftCertificateCreateUpdateDTO certificate) {
 		GiftCertificate certificateToUpdate = convertToEntity(certificate);
 		certificateToUpdate.setLastUpdateDate(DateTimeFormatterISO.createAndformatDateTime());
-		GiftCertificate updatedCertificate = certificateDao.updateCertificate(certificateToUpdate);
-		if (updatedCertificate == null) {
-			return null;
+		int affectedRows = certificateDao.updateCertificate(certificateId, certificateToUpdate);
+		if (affectedRows == 0) {
+			return new GiftCertificateGetDTO();
 		}
-		return convertToDto(updatedCertificate);
+		return convertToDto(certificateDao.findCertificate(certificateId));
 	}
 
 	@Override

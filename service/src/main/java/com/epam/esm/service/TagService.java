@@ -13,7 +13,7 @@ public interface TagService {
 
 	TagDTO saveTag(TagDTO tag);
 
-	int updateTag(TagDTO tag);
+	TagDTO updateTag(long tagId, TagDTO tag);
 
 	int deleteTag(long id) throws IllegalOperationServiceException;
 

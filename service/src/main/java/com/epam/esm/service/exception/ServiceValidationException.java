@@ -1,6 +1,6 @@
 package com.epam.esm.service.exception;
 
-public class ServiceValidationException extends Exception {
+public class ServiceValidationException extends RuntimeException {
 	
 	private static final long serialVersionUID = 1L;
 

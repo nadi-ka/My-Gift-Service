@@ -33,14 +33,14 @@ public class TagServiceImpl implements TagService {
 	}
 
 	@Override
-	public TagDTO saveTag(TagDTO theTag) {
-		Tag resultTag = tagDao.addTag(convertToEntity(theTag));
+	public TagDTO saveTag(TagDTO tag) {
+		Tag resultTag = tagDao.addTag(convertToEntity(tag));
 		return convertToDto(resultTag);
 	}
 
 	@Override
-	public TagDTO getTag(long theId) {
-		Tag tag = tagDao.findTag(theId);
+	public TagDTO getTag(long id) {
+		Tag tag = tagDao.findTag(id);
 		if (tag == null) {
 			return null;
 		}
@@ -48,20 +48,22 @@ public class TagServiceImpl implements TagService {
 	}
 
 	@Override
-	public int updateTag(TagDTO theTag) {
-		int affectedRows = tagDao.updateTag(convertToEntity(theTag));
-		return affectedRows;
-
+	public TagDTO updateTag(long tagId, TagDTO tag) {
+		int affectedRows = tagDao.updateTag(tagId, convertToEntity(tag));
+		if (affectedRows == 0) {
+			return new TagDTO();
+		}
+		return convertToDto(tagDao.findTag(tagId));
 	}
 
 	@Override
-	public int deleteTag(long theId) throws IllegalOperationServiceException {
-		boolean tagBoundedWithCertificate = tagDao.certificatesExistForTag(theId);
+	public int deleteTag(long id) throws IllegalOperationServiceException {
+		boolean tagBoundedWithCertificate = tagDao.certificatesExistForTag(id);
 		if (tagBoundedWithCertificate) {
 			throw new IllegalOperationServiceException(
-					"The tag is bounded with one or more certififcates and coudn't be deleted, tagId - " + theId);
+					"The tag is bounded with one or more certififcates and coudn't be deleted, tagId - " + id);
 		}
-		int affectedRows = tagDao.deleteTag(theId);
+		int affectedRows = tagDao.deleteTag(id);
 		return affectedRows;
 	}
 

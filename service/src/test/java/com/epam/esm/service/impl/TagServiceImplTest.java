@@ -92,25 +92,32 @@ class TagServiceImplTest {
 	@Test
 	void testUpdateTag_PositiveResult() {
 		
-		Tag updatedTag = new Tag(1, "#SPA");
-		TagDTO updatedTagDTO = new TagDTO(1, "#SPA");
+		Tag tag = new Tag();
+		tag.setName("#SPA");
+		TagDTO tagDTO = new TagDTO();
+		tagDTO.setName("#SPA");
 		
-		Mockito.when(tagDao.updateTag(updatedTag)).thenReturn(1);
-		int affectedRows = tagService.updateTag(updatedTagDTO);
+		Mockito.when(tagDao.updateTag(1, tag)).thenReturn(1);
+		Mockito.when(tagDao.findTag(1)).thenReturn(new Tag(1, "#SPA"));
+		TagDTO actualTag = tagService.updateTag(1, tagDTO);
 		
-		assertTrue(affectedRows == 1);
+		assertNotNull(actualTag);
+		assertEquals("#SPA", actualTag.getName());
 	}
 	
 	@Test
 	void testUpdateTag_NegativeResult_NotFound() {
 		
-		Tag updatedTag = new Tag(999, "#SPA");
-		TagDTO updatedTagDTO = new TagDTO(999, "#SPA");
+		Tag tag = new Tag();
+		tag.setName("#SPA");
+		TagDTO tagDTO = new TagDTO();
+		tagDTO.setName("#SPA");
 		
-		Mockito.when(tagDao.updateTag(updatedTag)).thenReturn(0);
-		int affectedRows = tagService.updateTag(updatedTagDTO);
+		Mockito.when(tagDao.updateTag(999, tag)).thenReturn(0);
+		TagDTO actualTag = tagService.updateTag(999, tagDTO);
 		
-		assertTrue(affectedRows == 0);
+		assertNotNull(actualTag);
+		assertNull(actualTag.getName());
 	}
 
 	/**

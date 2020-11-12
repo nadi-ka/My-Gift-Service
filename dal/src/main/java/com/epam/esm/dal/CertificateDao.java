@@ -10,7 +10,7 @@ public interface CertificateDao {
 
 	GiftCertificate addCertificate(GiftCertificate certificate);
 
-	GiftCertificate updateCertificate(GiftCertificate certificate);
+	int updateCertificate(long certificateId, GiftCertificate certificate);
 
 	List<GiftCertificate> findCertificates(List<FilterParam> filterParams, List<OrderParam> orderParams);
 

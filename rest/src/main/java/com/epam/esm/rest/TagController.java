@@ -98,8 +98,8 @@ public class TagController {
 			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.TAG_NOT_UPDATED_KEY),
 					new Object[] { tagId }, Locale.getDefault()));
 		}
-		tagService.updateTag(tag);
-		return tag;
+		TagDTO updatedTag = tagService.updateTag(tagId, tag);
+		return updatedTag;
 	}
 
 	/**

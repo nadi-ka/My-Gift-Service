@@ -70,11 +70,12 @@ class TagDaoImplTest {
 	void testUpdateTag_PositiveResult() {
 		
 		TagDaoSql tagDao = getTagDao();
-		tagDao.updateTag(new Tag(1, "SPA"));
-		Tag tag = tagDao.findTag(1);
+		Tag tag = new Tag();
+		tag.setName("SPA");
+		tagDao.updateTag(1, tag);
+		Tag actualTag = tagDao.findTag(1);
 		
-		assertNotNull(tag);
-		assertEquals(1, tag.getId());
+		assertNotNull(actualTag);
 		assertEquals("SPA", tag.getName());
 	}
 	
@@ -82,7 +83,9 @@ class TagDaoImplTest {
 	void testUpdateTag_NegativeResult_NotUpdated() {
 		
 		TagDaoSql tagDao = getTagDao();
-		int affectedRowsActual = tagDao.updateTag(new Tag(9999, "SPA"));
+		Tag tag = new Tag();
+		tag.setName("SPA");
+		int affectedRowsActual = tagDao.updateTag(999, tag);
 
 		assertEquals(0, affectedRowsActual);
 	}

@@ -17,7 +17,7 @@ public interface CertificateService {
 
 	GiftCertificateGetDTO saveCertificate(GiftCertificateCreateUpdateDTO certificate);
 
-	GiftCertificateGetDTO updateCertificate(GiftCertificateCreateUpdateDTO certificate);
+	GiftCertificateGetDTO updateCertificate(long certificateId, GiftCertificateCreateUpdateDTO certificate);
 
 	int[] deleteCertificate(long id);
 

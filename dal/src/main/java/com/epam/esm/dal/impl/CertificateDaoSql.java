@@ -20,9 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.epam.esm.dal.CertificateDao;
 import com.epam.esm.dal.TagDao;
-import com.epam.esm.dal.mapper.CertificateMapper;
-import com.epam.esm.dal.mapper.CertificateWithTagsMapper;
-import com.epam.esm.dal.util.DuplicateResultsRemover;
+import com.epam.esm.dal.mapper.CertificateResultSetExtractor;
 import com.epam.esm.dal.util.SqlQueryBuilder;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Tag;
@@ -36,7 +34,11 @@ public class CertificateDaoSql implements CertificateDao {
 	private SqlQueryBuilder sqlBuilder;
 	private TagDao tagDao;
 
-	private static final String sqlFindCertificateById = "SELECT * FROM GiftService.GiftCertificate WHERE Id = (?)";
+	private static final String sqlFindCertificatesWithTagsById = "SELECT GiftCertificate.Id, "
+			+ "GiftCertificate.Name, Description, Price, CreateDate, LastUpdateDate, Duration, "
+			+ "Tag.Id, Tag.Name FROM GiftService.GiftCertificate JOIN GiftService.`Tag-Certificate` "
+			+ "ON GiftCertificate.Id = `Tag-Certificate`.IdCertificate JOIN GiftService.Tag "
+			+ "ON Tag.Id = `Tag-Certificate`.IdTag WHERE GiftCertificate.Id = (?)";
 	private static final String sqlAddCertificate = "INSERT INTO GiftService.GiftCertificate (Name, Description, "
 			+ "Price, CreateDate, LastUpdateDate, Duration) VALUES (?,?,?,?,?,?);";
 	private static final String sqlInsertIntoM2M = "INSERT INTO GiftService.`Tag-Certificate` VALUES (?,?);";
@@ -92,29 +94,25 @@ public class CertificateDaoSql implements CertificateDao {
 
 	@Transactional
 	@Override
-	public GiftCertificate updateCertificate(GiftCertificate certificate) {
+	public int updateCertificate(long certificateId, GiftCertificate certificate) {
 		int affectedRows = jdbcTemplate.update(sqlUpdateCertificate, certificate.getName(),
 				certificate.getDescription(), certificate.getPrice(), certificate.getLastUpdateDate(),
-				certificate.getDuration(), certificate.getId());
+				certificate.getDuration(), certificateId);
 		if (certificate.getTags() != null && !certificate.getTags().isEmpty()) {
-			jdbcTemplate.update(sqlDeleteFromM2M, certificate.getId());
+			jdbcTemplate.update(sqlDeleteFromM2M, certificateId);
 			updateTagsBoundedWithCertificate(certificate);
 			for (Tag tag : certificate.getTags()) {
-				jdbcTemplate.update(sqlInsertIntoM2M, tag.getId(), certificate.getId());
+				jdbcTemplate.update(sqlInsertIntoM2M, tag.getId(), certificateId);
 			}
 		}
-		if (affectedRows == 0) {
-			return null;
-		}
-		return certificate;
+		return affectedRows;
 	}
 
 	@Override
 	public List<GiftCertificate> findCertificates(List<FilterParam> filterParams, List<OrderParam> orderParams) {
 		String sqlQuery = sqlBuilder.buildCertificatesQuery(filterParams, orderParams);
 		try {
-			List<GiftCertificate> certificates = jdbcTemplate.query(sqlQuery, new CertificateWithTagsMapper());
-			certificates = DuplicateResultsRemover.removeDuplicateResults(certificates);
+			List<GiftCertificate> certificates = jdbcTemplate.query(sqlQuery, new CertificateResultSetExtractor());
 			return certificates;
 		} catch (DataAccessException e) {
 			// nothing was found by the request;
@@ -125,8 +123,13 @@ public class CertificateDaoSql implements CertificateDao {
 	@Override
 	public GiftCertificate findCertificate(long id) {
 		try {
-			return jdbcTemplate.queryForObject(sqlFindCertificateById, new Object[] { id },
-					new CertificateMapper());
+			List<GiftCertificate> certificates = jdbcTemplate.query(sqlFindCertificatesWithTagsById,
+					new Object[] { id }, new CertificateResultSetExtractor());
+			GiftCertificate certificate = null;
+			if (certificates!= null && !certificates.isEmpty()) {
+				certificate = certificates.get(0);
+			}	
+			return certificate;
 		} catch (DataAccessException e) {
 			return null;
 		}

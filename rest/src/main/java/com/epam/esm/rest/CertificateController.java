@@ -100,7 +100,7 @@ public class CertificateController {
 			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.CERTIFICATE_NOT_UPDATED_KEY),
 					new Object[] { certificateId }, Locale.getDefault()));
 		}
-		GiftCertificateGetDTO certificateDTO = certificateService.updateCertificate(certificate);
+		GiftCertificateGetDTO certificateDTO = certificateService.updateCertificate(certificateId, certificate);
 		return certificateDTO;
 	}
 
@@ -133,7 +133,7 @@ public class CertificateController {
 	public @ResponseBody List<GiftCertificateGetDTO> getCertificates(@RequestParam(required = false) String tag,
 			@RequestParam(required = false) String name, @RequestParam(required = false) String description,
 			@RequestParam(required = false, defaultValue = "date") String order,
-			@RequestParam(required = false, defaultValue = "desc") String direction) throws ServiceValidationException {
+			@RequestParam(required = false, defaultValue = "desc") String direction) {
 		List<FilterParam> filterParams = new ArrayList<>();
 		List<OrderParam> orderParams = new ArrayList<>();
 		if (tag != null && !tag.isEmpty()) {

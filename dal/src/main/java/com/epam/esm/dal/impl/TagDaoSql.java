@@ -58,8 +58,8 @@ public class TagDaoSql implements TagDao {
 	}
 
 	@Override
-	public int updateTag(Tag tag) {
-		int affectedRows = jdbcTemplate.update(sqlUpdateTag, tag.getName(), tag.getId());
+	public int updateTag(long tagId, Tag tag) {
+		int affectedRows = jdbcTemplate.update(sqlUpdateTag, tag.getName(), tagId);
 		return affectedRows;
 	}
 

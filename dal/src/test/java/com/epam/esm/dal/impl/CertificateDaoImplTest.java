@@ -26,7 +26,6 @@ class CertificateDaoImplTest {
 
 	@BeforeEach
 	void setUp() {
-
 		db = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2)
 				.setName("testDB;DATABASE_TO_UPPER=false;IGNORECASE=TRUE;CASE_INSENSITIVE_IDENTIFIERS=TRUE;MODE=MySQL")
 				.addScript("create-db.sql").addScript("insert-data.sql").build();
@@ -34,7 +33,6 @@ class CertificateDaoImplTest {
 
 	@AfterEach
 	void tearDown() {
-
 		db.shutdown();
 	}
 
@@ -44,15 +42,12 @@ class CertificateDaoImplTest {
 	 */
 	@Test
 	void testAddCertificate() {
-
 		CertificateDaoSql certificateDao = getCertificateDao();
-
 		GiftCertificate savedCertificate = certificateDao.addCertificate(getCertificate());
 
 		assertNotNull(savedCertificate);
 		assertEquals(4, savedCertificate.getId());
 		assertEquals("Master-class from chocolatier", savedCertificate.getName());
-
 	}
 
 	/**
@@ -61,19 +56,16 @@ class CertificateDaoImplTest {
 	 */
 	@Test
 	void testUpdateCertificate() {
-
 		CertificateDaoSql certificateDao = getCertificateDao();
 		GiftCertificate certificate = getCertificate();
-		certificate.setId(1);
-		certificateDao.updateCertificate(certificate);
-		GiftCertificate updatedCertificateActual = certificateDao.findCertificate(1);
+		int affectedRows = certificateDao.updateCertificate(1, certificate);
+		GiftCertificate certificateActual = certificateDao.findCertificate(1);
 
-		assertNotNull(updatedCertificateActual);
-		assertEquals(1, updatedCertificateActual.getId());
-		assertEquals("Master-class from chocolatier", updatedCertificateActual.getName());
-
+		assertNotNull(certificateActual);
+		assertTrue(affectedRows == 1);
+		assertEquals(1, certificateActual.getId());
+		assertEquals("Master-class from chocolatier", certificateActual.getName());
 	}
-
 
 	/**
 	 * Test method for
@@ -86,24 +78,20 @@ class CertificateDaoImplTest {
 	 */
 	@Test
 	void testFindCertificate_PositiveResult() {
-
 		CertificateDaoSql certificateDao = getCertificateDao();
 		GiftCertificate certificateActual = certificateDao.findCertificate(1);
 
 		assertNotNull(certificateActual);
 		assertEquals(1, certificateActual.getId());
 		assertEquals("Skydiving", certificateActual.getName());
-
 	}
 
 	@Test
 	void testFindCertificate_NegativaResult_notFound() {
-
 		CertificateDaoSql certificateDao = getCertificateDao();
 		GiftCertificate certificate = certificateDao.findCertificate(9999);
 
 		assertNull(certificate);
-
 	}
 
 	/**
@@ -112,29 +100,23 @@ class CertificateDaoImplTest {
 	 */
 	@Test
 	void testDeleteCertificate_PositiveResult_DeletedSuccessfully() {
-
 		CertificateDaoSql certificateDao = getCertificateDao();
 		certificateDao.deleteCertificate(1);
-
 		GiftCertificate certificate = certificateDao.findCertificate(1);
 
 		assertNull(certificate);
-
 	}
 
 	@Test
 	void testDeleteCertificate_NegativeResult_CertificateAbsent() {
-
 		CertificateDaoSql certificateDao = getCertificateDao();
 		int[] affectedRowsActual = certificateDao.deleteCertificate(9999);
 		int[] expected = new int[] { 0, 0 };
 
 		assertArrayEquals(expected, affectedRowsActual);
-
 	}
 
 	private CertificateDaoSql getCertificateDao() {
-
 		JdbcTemplate template = new JdbcTemplate(db);
 		CertificateDaoSql certificateDao = new CertificateDaoSql(template);
 		certificateDao.setTagDao(getTagDao());
@@ -142,24 +124,20 @@ class CertificateDaoImplTest {
 	}
 
 	private TagDaoSql getTagDao() {
-
 		JdbcTemplate template = new JdbcTemplate(db);
 		TagDaoSql tagDao = new TagDaoSql(template);
 		return tagDao;
 	}
 
 	private GiftCertificate getCertificate() {
-
 		ZonedDateTime zoneEuropeMinsk = ZonedDateTime.now(ZoneId.of("Europe/Minsk"));
 		String formatPattern = "yyyy-MM-dd HH:mm:ss";
-
 		LocalDateTime stamp = zoneEuropeMinsk.toLocalDateTime();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatPattern);
 		zoneEuropeMinsk.format(formatter);
 
 		List<Tag> tags = new ArrayList<Tag>();
 		tags.add(new Tag(2, "#Romance"));
-
 		GiftCertificate certificate = new GiftCertificate();
 		certificate.setName("Master-class from chocolatier");
 		certificate.setDescription("Two hours master-class for couple");
@@ -168,7 +146,6 @@ class CertificateDaoImplTest {
 		certificate.setLastUpdateDate(stamp);
 		certificate.setDuration(90);
 		certificate.setTags(tags);
-
 		return certificate;
 	}
 

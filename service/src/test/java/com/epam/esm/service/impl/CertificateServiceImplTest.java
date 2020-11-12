@@ -56,7 +56,7 @@ class CertificateServiceImplTest {
 		filterParams.add(new FilterParam("tag", "Romance"));
 		orderParams.add(new OrderParam("date", "desc"));
 
-		Mockito.when(certificateDao.findCertificates(filterParams, orderParams)).thenReturn(certificates());
+		Mockito.when(certificateDao.findCertificates(filterParams, orderParams)).thenReturn(getCertificates());
 		List<GiftCertificateGetDTO> certificatesActual = certificateService.getCertificates(filterParams, orderParams);
 
 		assertTrue(certificatesActual.size() == 2);
@@ -71,7 +71,7 @@ class CertificateServiceImplTest {
 	@Test
 	void testGetCertificate_PositiveResult() {
 
-		GiftCertificate certificate = certificate();
+		GiftCertificate certificate = getCertificate();
 
 		Mockito.when(certificateDao.findCertificate(1)).thenReturn(certificate);
 		GiftCertificateGetDTO certificateActual = certificateService.getCertificate(1);
@@ -96,8 +96,8 @@ class CertificateServiceImplTest {
 	@Test
 	void testSaveCertificate() {
 
-		Mockito.when(certificateDao.addCertificate(Mockito.any())).thenReturn(certificateFull());
-		GiftCertificateGetDTO actual = certificateService.saveCertificate(certificateCreateUpdateDTO());
+		Mockito.when(certificateDao.addCertificate(Mockito.any())).thenReturn(getCertificateFull());
+		GiftCertificateGetDTO actual = certificateService.saveCertificate(getCertificateCreateUpdateDTO());
 
 		assertNotNull(actual);
 		assertEquals("Master-class from chocolatier", actual.getName());
@@ -110,8 +110,9 @@ class CertificateServiceImplTest {
 	@Test
 	void testUpdateCertificate_PositiveResult_Updated() {
 
-		Mockito.when(certificateDao.updateCertificate(Mockito.any())).thenReturn(certificateFull());
-		GiftCertificateGetDTO actual = certificateService.updateCertificate(certificateCreateUpdateDTO());
+		Mockito.when(certificateDao.updateCertificate(Mockito.anyLong(), Mockito.any())).thenReturn(1);
+		Mockito.when(certificateDao.findCertificate(Mockito.anyLong())).thenReturn(getCertificateFull());
+		GiftCertificateGetDTO actual = certificateService.updateCertificate(3, getCertificateCreateUpdateDTO());
 
 		assertNotNull(actual);
 		assertEquals("Master-class from chocolatier", actual.getName());
@@ -120,10 +121,11 @@ class CertificateServiceImplTest {
 	@Test
 	void testUpdateCertificate_NegativeResult_NotUpdated() {
 
-		Mockito.when(certificateDao.updateCertificate(Mockito.any())).thenReturn(null);
-		GiftCertificateGetDTO actual = certificateService.updateCertificate(certificateCreateUpdateDTO());
+		Mockito.when(certificateDao.updateCertificate(Mockito.anyLong(), Mockito.any())).thenReturn(0);
+		GiftCertificateGetDTO actual = certificateService.updateCertificate(999, getCertificateCreateUpdateDTO());
 
-		assertNull(actual);
+		assertNotNull(actual);
+		assertNull(actual.getName());
 	}
 
 	/**
@@ -139,7 +141,7 @@ class CertificateServiceImplTest {
 		assertArrayEquals(new int[] { 1, 1 }, affectedRows);
 	}
 
-	private GiftCertificate certificate() {
+	private GiftCertificate getCertificate() {
 
 		List<Tag> tags = new ArrayList<Tag>();
 		tags.add(new Tag(2, "#Romance"));
@@ -156,7 +158,7 @@ class CertificateServiceImplTest {
 		return certificate;
 	}
 
-	private List<GiftCertificate> certificates() {
+	private List<GiftCertificate> getCertificates() {
 
 		List<GiftCertificate> certificates = new ArrayList<GiftCertificate>();
 
@@ -173,14 +175,14 @@ class CertificateServiceImplTest {
 		certificate.setDuration(120);
 		certificate.setTags(tags);
 
-		certificates.add(certificate());
+		certificates.add(getCertificate());
 		certificates.add(certificate);
 
 		return certificates;
 	}
 
 
-	private GiftCertificateCreateUpdateDTO certificateCreateUpdateDTO() {
+	private GiftCertificateCreateUpdateDTO getCertificateCreateUpdateDTO() {
 
 		List<TagDTO> tags = new ArrayList<TagDTO>();
 		tags.add(new TagDTO(2, "#Romance"));
@@ -195,7 +197,7 @@ class CertificateServiceImplTest {
 		return certificate;
 	}
 
-	private GiftCertificate certificateFull() {
+	private GiftCertificate getCertificateFull() {
 
 		List<Tag> tags = new ArrayList<Tag>();
 		tags.add(new Tag(2, "#Romance"));
@@ -210,7 +212,7 @@ class CertificateServiceImplTest {
 		certificate.setDuration(90);
 		certificate.setTags(tags);
 
-		return certificate();
+		return getCertificate();
 	}
 
 }
