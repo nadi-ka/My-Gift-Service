@@ -22,6 +22,7 @@ import com.epam.esm.dto.TagDTO;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.service.CertificateService;
+import com.epam.esm.service.exception.ServiceValidationException;
 import com.epam.esm.service.util.DateTimeFormatterISO;
 import com.epam.esm.transferobj.FilterParam;
 import com.epam.esm.transferobj.OrderParam;
@@ -48,7 +49,7 @@ class CertificateServiceImplTest {
 	 * {@link com.epam.esm.service.impl.CertificateServiceImpl#getCertificates(java.util.List, java.util.List)}.
 	 */
 	@Test
-	void testGetCertificates() {
+	void testGetCertificates() throws ServiceValidationException {
 
 		List<FilterParam> filterParams = new ArrayList<FilterParam>();
 		List<OrderParam> orderParams = new ArrayList<OrderParam>();

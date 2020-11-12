@@ -10,8 +10,7 @@ public final class RequestOrderParamsChecker {
 	private static final String paramDirectionPattern = "^asc|desc$";
 	private static final String emptyString = "";
 	
-	public static List<OrderParam> checkAndCorrectOrderParams(List<OrderParam> orderParams) {
-		
+	public static List<OrderParam> checkAndCorrectOrderParams(List<OrderParam> orderParams) {	
 		for (OrderParam param: orderParams) {
 			if (!param.getName().matches(paramNamePattern)) {
 				param.setName(emptyString);
@@ -19,11 +18,7 @@ public final class RequestOrderParamsChecker {
 			if (!param.getDirection().matches(paramDirectionPattern)) {
 				param.setDirection(emptyString);
 			}
-		}
-		
-		return orderParams;
-		
+		}	
+		return orderParams;	
 	}
-
-
 }

@@ -6,6 +6,9 @@ import java.util.Locale;
 
 import javax.validation.Valid;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -27,6 +30,7 @@ import com.epam.esm.rest.exception.InvalidRequestParametersException;
 import com.epam.esm.rest.exception.NotFoundException;
 import com.epam.esm.rest.messagekey.MessageKeyHolder;
 import com.epam.esm.service.CertificateService;
+import com.epam.esm.service.exception.ServiceValidationException;
 import com.epam.esm.transferobj.FilterParam;
 import com.epam.esm.transferobj.OrderParam;
 import com.epam.esm.transferobj.ParameterConstant;
@@ -37,6 +41,7 @@ public class CertificateController {
 
 	private CertificateService certificateService;
 	private MessageSource messageSource;
+	private static final Logger log = LogManager.getLogger(CertificateController.class);
 
 	@Autowired
 	public CertificateController(CertificateService certificateService, MessageSource messageSource) {
@@ -128,7 +133,7 @@ public class CertificateController {
 	public @ResponseBody List<GiftCertificateGetDTO> getCertificates(@RequestParam(required = false) String tag,
 			@RequestParam(required = false) String name, @RequestParam(required = false) String description,
 			@RequestParam(required = false, defaultValue = "date") String order,
-			@RequestParam(required = false, defaultValue = "desc") String direction) {
+			@RequestParam(required = false, defaultValue = "desc") String direction) throws ServiceValidationException {
 		List<FilterParam> filterParams = new ArrayList<>();
 		List<OrderParam> orderParams = new ArrayList<>();
 		if (tag != null && !tag.isEmpty()) {
@@ -141,7 +146,15 @@ public class CertificateController {
 			filterParams.add(new FilterParam(ParameterConstant.DESCRIPTION, description));
 		}
 		orderParams.add(new OrderParam(order, direction));
-		List<GiftCertificateGetDTO> certificates = certificateService.getCertificates(filterParams, orderParams);
+		
+		List<GiftCertificateGetDTO> certificates;
+		try {
+		 certificates = certificateService.getCertificates(filterParams, orderParams);
+		}catch (ServiceValidationException e) {
+			log.log(Level.ERROR, "Filter param's value is not valid", e);
+			throw new ServiceValidationException(messageSource.getMessage(
+					(MessageKeyHolder.CERTIFICATE_INVALID_REQUEST_PARAM_KEY), null, Locale.getDefault()));
+		}
 		return certificates;
 	}
 

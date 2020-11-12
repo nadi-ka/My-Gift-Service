@@ -14,7 +14,9 @@ import com.epam.esm.dto.GiftCertificateCreateUpdateDTO;
 import com.epam.esm.dto.GiftCertificateGetDTO;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.service.CertificateService;
+import com.epam.esm.service.exception.ServiceValidationException;
 import com.epam.esm.service.util.DateTimeFormatterISO;
+import com.epam.esm.service.util.RequestFilterParamsValidator;
 import com.epam.esm.service.util.RequestOrderParamsChecker;
 import com.epam.esm.transferobj.FilterParam;
 import com.epam.esm.transferobj.OrderParam;
@@ -32,8 +34,13 @@ public class CertificateServiceImpl implements CertificateService {
 	}
 
 	@Override
-	public List<GiftCertificateGetDTO> getCertificates(List<FilterParam> filterParams, List<OrderParam> orderParams) {
+	public List<GiftCertificateGetDTO> getCertificates(List<FilterParam> filterParams, List<OrderParam> orderParams)
+			throws ServiceValidationException {
 		orderParams = RequestOrderParamsChecker.checkAndCorrectOrderParams(orderParams);
+		boolean isFilterParamsValid = RequestFilterParamsValidator.validateFilterParams(filterParams);
+		if (!isFilterParamsValid) {
+			throw new ServiceValidationException("Filter param's value is not valid");
+		}
 		List<GiftCertificate> certificates = certificateDao.findCertificates(filterParams, orderParams);
 		return certificates.stream().map(this::convertToDto).collect(Collectors.toList());
 	}

@@ -10,6 +10,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import com.epam.esm.rest.exception.InvalidRequestParametersException;
 import com.epam.esm.rest.exception.NotFoundException;
+import com.epam.esm.service.exception.ServiceValidationException;
 
 @ControllerAdvice
 public class RestExceptionHandler {
@@ -30,28 +31,35 @@ public class RestExceptionHandler {
 	}
 
 	@ExceptionHandler
-	public ResponseEntity<ErrorResponse> handleInvalidParamsException(MethodArgumentNotValidException exc) {
+	public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException exc) {
 		ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), exc.getMessage(),
 				System.currentTimeMillis());
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
 	
 	@ExceptionHandler
-	public ResponseEntity<ErrorResponse> handleInvalidParamsException(MethodArgumentTypeMismatchException exc) {
+	public ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException exc) {
 		ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), exc.getMessage(),
 				System.currentTimeMillis());
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
 	
 	@ExceptionHandler
-	public ResponseEntity<ErrorResponse> handleInvalidParamsException(HttpRequestMethodNotSupportedException exc) {
+	public ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException exc) {
 		ErrorResponse error = new ErrorResponse(HttpStatus.METHOD_NOT_ALLOWED.value(), exc.getMessage(),
 				System.currentTimeMillis());
 		return new ResponseEntity<>(error, HttpStatus.METHOD_NOT_ALLOWED);
 	}
 	
 	@ExceptionHandler
-	public ResponseEntity<ErrorResponse> handleInvalidParamsException(InvalidRequestParametersException exc) {
+	public ResponseEntity<ErrorResponse> handleInvalidRequestParametersException(InvalidRequestParametersException exc) {
+		ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), exc.getMessage(),
+				System.currentTimeMillis());
+		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<ErrorResponse> handleServiceValidationException(ServiceValidationException exc) {
 		ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), exc.getMessage(),
 				System.currentTimeMillis());
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
