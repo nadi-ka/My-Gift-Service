@@ -78,6 +78,7 @@ public class CertificateDaoSql implements CertificateDao {
 		long newSertificateId = keyHolder.getKey().longValue();
 		certificate.setId(newSertificateId);
 		updateTagsBoundedWithCertificate(certificate);
+
 		for (Tag tag : certificate.getTags()) {
 			jdbcTemplate.update(SQL_INSERT_INTO_M2M, tag.getId(), newSertificateId);
 		}
