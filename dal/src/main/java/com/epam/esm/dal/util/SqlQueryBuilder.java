@@ -14,7 +14,7 @@ public final class SqlQueryBuilder {
 	@Autowired
 	private ColumnNameRequestParamMapper columnMapper;
 
-	private static final String sqlFindCertificatesWithTags = "SELECT GiftCertificate.Id, "
+	private static final String SQL_FIND_CERTIFICATES_WITH_TAGS = "SELECT GiftCertificate.Id, "
 			+ "GiftCertificate.Name, Description, Price, CreateDate, LastUpdateDate, Duration, "
 			+ "Tag.Id, Tag.Name FROM GiftService.GiftCertificate JOIN GiftService.`Tag-Certificate` "
 			+ "ON GiftCertificate.Id = `Tag-Certificate`.IdCertificate JOIN GiftService.Tag "
@@ -33,7 +33,7 @@ public final class SqlQueryBuilder {
 
 	public String buildCertificatesQuery(List<FilterParam> filterParams, List<OrderParam> orderParams) {
 
-		String sqlQuery = sqlFindCertificatesWithTags;
+		String sqlQuery = SQL_FIND_CERTIFICATES_WITH_TAGS;
 
 		if (filterParams.size() > 0) {
 			

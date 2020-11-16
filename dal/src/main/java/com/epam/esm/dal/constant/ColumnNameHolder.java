@@ -2,6 +2,7 @@ package com.epam.esm.dal.constant;
 
 public final class ColumnNameHolder {
 	
+	private ColumnNameHolder() {}	
 
 	/**
 	 * Column names for the table 'tag'

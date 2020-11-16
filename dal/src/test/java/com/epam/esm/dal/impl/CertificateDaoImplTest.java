@@ -17,6 +17,8 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
+import com.epam.esm.dal.TagDao;
+import com.epam.esm.dal.util.SqlQueryBuilder;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Tag;
 
@@ -118,15 +120,10 @@ class CertificateDaoImplTest {
 
 	private CertificateDaoSql getCertificateDao() {
 		JdbcTemplate template = new JdbcTemplate(db);
-		CertificateDaoSql certificateDao = new CertificateDaoSql(template);
-		certificateDao.setTagDao(getTagDao());
+		SqlQueryBuilder builder = new SqlQueryBuilder();
+		TagDao tagDao = new TagDaoSql(template);
+		CertificateDaoSql certificateDao = new CertificateDaoSql(template, builder, tagDao);
 		return certificateDao;
-	}
-
-	private TagDaoSql getTagDao() {
-		JdbcTemplate template = new JdbcTemplate(db);
-		TagDaoSql tagDao = new TagDaoSql(template);
-		return tagDao;
 	}
 
 	private GiftCertificate getCertificate() {

@@ -25,14 +25,17 @@ import com.epam.esm.entity.Tag;
 public class TagDaoSql implements TagDao {
 
 	private final JdbcTemplate jdbcTemplate;
+	private RowMapper<Tag> ROW_MAPPER = (ResultSet resultSet, int rowNum) -> {
+		return new Tag(resultSet.getLong(ColumnNameHolder.TAG_ID), resultSet.getString(ColumnNameHolder.TAG_NAME));
+	};
 
-	private static final String sqlFindAllTags = "SELECT * FROM GiftService.Tag;";
-	private static final String sqlFindTagById = "SELECT * FROM GiftService.Tag WHERE Id = (?)";
-	private static final String sqlFindTagByName = "SELECT * FROM GiftService.Tag WHERE Name = (?);";
-	private static final String sqlAddTag = "INSERT INTO GiftService.Tag (Name) VALUES (?)";
-	private static final String sqlUpdateTag = "Update GiftService.Tag set Name = (?) where Id = (?);";
-	private static final String sqlDeleteTagById = "DELETE FROM  GiftService.Tag WHERE Id = (?);";
-	private static final String sqlFindCertificateIdByTagId = "SELECT IdCertificate FROM  "
+	private static final String SQL_FIND_TAGS = "SELECT * FROM GiftService.Tag;";
+	private static final String SQL_FIND_TAG_BY_ID = "SELECT * FROM GiftService.Tag WHERE Id = (?)";
+	private static final String SQL_FIND_TAG_BY_NAME = "SELECT * FROM GiftService.Tag WHERE Name = (?);";
+	private static final String SQL_ADD_TAG = "INSERT INTO GiftService.Tag (Name) VALUES (?)";
+	private static final String SQL_UPDATE_TAG = "Update GiftService.Tag set Name = (?) where Id = (?);";
+	private static final String SQL_DELETE_TAG_BY_ID = "DELETE FROM  GiftService.Tag WHERE Id = (?);";
+	private static final String SQL_FIND_CERTIFICATE_ID_BY_TAG_ID = "SELECT IdCertificate FROM  "
 			+ "GiftService.`Tag-Certificate` WHERE IdTag = (?) LIMIT 1;";
 
 	@Autowired
@@ -47,7 +50,7 @@ public class TagDaoSql implements TagDao {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 				String paramToReturn = "Id";
-				PreparedStatement preparedStatement = con.prepareStatement(sqlAddTag, new String[] { paramToReturn });
+				PreparedStatement preparedStatement = con.prepareStatement(SQL_ADD_TAG, new String[] { paramToReturn });
 				preparedStatement.setString(1, tag.getName());
 				return preparedStatement;
 			}
@@ -59,15 +62,13 @@ public class TagDaoSql implements TagDao {
 
 	@Override
 	public int updateTag(long tagId, Tag tag) {
-		int affectedRows = jdbcTemplate.update(sqlUpdateTag, tag.getName(), tagId);
-		return affectedRows;
+		return jdbcTemplate.update(SQL_UPDATE_TAG, tag.getName(), tagId);
 	}
 
 	@Override
 	public List<Tag> findAllTags() {
 		try {
-			List<Tag> tags = jdbcTemplate.query(sqlFindAllTags, ROW_MAPPER);
-			return tags;
+			return jdbcTemplate.query(SQL_FIND_TAGS, ROW_MAPPER);
 		} catch (DataAccessException e) {
 			// nothing was found by the request
 			return new ArrayList<Tag>();
@@ -77,7 +78,7 @@ public class TagDaoSql implements TagDao {
 	@Override
 	public Tag findTag(long id) {
 		try {
-			return jdbcTemplate.queryForObject(sqlFindTagById, new Object[] { id }, ROW_MAPPER);
+			return jdbcTemplate.queryForObject(SQL_FIND_TAG_BY_ID, new Object[] { id }, ROW_MAPPER);
 		} catch (DataAccessException e) {
 			return null;
 		}
@@ -86,15 +87,14 @@ public class TagDaoSql implements TagDao {
 	@Override
 	public int deleteTag(long id) {
 		int[] types = { Types.BIGINT };
-		int affectedRows = jdbcTemplate.update(sqlDeleteTagById, new Object[] { id }, types);
-		return affectedRows;
+		return jdbcTemplate.update(SQL_DELETE_TAG_BY_ID, new Object[] { id }, types);
 	}
 
 	@Override
 	public boolean certificatesExistForTag(long tagId) {
 		long certificateId;
 		try {
-			certificateId = (Long) jdbcTemplate.queryForObject(sqlFindCertificateIdByTagId, new Object[] { tagId },
+			certificateId = (Long) jdbcTemplate.queryForObject(SQL_FIND_CERTIFICATE_ID_BY_TAG_ID, new Object[] { tagId },
 					Long.class);
 		} catch (DataAccessException e) {
 			certificateId = 0;
@@ -106,15 +106,11 @@ public class TagDaoSql implements TagDao {
 	public Tag findTagByName(String name) {
 		Tag tag;
 		try {
-			tag = jdbcTemplate.queryForObject(sqlFindTagByName, new Object[] { name }, ROW_MAPPER);
+			tag = jdbcTemplate.queryForObject(SQL_FIND_TAG_BY_NAME, new Object[] { name }, ROW_MAPPER);
 		} catch (DataAccessException e) {
 			tag = null;
 		}
 		return tag;
 	}
-
-	RowMapper<Tag> ROW_MAPPER = (ResultSet resultSet, int rowNum) -> {
-		return new Tag(resultSet.getLong(ColumnNameHolder.TAG_ID), resultSet.getString(ColumnNameHolder.TAG_NAME));
-	};
 
 }

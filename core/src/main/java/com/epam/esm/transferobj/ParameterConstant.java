@@ -1,6 +1,8 @@
 package com.epam.esm.transferobj;
 
 public final class ParameterConstant {
+	
+	private ParameterConstant() {}
 
 	public static final String TAG = "tag";
 	public static final String CERTIFICATE_NAME = "name";

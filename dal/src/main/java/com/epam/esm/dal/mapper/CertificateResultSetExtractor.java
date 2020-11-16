@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +18,7 @@ import com.epam.esm.entity.Tag;
 
 public class CertificateResultSetExtractor implements ResultSetExtractor<List<GiftCertificate>> {
 
-	private Map<Long, GiftCertificate> certificateMap = new HashMap<Long, GiftCertificate>();
+	private Map<Long, GiftCertificate> certificateMap = new LinkedHashMap<Long, GiftCertificate>();
 
 	@Override
 	public List<GiftCertificate> extractData(ResultSet rs) throws SQLException, DataAccessException {
@@ -37,21 +37,17 @@ public class CertificateResultSetExtractor implements ResultSetExtractor<List<Gi
 				certificate.setLastUpdateDate(lastUpdateDateTime);
 				certificate.setDuration(rs.getInt(ColumnNameHolder.CERTIFICATE_DURATION));
 				certificate.setTags(new ArrayList<Tag>());
-				certificateMap.put(rs.getLong(ColumnNameHolder.CERTIFICATE_ID), certificate);
 			}
 			
 			Tag tag = new Tag();
 			tag.setId(rs.getLong(ColumnNameHolder.TAG_ID));
 			tag.setName(rs.getString(ColumnNameHolder.TAG_NAME));
-
-			List<Tag> currentCertificateTagList = certificateMap.get(rs.getLong(ColumnNameHolder.CERTIFICATE_ID))
-					.getTags();
-			currentCertificateTagList.add(tag);
-			certificate.setTags(currentCertificateTagList);
+			List<Tag> tags = certificate.getTags();
+			tags.add(tag);
+			certificate.setTags(tags);
+			certificateMap.put(rs.getLong(ColumnNameHolder.CERTIFICATE_ID), certificate);
 		}
-		List<GiftCertificate> resultList = new ArrayList<GiftCertificate>(certificateMap.values());
-
-		return resultList;
+		return new ArrayList<GiftCertificate>(certificateMap.values());
 	}
 
 }
