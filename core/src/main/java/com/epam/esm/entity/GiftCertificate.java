@@ -1,26 +1,59 @@
 package com.epam.esm.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+@Entity
+@Table(name = "GiftCertificate")
 public class GiftCertificate {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "Id")
 	private long id;
+
+	@Column(name = "Name")
 	private String name;
+
+	@Column(name = "Description")
 	private String description;
+
+	@Column(name = "Price")
 	private double price;
 
+	@Column(name = "CreateDate")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Minsk")
 	private LocalDateTime creationDate;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC")
+	@Column(name = "LastUpdateDate")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Minsk")
 	private LocalDateTime lastUpdateDate;
 
+	@Column(name = "Duration")
 	private int duration;
 
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH }, 
+			fetch = FetchType.LAZY)
+	@JoinTable(name = "`Tag-Certificate`", joinColumns = @JoinColumn(name = "IdCertificate"), inverseJoinColumns = @JoinColumn(name = "IdTag"))
 	private List<Tag> tags;
+
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "certificates")
+	private List<Purchase> purchases;
 
 	public GiftCertificate() {
 	}
@@ -106,6 +139,22 @@ public class GiftCertificate {
 		this.tags = tags;
 	}
 
+	public List<Purchase> getPurchases() {
+		return purchases;
+	}
+
+	public void setPurchases(List<Purchase> purchases) {
+		this.purchases = purchases;
+	}
+
+	public void addTag(Tag tag) {
+
+		if (tags == null) {
+			tags = new ArrayList<Tag>();
+		}
+		tags.add(tag);
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -116,6 +165,7 @@ public class GiftCertificate {
 		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((lastUpdateDate == null) ? 0 : lastUpdateDate.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((purchases == null) ? 0 : purchases.hashCode());
 		long temp;
 		temp = Double.doubleToLongBits(price);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
@@ -155,6 +205,11 @@ public class GiftCertificate {
 			if (other.name != null)
 				return false;
 		} else if (!name.equals(other.name))
+			return false;
+		if (purchases == null) {
+			if (other.purchases != null)
+				return false;
+		} else if (!purchases.equals(other.purchases))
 			return false;
 		if (Double.doubleToLongBits(price) != Double.doubleToLongBits(other.price))
 			return false;

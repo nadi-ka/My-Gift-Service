@@ -32,7 +32,7 @@ public class GiftCertificateGetDTO extends GiftCertificateCreateUpdateDTO {
 	public String toString() {
 		return "GiftCertificateGetDTO [creationDate=" + creationDate + ", lastUpdateDate=" + lastUpdateDate
 				+ ", getId()=" + getId() + ", getName()=" + getName() + ", getDescription()=" + getDescription()
-				+ ", getPrice()=" + getPrice() + ", getDuration()=" + getDuration() + "]";
+				+ ", getPrice()=" + getPrice() + ", getDuration()=" + getDuration() + ", getTags()=" + getTags() + "]";
 	}
 
 }

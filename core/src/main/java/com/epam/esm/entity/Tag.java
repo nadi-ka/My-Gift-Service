@@ -2,11 +2,29 @@ package com.epam.esm.entity;
 
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "Tag")
 public class Tag {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "Id")
 	private long id;
+	
+	@Column(name = "Name")
 	private String name;
-
+	
+	@ManyToMany(fetch = FetchType.LAZY, 
+			mappedBy = "tags")
 	private List<GiftCertificate> certificates;
 
 	public Tag() {
@@ -50,9 +68,9 @@ public class Tag {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((certificates == null) ? 0 : certificates.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((certificates == null) ? 0 : certificates.hashCode());
 		return result;
 	}
 
@@ -65,17 +83,17 @@ public class Tag {
 		if (getClass() != obj.getClass())
 			return false;
 		Tag other = (Tag) obj;
+		if (certificates == null) {
+			if (other.certificates != null)
+				return false;
+		} else if (!certificates.equals(other.certificates))
+			return false;
 		if (id != other.id)
 			return false;
 		if (name == null) {
 			if (other.name != null)
 				return false;
 		} else if (!name.equals(other.name))
-			return false;
-		if (certificates == null) {
-			if (other.certificates != null)
-				return false;
-		} else if (!certificates.equals(other.certificates))
 			return false;
 		return true;
 	}
