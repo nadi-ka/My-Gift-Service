@@ -1,125 +1,90 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-
-  <groupId>com.epam.esm</groupId>
-  <artifactId>gift-service</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <packaging>pom</packaging>
-
-  <name>gift-service</name>
-  
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
-  </properties>
-
-  <dependencies>
-    
-    <!-- junit.jupiter -->
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <version>5.4.0</version>
-      <scope>test</scope>
-    </dependency>
-    
-    <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <version>3.1.0</version>
-      <scope>provided</scope>
-    </dependency>
-    
-    <!-- log4j -->
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>2.13.1</version>
-      <type>pom</type>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-api</artifactId>
-      <version>2.13.1</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-core</artifactId>
-      <version>2.13.1</version>
-    </dependency>
-    
-    <!-- Spring Framework -->
-    
-    <!-- https://mvnrepository.com/artifact/org.springframework/spring-core -->
-	<dependency>
-    	<groupId>org.springframework</groupId>
-    	<artifactId>spring-core</artifactId>
-    	<version>5.2.9.RELEASE</version>
-	</dependency>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 	
-	<!-- https://mvnrepository.com/artifact/org.springframework/spring-webmvc -->
-	<dependency>
-    	<groupId>org.springframework</groupId>
-    	<artifactId>spring-webmvc</artifactId>
-    	<version>5.2.9.RELEASE</version>
-	</dependency>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.2.11.RELEASE</version>
+		<relativePath/>
+	</parent>
 	
-	<!-- https://mvnrepository.com/artifact/org.springframework/spring-jdbc -->
-	<dependency>
-    	<groupId>org.springframework</groupId>
-    	<artifactId>spring-jdbc</artifactId>
-    	<version>5.2.9.RELEASE</version>
-	</dependency>
-	
-	<!-- https://mvnrepository.com/artifact/org.springframework/spring-test -->
-	<dependency>
-    	<groupId>org.springframework</groupId>
-    	<artifactId>spring-test</artifactId>
-    	<version>5.2.10.RELEASE</version>
-    	<scope>test</scope>
-	</dependency>
-  </dependencies>
-  
-  <build>
+	<groupId>com.epam.esm</groupId>
+	<artifactId>gift-service</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>gift-service</name>
+	<description>Demo project for Spring Boot</description>
+	<packaging>pom</packaging>
 
-    <finalName>mjc-gift-service</finalName>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java.version>1.8</java.version>
+	</properties>
+
+	<dependencies>
+	
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-hateoas</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.junit.vintage</groupId>
+					<artifactId>junit-vintage-engine</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
+    	<dependency>
+      		<groupId>javax.servlet</groupId>
+      		<artifactId>javax.servlet-api</artifactId>
+      		<version>3.1.0</version>
+      		<scope>provided</scope>
+    	</dependency>
     
-    <pluginManagement>
+    	<!-- log4j -->
+    	<dependency>
+      		<groupId>org.apache.logging.log4j</groupId>
+      		<artifactId>log4j</artifactId>
+      		<version>2.13.1</version>
+      		<type>pom</type>
+    	</dependency>
 
-      <plugins>
-
-        <!-- Builds a Web Application Archive (WAR) file from the project output 
-				and its dependencies. -->
+    	<dependency>
+      		<groupId>org.apache.logging.log4j</groupId>
+      		<artifactId>log4j-api</artifactId>
+      		<version>2.13.1</version>
+    	</dependency>
+    	
+	</dependencies>
+	
+	<build>
+		<plugins>
 			<plugin>
-				<!-- Add Maven coordinates (GAV) for: maven-war-plugin -->
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>3.2.0</version>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-
-        	<plugin>
-          		<groupId>org.apache.tomcat.maven</groupId>
-          		<artifactId>tomcat7-maven-plugin</artifactId>
-          		<version>2.2</version>
-          		<configuration>
-            		<uriEncoding>UTF-8</uriEncoding>
-            		<url>http://localhost:8080/manager/text</url>
-            		<server>tomcat-server</server>
-          		</configuration>
-        	</plugin>
-
-      </plugins>
-      
-    </pluginManagement>
-
-  </build>
-  
-  <modules>
+		</plugins>
+	</build>
+	
+	<modules>
   
     <module>dal</module>
     <module>service</module>
@@ -127,4 +92,5 @@
     <module>core</module>
     
   </modules>
+
 </project>
