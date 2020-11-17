@@ -24,45 +24,38 @@ public class PurchaseDaoImpl implements PurchaseDao {
 	private static final String parameterUserId = "userId";
 	private static final String parameterPurchaseId = "purchaseId";
 	
-	@Autowired
 	private SessionFactory sessionFactory;
+	
+	@Autowired
+	public PurchaseDaoImpl(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
 
 	@Override
 	@Transactional
 	public List<Purchase> findPurchsesByUserId(long userId) {
-		
 		Session session = sessionFactory.getCurrentSession();
-		
 		Query<Purchase> query = session.createQuery(hqlGetPurchasesByUserId, Purchase.class);
 		query.setParameter(parameterUserId, userId);
-		
 		List<Purchase> purchases = query.getResultList();
-		
 		return purchases;
 	}
 	
 	@Override
 	@Transactional
 	public Purchase findPurchseById(long purchaseId) {
-		
 		Session session = sessionFactory.getCurrentSession();
-		
 		Query<Purchase> query = session.createQuery(hqlGetPurchaseById, Purchase.class);
 		query.setParameter(parameterPurchaseId, purchaseId);
-		
 		Purchase purchase = query.getSingleResult();
-		
 		return purchase;
 	}
 
 	@Override
 	@Transactional
 	public long addPurchase(Purchase purchase) {
-		
 		Session session = sessionFactory.getCurrentSession();
-		
 		long purchaseId = (Long) session.save(purchase);
-		
 		return purchaseId;
 	}
 

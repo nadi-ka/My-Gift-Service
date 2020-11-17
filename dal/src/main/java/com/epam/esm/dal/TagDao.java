@@ -8,7 +8,7 @@ public interface TagDao {
 
 	Tag addTag(Tag tag);
 
-	int updateTag(long id, Tag tag);
+	Tag updateTag(long id, Tag tag);
 
 	List<Tag> findAllTags();
 

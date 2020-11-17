@@ -3,6 +3,8 @@ package com.epam.esm.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,8 @@ public class TagServiceImpl implements TagService {
 
 	private TagDao tagDao;
 	private ModelMapper modelMapper;
+	
+	private static Logger logger = LogManager.getLogger(TagServiceImpl.class);
 
 	@Autowired
 	public TagServiceImpl(TagDao tagDao, ModelMapper modelMapper) {
@@ -49,11 +53,9 @@ public class TagServiceImpl implements TagService {
 
 	@Override
 	public TagDTO updateTag(long tagId, TagDTO tag) {
-		int affectedRows = tagDao.updateTag(tagId, convertToEntity(tag));
-		if (affectedRows == 0) {
-			return new TagDTO();
-		}
-		return convertToDto(tagDao.findTag(tagId));
+		Tag updatedTag = tagDao.updateTag(tagId, convertToEntity(tag));
+		logger.info("******************&&&&&&: " + updatedTag);
+		return convertToDto(updatedTag);
 	}
 
 	@Override

@@ -9,9 +9,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
@@ -25,6 +27,8 @@ import com.epam.esm.entity.Tag;
 class CertificateDaoImplTest {
 
 	private EmbeddedDatabase db;
+	@Autowired
+	private SessionFactory sessionFactory;
 
 	@BeforeEach
 	void setUp() {
@@ -121,7 +125,7 @@ class CertificateDaoImplTest {
 	private CertificateDaoSql getCertificateDao() {
 		JdbcTemplate template = new JdbcTemplate(db);
 		SqlQueryBuilder builder = new SqlQueryBuilder();
-		TagDao tagDao = new TagDaoSql(template);
+		TagDao tagDao = new TagDaoSql(sessionFactory);
 		CertificateDaoSql certificateDao = new CertificateDaoSql(template, builder, tagDao);
 		return certificateDao;
 	}

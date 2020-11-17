@@ -93,6 +93,7 @@ public class TagController {
 	 */
 	@PutMapping("{tagId}")
 	public TagDTO updateTag(@PathVariable long tagId, @Valid @RequestBody TagDTO tag) {
+		log.info("FROM CONTROLLER%%%%%%%%%%%%%%%%%%%!!!!!!!");
 		TagDTO tagDTO = tagService.getTag(tagId);
 		if (tagDTO == null) {
 			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.TAG_NOT_UPDATED_KEY),

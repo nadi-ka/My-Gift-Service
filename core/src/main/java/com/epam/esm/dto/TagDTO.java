@@ -1,7 +1,6 @@
 package com.epam.esm.dto;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class TagDTO {
@@ -10,7 +9,6 @@ public class TagDTO {
 	
 	@NotBlank
 	@Size(max = 45, message = "must be less or equal to 45")
-	@Pattern(regexp = "^[a-zA-Z0-9#-]+$")
 	private String name;
 
 	public TagDTO() {
