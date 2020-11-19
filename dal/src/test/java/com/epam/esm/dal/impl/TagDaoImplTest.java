@@ -19,6 +19,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import com.epam.esm.dal.TagDao;
 import com.epam.esm.dal.config.DalSpringConfig;
@@ -29,9 +30,11 @@ import com.epam.esm.entity.Tag;
 @SpringJUnitConfig(DalSpringConfig.class)
 @EnableAutoConfiguration
 class TagDaoImplTest {
+	
+	private SessionFactory sessionFactory;
 
-//	@Autowired
-//	private TagDao tagDao;
+	@Autowired
+	private TagDao tagDao = new TagDaoSql(sessionFactory);
 //	private EmbeddedDatabase db;
 //	
 //	@BeforeAll
@@ -105,18 +108,18 @@ class TagDaoImplTest {
 //////	}
 ////		
 ////
-////	/**
-////	 * Test method for {@link com.epam.esm.dal.impl.TagDaoSql#findAllTags()}.
-////	 */
-////	@Test
-////	void testFindAllTags() {
-////
-////		TagDaoSql tagDao = getTagDao();
-////		List<Tag> actualTags = tagDao.findAllTags();
-////
-////		assertNotNull(actualTags);
-////		assertEquals(2, actualTags.size());
-////	}
+	/**
+	 * Test method for {@link com.epam.esm.dal.impl.TagDaoSql#findAllTags()}.
+	 */
+	@Test
+	void testFindAllTags() {
+
+//		TagDaoSql tagDao = getTagDao();
+		List<Tag> actualTags = tagDao.findAllTags();
+
+		assertNotNull(actualTags);
+//		assertEquals(2, actualTags.size());
+	}
 ////
 ////	/**
 ////	 * Test method for {@link com.epam.esm.dal.impl.TagDaoSql#findTag(long)}.
