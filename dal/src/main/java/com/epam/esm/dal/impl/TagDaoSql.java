@@ -26,8 +26,8 @@ public class TagDaoSql implements TagDao {
 	private static final String FIND_TAGS = "FROM Tag";
 	private static final String FIND_CERTIFICATE_ID_BY_TAG_ID = "SELECT c "
 			+ "FROM GiftCertificate c JOIN c.tags t WHERE t.id  = :tagId";
-	private static final String FIND_TAG_BY_NAME = "FROM Tag WHERE Name = :tagName;";
-	private static final String DELETE_TAG_BY_ID = "DELETE FROM Tag WHERE Id = :tagId";
+	private static final String FIND_TAG_BY_NAME = "FROM Tag WHERE name = :tagName";
+	private static final String DELETE_TAG_BY_ID = "DELETE FROM Tag WHERE id = :tagId";
 	private static final String PARAM_TAG_ID = "tagId";
 	private static final String PARAM_TAG_NAME = "tagName";
 

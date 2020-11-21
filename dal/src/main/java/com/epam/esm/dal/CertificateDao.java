@@ -10,12 +10,12 @@ public interface CertificateDao {
 
 	GiftCertificate addCertificate(GiftCertificate certificate);
 
-	int updateCertificate(long certificateId, GiftCertificate certificate);
+	GiftCertificate updateCertificate(long certificateId, GiftCertificate certificate);
 
 	List<GiftCertificate> findCertificates(List<FilterParam> filterParams, List<OrderParam> orderParams);
 
 	GiftCertificate findCertificate(long id);
 
-	int[] deleteCertificate(long id);
+	int deleteCertificate(long id);
 
 }

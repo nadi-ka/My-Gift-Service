@@ -1,10 +1,10 @@
-package com.epam.esm.service.util;
+package com.epam.esm.service.validator;
 
 import java.util.List;
 
 import com.epam.esm.transferobj.FilterParam;
 
-public final class RequestFilterParamsValidator {
+public class RequestFilterParamsValidator {
 	
 	private static final String paramValuePattern = "'(''|[^'])*'";
 	

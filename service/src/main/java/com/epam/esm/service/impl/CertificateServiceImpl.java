@@ -10,14 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.epam.esm.dal.CertificateDao;
-import com.epam.esm.dto.GiftCertificateCreateUpdateDTO;
+import com.epam.esm.dto.GiftCertificateCreateDTO;
 import com.epam.esm.dto.GiftCertificateGetDTO;
+import com.epam.esm.dto.GiftCertificateUpdateDTO;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.service.CertificateService;
 import com.epam.esm.service.exception.ServiceValidationException;
 import com.epam.esm.service.util.DateTimeFormatterISO;
-import com.epam.esm.service.util.RequestFilterParamsValidator;
 import com.epam.esm.service.util.RequestOrderParamsChecker;
+import com.epam.esm.service.validator.RequestFilterParamsValidator;
+import com.epam.esm.service.validator.RequestOrderParamsValidator;
 import com.epam.esm.transferobj.FilterParam;
 import com.epam.esm.transferobj.OrderParam;
 
@@ -36,10 +38,11 @@ public class CertificateServiceImpl implements CertificateService {
 	@Override
 	public List<GiftCertificateGetDTO> getCertificates(List<FilterParam> filterParams, List<OrderParam> orderParams)
 			throws ServiceValidationException {
-		orderParams = RequestOrderParamsChecker.checkAndCorrectOrderParams(orderParams);
+//		orderParams = RequestOrderParamsChecker.checkAndCorrectOrderParams(orderParams);
 		boolean isFilterParamsValid = RequestFilterParamsValidator.validateFilterParams(filterParams);
-		if (!isFilterParamsValid) {
-			throw new ServiceValidationException("Filter param's value is not valid");
+		boolean isOrderParamsValid = RequestOrderParamsValidator.validateOrderParams(orderParams);
+		if (!isFilterParamsValid || !isOrderParamsValid) {
+			throw new ServiceValidationException("Request param's value is not valid");
 		}
 		List<GiftCertificate> certificates = certificateDao.findCertificates(filterParams, orderParams);
 		return certificates.stream().map(this::convertToDto).collect(Collectors.toList());
@@ -55,7 +58,7 @@ public class CertificateServiceImpl implements CertificateService {
 	}
 
 	@Override
-	public GiftCertificateGetDTO saveCertificate(GiftCertificateCreateUpdateDTO certificate) {
+	public GiftCertificateGetDTO saveCertificate(GiftCertificateCreateDTO certificate) {
 		GiftCertificate certificateToAdd = convertToEntity(certificate);
 		LocalDateTime creationTime = DateTimeFormatterISO.createAndformatDateTime();
 		certificateToAdd.setCreationDate(creationTime);
@@ -65,19 +68,19 @@ public class CertificateServiceImpl implements CertificateService {
 	}
 
 	@Override
-	public GiftCertificateGetDTO updateCertificate(long certificateId, GiftCertificateCreateUpdateDTO certificate) {
+	public GiftCertificateGetDTO updateCertificate(long certificateId, GiftCertificateUpdateDTO certificate) {
 		GiftCertificate certificateToUpdate = convertToEntity(certificate);
 		certificateToUpdate.setLastUpdateDate(DateTimeFormatterISO.createAndformatDateTime());
-		int affectedRows = certificateDao.updateCertificate(certificateId, certificateToUpdate);
-		if (affectedRows == 0) {
+		GiftCertificate updatedCertificate = certificateDao.updateCertificate(certificateId, certificateToUpdate);
+		if (updatedCertificate == null) {
 			return new GiftCertificateGetDTO();
 		}
-		return convertToDto(certificateDao.findCertificate(certificateId));
+		return convertToDto(updatedCertificate);
 	}
 
 	@Override
-	public int[] deleteCertificate(long id) {
-		int[] affectedRows = certificateDao.deleteCertificate(id);
+	public int deleteCertificate(long id) {
+		int affectedRows = certificateDao.deleteCertificate(id);
 		return affectedRows;
 	}
 
@@ -89,8 +92,13 @@ public class CertificateServiceImpl implements CertificateService {
 		return certificateDTO;
 	}
 
-	private GiftCertificate convertToEntity(GiftCertificateCreateUpdateDTO giftDTO) {
-		GiftCertificate certificate = modelMapper.map(giftDTO, GiftCertificate.class);
+	private GiftCertificate convertToEntity(GiftCertificateCreateDTO certificateDTO) {
+		GiftCertificate certificate = modelMapper.map(certificateDTO, GiftCertificate.class);
+		return certificate;
+	}
+	
+	private GiftCertificate convertToEntity(GiftCertificateUpdateDTO certificateDTO) {
+		GiftCertificate certificate = modelMapper.map(certificateDTO, GiftCertificate.class);
 		return certificate;
 	}
 

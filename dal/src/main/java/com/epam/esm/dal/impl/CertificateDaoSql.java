@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.criteria.CriteriaQuery;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +54,9 @@ public class CertificateDaoSql implements CertificateDao {
 			+ "Description = (?), Price = (?), LastUpdateDate = (?), Duration = (?) where Id = (?);";
 	private static final String SQL_DELETE_CERTIFICATE_BY_ID = "DELETE FROM GiftService.GiftCertificate WHERE Id = (?);";
 	private static final String SQL_DELETE_FROM_M2M = "DELETE FROM GiftService.`Tag-Certificate` WHERE IdCertificate = (?);";
+	
+	private static final String DELETE_CERTIFICATE_BY_ID = "DELETE FROM GiftCertificate WHERE id = :certificateId";
+	private static final String PARAM_CERTIFICATE_ID = "certificateId";
 
 	@Autowired
 	public CertificateDaoSql(SessionFactory sessionFactory, SqlQueryBuilder builder, TagDao tagDao) {
@@ -62,67 +67,32 @@ public class CertificateDaoSql implements CertificateDao {
 
 	@Override
 	public GiftCertificate addCertificate(GiftCertificate certificate) {
-//		LocalDateTime lastUpdateDate = certificate.getLastUpdateDate();
-//		Timestamp lastUpdateTimestamp = ((lastUpdateDate == null) ? null : Timestamp.valueOf(lastUpdateDate));
-//		KeyHolder keyHolder = new GeneratedKeyHolder();
-//		jdbcTemplate.update(new PreparedStatementCreator() {
-//			@Override
-//			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-//				String paramToReturn = "Id";
-//				PreparedStatement preparedStatement = con.prepareStatement(SQL_ADD_CERTIFICATE,
-//						new String[] { paramToReturn });
-//				preparedStatement.setString(1, certificate.getName());
-//				preparedStatement.setString(2, certificate.getDescription());
-//				preparedStatement.setDouble(3, certificate.getPrice());
-//				preparedStatement.setTimestamp(4, Timestamp.valueOf(certificate.getCreationDate()));
-//				preparedStatement.setTimestamp(5, lastUpdateTimestamp);
-//				preparedStatement.setLong(6, certificate.getDuration());
-//				return preparedStatement;
-//			}
-//		}, keyHolder);
-//		long newSertificateId = keyHolder.getKey().longValue();
-//		certificate.setId(newSertificateId);
-//		updateTagsBoundedWithCertificate(certificate);
-//
-//		for (Tag tag : certificate.getTags()) {
-//			jdbcTemplate.update(SQL_INSERT_INTO_M2M, tag.getId(), newSertificateId);
-//		}
-//		return certificate;
-		
 		Session session = sessionFactory.getCurrentSession();
-		long id = (Long) session.save(certificate);
-		certificate.setId(id);
 		updateTagsBoundedWithCertificate(certificate);
-		for (Tag tag : certificate.getTags()) {
-			session.saveOrUpdate(tag);
-		}
+		long id = (Long) session.save(certificate);
 		return session.get(GiftCertificate.class, id);
 	}
 
 	@Override
-	public int updateCertificate(long certificateId, GiftCertificate certificate) {
-		int affectedRows = jdbcTemplate.update(SQL_UPDATE_CERTIFICATE, certificate.getName(),
-				certificate.getDescription(), certificate.getPrice(), certificate.getLastUpdateDate(),
-				certificate.getDuration(), certificateId);
+	public GiftCertificate updateCertificate(long certificateId, GiftCertificate certificate) {
 		if (certificate.getTags() != null && !certificate.getTags().isEmpty()) {
-			jdbcTemplate.update(SQL_DELETE_FROM_M2M, certificateId);
 			updateTagsBoundedWithCertificate(certificate);
-			for (Tag tag : certificate.getTags()) {
-				jdbcTemplate.update(SQL_INSERT_INTO_M2M, tag.getId(), certificateId);
-			}
 		}
-		return affectedRows;
+		certificate.setId(certificateId);
+		return (GiftCertificate) sessionFactory.getCurrentSession().merge(certificate);
 	}
 
 	@Override
 	public List<GiftCertificate> findCertificates(List<FilterParam> filterParams, List<OrderParam> orderParams) {
-		String sqlQuery = sqlBuilder.buildCertificatesQuery(filterParams, orderParams);
-		try {
-			return jdbcTemplate.query(sqlQuery, new CertificateResultSetExtractor());
-		} catch (DataAccessException e) {
-			// nothing was found by the request;
-			return new ArrayList<GiftCertificate>();
-		}
+//		String sqlQuery = sqlBuilder.buildCertificatesQuery(filterParams, orderParams);
+//		try {
+//			return jdbcTemplate.query(sqlQuery, new CertificateResultSetExtractor());
+//		} catch (DataAccessException e) {
+//			return new ArrayList<GiftCertificate>();
+//		}
+		CriteriaQuery<GiftCertificate> query = sqlBuilder.buildCertificatesQuery(filterParams, orderParams, sessionFactory);
+		List<GiftCertificate> certificates = sessionFactory.getCurrentSession().createQuery(query).getResultList();
+		return certificates;
 	}
 
 	@Override
@@ -131,11 +101,9 @@ public class CertificateDaoSql implements CertificateDao {
 	}
 
 	@Override
-	public int[] deleteCertificate(long id) {
-		int[] types = { Types.BIGINT };
-		int affectedRows1 = jdbcTemplate.update(SQL_DELETE_FROM_M2M, new Object[] { id }, types);
-		int affectedRows2 = jdbcTemplate.update(SQL_DELETE_CERTIFICATE_BY_ID, new Object[] { id }, types);
-		return new int[] { affectedRows1, affectedRows2 };
+	public int deleteCertificate(long id) {
+		return sessionFactory.getCurrentSession().createQuery(DELETE_CERTIFICATE_BY_ID).setParameter(PARAM_CERTIFICATE_ID, id)
+				.executeUpdate();
 	}
 
 	private void updateTagsBoundedWithCertificate(GiftCertificate certificate) {

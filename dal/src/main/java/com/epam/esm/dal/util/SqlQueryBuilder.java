@@ -1,73 +1,69 @@
 package com.epam.esm.dal.util;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
+import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Component;
 
+import com.epam.esm.entity.GiftCertificate;
+import com.epam.esm.entity.Tag;
 import com.epam.esm.transferobj.FilterParam;
 import com.epam.esm.transferobj.OrderParam;
+import com.epam.esm.transferobj.ParameterConstant;
 
 @Component
 public final class SqlQueryBuilder {
 
-	@Autowired
-	private ColumnNameRequestParamMapper columnMapper;
-
-	private static final String SQL_FIND_CERTIFICATES_WITH_TAGS = "SELECT GiftCertificate.Id, "
-			+ "GiftCertificate.Name, Description, Price, CreateDate, LastUpdateDate, Duration, "
-			+ "Tag.Id, Tag.Name FROM GiftService.GiftCertificate JOIN GiftService.`Tag-Certificate` "
-			+ "ON GiftCertificate.Id = `Tag-Certificate`.IdCertificate JOIN GiftService.Tag "
-			+ "ON Tag.Id = `Tag-Certificate`.IdTag";
-	private static final String WHERE = " WHERE ";
-	private static final String AND = " AND ";
-	private static final String OR = " OR ";
-	private static final String LIKE = " LIKE ";
-	private static final String ORDER_BY = " ORDER BY ";
-	private static final String EQUALS_SIGN = "=";
+	private static final String TAGS = "tags";
 	private static final String PERCENT_SIGN = "%";
-	private static final String BRACKET_OPEN = "(";
-	private static final String BRACKED_CLOSE = ")";
-	private static final String QUOTE_SIGN = "'";
-	private static final String EMPTY_STRING = " ";
 
-	public String buildCertificatesQuery(List<FilterParam> filterParams, List<OrderParam> orderParams) {
-
-		String sqlQuery = SQL_FIND_CERTIFICATES_WITH_TAGS;
+	public CriteriaQuery<GiftCertificate> buildCertificatesQuery(List<FilterParam> filterParams,
+			List<OrderParam> orderParams, SessionFactory sessionFactory) {
+		CriteriaBuilder criteriaBuilder = sessionFactory.getCriteriaBuilder();
+		CriteriaQuery<GiftCertificate> query = criteriaBuilder.createQuery(GiftCertificate.class);
+		Root<GiftCertificate> certificate = query.from(GiftCertificate.class);
+		Join<GiftCertificate, Tag> tag = certificate.join(TAGS);
 
 		if (filterParams.size() > 0) {
-			
-			sqlQuery += WHERE;
+			List<Predicate> p = new ArrayList<Predicate>();
 			for (FilterParam filter : filterParams) {
-	
-				sqlQuery += BRACKET_OPEN + columnMapper.getColumnByParamName(filter.getName());
-				sqlQuery += EQUALS_SIGN;
-				sqlQuery += QUOTE_SIGN + filter.getValue() + QUOTE_SIGN;
-				sqlQuery += OR;
-				sqlQuery += columnMapper.getColumnByParamName(filter.getName());
-				sqlQuery += LIKE;
-				sqlQuery += QUOTE_SIGN + PERCENT_SIGN + filter.getValue() + PERCENT_SIGN + QUOTE_SIGN;
-				sqlQuery += BRACKED_CLOSE + EMPTY_STRING;
-				sqlQuery += AND;
+				if (filter.getName().equals(ParameterConstant.TAG)) {
+					Predicate conditionTag = criteriaBuilder.like(tag.get(ParameterConstant.TAG_NAME),
+							PERCENT_SIGN + filter.getValue() + PERCENT_SIGN);
+					p.add(conditionTag);
+				}
+				if (filter.getName().equals(ParameterConstant.CERTIFICATE_NAME)) {
+					Predicate conditionName = criteriaBuilder.like(certificate.get(ParameterConstant.CERTIFICATE_NAME),
+							PERCENT_SIGN + filter.getValue() + PERCENT_SIGN);
+					p.add(conditionName);
+				}
+				if (filter.getName().equals(ParameterConstant.DESCRIPTION)) {
+					Predicate conditionDescription = criteriaBuilder.like(
+							certificate.get(ParameterConstant.DESCRIPTION).as(String.class),
+							PERCENT_SIGN + filter.getValue() + PERCENT_SIGN);
+					p.add(conditionDescription);
+				}
 			}
-			// remove last "AND ", if presents;
-			String lastQueryCharacters = "AND ";
-			if (sqlQuery.endsWith(lastQueryCharacters)) {
-				sqlQuery = sqlQuery.substring(0, sqlQuery.length() - lastQueryCharacters.length());
+			if (!p.isEmpty()) {
+				Predicate[] predicate = new Predicate[p.size()];
+				p.toArray(predicate);
+				query.select(certificate).where(predicate);
 			}
 		}
-
 		if (orderParams.size() > 0) {
-			sqlQuery += ORDER_BY;
-			for (OrderParam order : orderParams) {
-				sqlQuery += columnMapper.getColumnByParamName(order.getName());
-				sqlQuery += EMPTY_STRING;
-				sqlQuery += order.getDirection();
-				sqlQuery += EMPTY_STRING;
+			if (orderParams.get(0).getDirection().equals(ParameterConstant.DIRECTION_ASC)) {
+				query.orderBy(criteriaBuilder.asc(certificate.get(orderParams.get(0).getName())));
+			} else {
+				query.orderBy(criteriaBuilder.desc(certificate.get(orderParams.get(0).getName())));
 			}
-			sqlQuery = sqlQuery.trim();
 		}
-		return sqlQuery;
+		return query.distinct(true);
 	}
-
 }

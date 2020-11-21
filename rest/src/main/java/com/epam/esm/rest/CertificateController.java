@@ -24,8 +24,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.epam.esm.dto.GiftCertificateCreateUpdateDTO;
+import com.epam.esm.dto.GiftCertificateCreateDTO;
 import com.epam.esm.dto.GiftCertificateGetDTO;
+import com.epam.esm.dto.GiftCertificateUpdateDTO;
 import com.epam.esm.rest.exception.InvalidRequestParametersException;
 import com.epam.esm.rest.exception.NotFoundException;
 import com.epam.esm.rest.messagekey.MessageKeyHolder;
@@ -76,7 +77,7 @@ public class CertificateController {
 	 *         certificates's Id)
 	 */
 	@PostMapping
-	public GiftCertificateGetDTO addCertificate(@Valid @RequestBody GiftCertificateCreateUpdateDTO certificate) {
+	public GiftCertificateGetDTO addCertificate(@Valid @RequestBody GiftCertificateCreateDTO certificate) {
 		if (certificate.getTags() == null || certificate.getTags().isEmpty()) {
 			throw new InvalidRequestParametersException(messageSource
 					.getMessage((MessageKeyHolder.CERTIFICATE_INVALID_TAGS_KEY), null, Locale.getDefault()));
@@ -94,14 +95,14 @@ public class CertificateController {
 	 */
 	@PutMapping("{certificateId}")
 	public GiftCertificateGetDTO updateCertificate(@PathVariable long certificateId,
-			@Valid @RequestBody GiftCertificateCreateUpdateDTO certificate) {
+			@Valid @RequestBody GiftCertificateUpdateDTO certificate) {
 		GiftCertificateGetDTO giftCertificateGetDTO = certificateService.getCertificate(certificateId);
 		if (giftCertificateGetDTO == null) {
 			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.CERTIFICATE_NOT_UPDATED_KEY),
 					new Object[] { certificateId }, Locale.getDefault()));
 		}
-		GiftCertificateGetDTO certificateDTO = certificateService.updateCertificate(certificateId, certificate);
-		return certificateDTO;
+		certificate.setCreationDate(giftCertificateGetDTO.getCreationDate());
+		return certificateService.updateCertificate(certificateId, certificate);
 	}
 
 	/**
@@ -132,8 +133,7 @@ public class CertificateController {
 	@GetMapping
 	public @ResponseBody List<GiftCertificateGetDTO> getCertificates(@RequestParam(required = false) String tag,
 			@RequestParam(required = false) String name, @RequestParam(required = false) String description,
-			@RequestParam(required = false, defaultValue = "date") String order,
-			@RequestParam(required = false, defaultValue = "desc") String direction) {
+			@RequestParam(required = false) String order, @RequestParam(required = false) String direction) {
 		List<FilterParam> filterParams = new ArrayList<>();
 		List<OrderParam> orderParams = new ArrayList<>();
 		if (tag != null && !tag.isEmpty()) {
@@ -146,14 +146,14 @@ public class CertificateController {
 			filterParams.add(new FilterParam(ParameterConstant.DESCRIPTION, description));
 		}
 		orderParams.add(new OrderParam(order, direction));
-		
+
 		List<GiftCertificateGetDTO> certificates;
 		try {
-		 certificates = certificateService.getCertificates(filterParams, orderParams);
-		}catch (ServiceValidationException e) {
+			certificates = certificateService.getCertificates(filterParams, orderParams);
+		} catch (ServiceValidationException e) {
 			log.log(Level.ERROR, "Filter param's value is not valid", e);
-			throw new ServiceValidationException(messageSource.getMessage(
-					(MessageKeyHolder.CERTIFICATE_INVALID_REQUEST_PARAM_KEY), null, Locale.getDefault()));
+			throw new ServiceValidationException(messageSource
+					.getMessage((MessageKeyHolder.CERTIFICATE_INVALID_REQUEST_PARAM_KEY), null, Locale.getDefault()));
 		}
 		return certificates;
 	}

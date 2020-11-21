@@ -1,24 +1,24 @@
-package com.epam.esm.service.util;
+package com.epam.esm.service.validator;
 
 import java.util.List;
 
 import com.epam.esm.transferobj.OrderParam;
 
-public final class RequestOrderParamsChecker {
+public class RequestOrderParamsValidator {
 	
 	private static final String paramNamePattern = "^creationDate|name$";
 	private static final String paramDirectionPattern = "^asc|desc$";
-	private static final String emptyString = "";
 	
-	public static List<OrderParam> checkAndCorrectOrderParams(List<OrderParam> orderParams) {	
+	public static boolean validateOrderParams(List<OrderParam> orderParams) {	
 		for (OrderParam param: orderParams) {
 			if (!param.getName().matches(paramNamePattern)) {
-				param.setName(emptyString);
+				return false;
 			}
 			if (!param.getDirection().matches(paramDirectionPattern)) {
-				param.setDirection(emptyString);
+				return false;
 			}
 		}	
-		return orderParams;	
+		return true;	
 	}
+
 }

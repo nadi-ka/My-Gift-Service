@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `Certificate_service`.`GiftCertificate` (
 -- -----------------------------------------------------
 -- Table `Certificate_service`.`Tag-Certificate`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Certificate_service`.`Tag-Certificate` (
+CREATE TABLE IF NOT EXISTS `Certificate_service`.`Tag_Certificate` (
   `IdTag` BIGINT NOT NULL,
   `IdCertificate` BIGINT NOT NULL,
   PRIMARY KEY (`IdTag`, `IdCertificate`),
@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS `Certificate_service`.`Purchase` (
 -- -----------------------------------------------------
 -- Table `Certificate_service`.`Purchase-Certificate`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Certificate_service`.`Purchase-Certificate` (
+CREATE TABLE IF NOT EXISTS `Certificate_service`.`Purchase_Certificate` (
   `Id_order` BIGINT NOT NULL,
   `Id_certificate` BIGINT NOT NULL,
   PRIMARY KEY (`Id_order`, `Id_certificate`),

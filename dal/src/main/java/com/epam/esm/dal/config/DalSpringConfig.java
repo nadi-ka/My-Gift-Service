@@ -6,12 +6,15 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -25,51 +28,57 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-//@PropertySource("classpath:db.properties")
+@PropertySource(value = "classpath:application.properties")
 @ComponentScan("com.epam.esm")
 @EnableTransactionManagement
 public class DalSpringConfig {
 
-//	private Environment env;
-//	
-//	@Autowired
-//	public DalSpringConfig(Environment environment) {
-//		this.env = environment;
-//	}
+	private Environment env;
+	
+	@Autowired
+	public DalSpringConfig(Environment environment) {
+		this.env = environment;
+	}
 
-//	@Bean
-//	public BasicDataSource dataSource() {
-//		BasicDataSource ds = new BasicDataSource();
+	@Bean
+	public BasicDataSource dataSource() {
+		BasicDataSource ds = new BasicDataSource();
 //		ds.setDriverClassName(env.getProperty("db.driver"));
 //		ds.setUrl(env.getProperty("db.url"));
 //		ds.setUsername(env.getProperty("db.user"));
 //		ds.setPassword(env.getProperty("db.password"));
 //		ds.setInitialSize(Integer.parseInt(env.getProperty("db.pool")));
-//		return ds;
-//	}
+		ds.setDriverClassName(env.getProperty("spring.datasource.driver-class-name"));
+		ds.setUrl(env.getProperty("spring.datasource.jdbc-url"));
+		ds.setUsername(env.getProperty("spring.datasource.username"));
+		ds.setPassword(env.getProperty("spring.datasource.password"));
+		ds.setInitialSize(Integer.parseInt(env.getProperty("spring.datasource.pool-size")));
+		return ds;
+	}
 	
-	@Bean
-    @ConfigurationProperties(prefix = "spring.datasource")
-    public DataSource dataSource() {
-      return DataSourceBuilder.create().build();
-    }
+//	@Bean
+//	@Primary
+//    @ConfigurationProperties(prefix = "spring.datasource")
+//    public DataSource dataSource() {
+//      return DataSourceBuilder.create().build();
+//    }
 
 	@Bean
-	public JdbcTemplate jdbcTemplate() throws NamingException {
-		return new JdbcTemplate(dataSource());
+	public JdbcTemplate jdbcTemplate(DataSource dataSource) throws NamingException {
+		return new JdbcTemplate(dataSource);
 	}
 
 	@Bean
-	public PlatformTransactionManager txManager() {
+	public PlatformTransactionManager txManager(LocalSessionFactoryBean sessionFactory) {
 		HibernateTransactionManager transactionManager = new HibernateTransactionManager();
-		transactionManager.setSessionFactory(sessionFactory().getObject());
+		transactionManager.setSessionFactory(sessionFactory.getObject());
 		return transactionManager;
 	}
 
 	@Bean
-	public LocalSessionFactoryBean sessionFactory() {
+	public LocalSessionFactoryBean sessionFactory(DataSource dataSource) {
 		LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
-		sessionFactory.setDataSource(dataSource());
+		sessionFactory.setDataSource(dataSource);
 		sessionFactory.setPackagesToScan("com.epam.esm");
 		sessionFactory.setHibernateProperties(hibernateProperties());
 		return sessionFactory;
@@ -82,13 +91,12 @@ public class DalSpringConfig {
 		hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
         hibernateProperties.setProperty("current_session_context_class", "thread");
 		hibernateProperties.setProperty("hibernate.enable_lazy_load_no_trans", "true");
-//		hibernateProperties.setProperty("connection.pool_size", "5");
 		return hibernateProperties;
 	}
 	
 	@Bean
     @Profile("test")
-    public EmbeddedDatabase embeddedDatabase(){
+    public DataSource embeddedDatabase(){
         return new EmbeddedDatabaseBuilder()
                 .setType(EmbeddedDatabaseType.H2)
                 .addScript("create-db.sql")

@@ -18,9 +18,9 @@ INSERT INTO `Certificate_service`.`GiftCertificate` (`Id`, `Name`, `Description`
 -- Data for table `Certificate_service`.`Tag-Certificate`
 -- -----------------------------------------------------
 USE `Certificate_service`;
-INSERT INTO `Certificate_service`.`Tag-Certificate` (`IdTag`, `IdCertificate`) VALUES (1, 1);
-INSERT INTO `Certificate_service`.`Tag-Certificate` (`IdTag`, `IdCertificate`) VALUES (1, 2);
-INSERT INTO `Certificate_service`.`Tag-Certificate` (`IdTag`, `IdCertificate`) VALUES (2, 3);
+INSERT INTO `Certificate_service`.`Tag_Certificate` (`IdTag`, `IdCertificate`) VALUES (1, 1);
+INSERT INTO `Certificate_service`.`Tag_Certificate` (`IdTag`, `IdCertificate`) VALUES (1, 2);
+INSERT INTO `Certificate_service`.`Tag_Certificate` (`IdTag`, `IdCertificate`) VALUES (2, 3);
 
 -- -----------------------------------------------------
 -- Data for table `Certificate_service`.`User`
@@ -42,9 +42,9 @@ INSERT INTO `Certificate_service`.`Purchase` (`Id`, `Id_user`, `Creation_date`) 
 -- Data for table `Certificate_service`.`Purchase-Certificate`
 -- -----------------------------------------------------
 USE `Certificate_service`;
-INSERT INTO `Certificate_service`.`Purchase-Certificate` (`Id_order`, `Id_certificate`) VALUES (1, 1);
-INSERT INTO `Certificate_service`.`Purchase-Certificate` (`Id_order`, `Id_certificate`) VALUES (1, 3);
-INSERT INTO `Certificate_service`.`Purchase-Certificate` (`Id_order`, `Id_certificate`) VALUES (2, 2);
-INSERT INTO `Certificate_service`.`Purchase-Certificate` (`Id_order`, `Id_certificate`) VALUES (3, 1);
-INSERT INTO `Certificate_service`.`Purchase-Certificate` (`Id_order`, `Id_certificate`) VALUES (3, 3);
-INSERT INTO `Certificate_service`.`Purchase-Certificate` (`Id_order`, `Id_certificate`) VALUES (4, 1);
+INSERT INTO `Certificate_service`.`Purchase_Certificate` (`Id_order`, `Id_certificate`) VALUES (1, 1);
+INSERT INTO `Certificate_service`.`Purchase_Certificate` (`Id_order`, `Id_certificate`) VALUES (1, 3);
+INSERT INTO `Certificate_service`.`Purchase_Certificate` (`Id_order`, `Id_certificate`) VALUES (2, 2);
+INSERT INTO `Certificate_service`.`Purchase_Certificate` (`Id_order`, `Id_certificate`) VALUES (3, 1);
+INSERT INTO `Certificate_service`.`Purchase_Certificate` (`Id_order`, `Id_certificate`) VALUES (3, 3);
+INSERT INTO `Certificate_service`.`Purchase_Certificate` (`Id_order`, `Id_certificate`) VALUES (4, 1);

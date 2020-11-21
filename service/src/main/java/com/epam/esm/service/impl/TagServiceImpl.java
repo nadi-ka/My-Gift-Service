@@ -54,7 +54,9 @@ public class TagServiceImpl implements TagService {
 	@Override
 	public TagDTO updateTag(long tagId, TagDTO tag) {
 		Tag updatedTag = tagDao.updateTag(tagId, convertToEntity(tag));
-		logger.info("******************&&&&&&: " + updatedTag);
+		if (updatedTag == null) {
+			return new TagDTO();
+		}
 		return convertToDto(updatedTag);
 	}
 
