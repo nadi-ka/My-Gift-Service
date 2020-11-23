@@ -23,6 +23,12 @@
    		<artifactId>service</artifactId>
    		<version>0.0.1-SNAPSHOT</version>
   	</dependency>
+  	
+  	<dependency>
+    	<groupId>com.github.java-json-tools</groupId>
+    	<artifactId>json-patch</artifactId>
+    	<version>1.12</version>
+	</dependency>
     
   </dependencies>
   

@@ -3,6 +3,7 @@ package com.epam.esm.rest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -15,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -28,6 +30,7 @@ import com.epam.esm.dto.GiftCertificateCreateDTO;
 import com.epam.esm.dto.GiftCertificateGetDTO;
 import com.epam.esm.dto.GiftCertificateUpdateDTO;
 import com.epam.esm.rest.exception.InvalidRequestParametersException;
+import com.epam.esm.rest.exception.JsonPatchProcessingException;
 import com.epam.esm.rest.exception.NotFoundException;
 import com.epam.esm.rest.messagekey.MessageKeyHolder;
 import com.epam.esm.service.CertificateService;
@@ -35,6 +38,11 @@ import com.epam.esm.service.exception.ServiceValidationException;
 import com.epam.esm.transferobj.FilterParam;
 import com.epam.esm.transferobj.OrderParam;
 import com.epam.esm.transferobj.ParameterConstant;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jsonpatch.JsonPatch;
+import com.github.fge.jsonpatch.JsonPatchException;
 
 @RestController
 @RequestMapping("/certificates")
@@ -43,6 +51,8 @@ public class CertificateController {
 	private CertificateService certificateService;
 	private MessageSource messageSource;
 	private static final Logger log = LogManager.getLogger(CertificateController.class);
+	@Autowired
+	ObjectMapper objectMapper;
 
 	@Autowired
 	public CertificateController(CertificateService certificateService, MessageSource messageSource) {
@@ -70,11 +80,10 @@ public class CertificateController {
 	/**
 	 * POST method which adds new certificate into the Database;
 	 * 
-	 * @param certificate The argument should contains the List of tags to bound the
-	 *                    certificate with
+	 * @param certificate (the argument should contains the list of tags to bound
+	 *                    the certificate with)
 	 * @return {@link GiftCertificateGetDTO} (in case of success, the method returns
-	 *         Status Code = 200 and the response body contains new generated
-	 *         certificates's Id)
+	 *         Status Code = 200 and the response body contains new certificates)
 	 */
 	@PostMapping
 	public GiftCertificateGetDTO addCertificate(@Valid @RequestBody GiftCertificateCreateDTO certificate) {
@@ -91,7 +100,7 @@ public class CertificateController {
 	 * 
 	 * @param certificateId, certificate
 	 * @return {@link GiftCertificateGetDTO} (in case of success, the method returns
-	 *         Status Code = 200)
+	 *         Status Code = 200 and updated entity in the response body)
 	 */
 	@PutMapping("{certificateId}")
 	public GiftCertificateGetDTO updateCertificate(@PathVariable long certificateId,
@@ -103,6 +112,36 @@ public class CertificateController {
 		}
 		certificate.setCreationDate(giftCertificateGetDTO.getCreationDate());
 		return certificateService.updateCertificate(certificateId, certificate);
+	}
+
+	/**
+	 * PATCH method which allows to change the certificate's name, description,
+	 * price, duration, bounded tags separately or in combination;
+	 * 
+	 * @param certificateId, patch
+	 * @return {@link GiftCertificateGetDTO} (in case of success, the method returns
+	 *         Status Code = 200 and updated entity in the response body)
+	 */
+	@PatchMapping("{certificateId}")
+	public GiftCertificateGetDTO partialUpdateCertificate(@PathVariable long certificateId,
+			@RequestBody JsonPatch patch) {
+		try {
+			GiftCertificateGetDTO certificate = certificateService.getCertificate(certificateId);
+			if (certificate == null) {
+				throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.CERTIFICATE_NOT_FOUND_KEY),
+						new Object[] { certificateId }, Locale.getDefault()));
+			}
+			GiftCertificateGetDTO certificatePatched = applyPatchToCertificate(patch, certificate);
+			return certificateService.updateCertificate(certificateId, certificatePatched);
+		} catch (JsonPatchException | JsonProcessingException e) {
+			log.log(Level.ERROR,
+					"Error when calling partialUpdateCertificate() from CertificateController, certificate wasn't updated, id - "
+							+ certificateId,
+					e);
+			throw new JsonPatchProcessingException(
+					messageSource.getMessage((MessageKeyHolder.CERTIFICATE_JSON_PATCH_ERROR),
+							new Object[] { certificateId }, Locale.getDefault()));
+		}
 	}
 
 	/**
@@ -156,6 +195,12 @@ public class CertificateController {
 					.getMessage((MessageKeyHolder.CERTIFICATE_INVALID_REQUEST_PARAM_KEY), null, Locale.getDefault()));
 		}
 		return certificates;
+	}
+
+	private GiftCertificateGetDTO applyPatchToCertificate(JsonPatch patch, GiftCertificateGetDTO targetCertificate)
+			throws JsonPatchException, JsonProcessingException {
+		JsonNode patched = patch.apply(objectMapper.convertValue(targetCertificate, JsonNode.class));
+		return objectMapper.treeToValue(patched, GiftCertificateGetDTO.class);
 	}
 
 }

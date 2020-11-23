@@ -38,7 +38,6 @@ public class CertificateServiceImpl implements CertificateService {
 	@Override
 	public List<GiftCertificateGetDTO> getCertificates(List<FilterParam> filterParams, List<OrderParam> orderParams)
 			throws ServiceValidationException {
-//		orderParams = RequestOrderParamsChecker.checkAndCorrectOrderParams(orderParams);
 		boolean isFilterParamsValid = RequestFilterParamsValidator.validateFilterParams(filterParams);
 		boolean isOrderParamsValid = RequestOrderParamsValidator.validateOrderParams(orderParams);
 		if (!isFilterParamsValid || !isOrderParamsValid) {

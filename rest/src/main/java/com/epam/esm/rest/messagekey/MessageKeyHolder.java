@@ -11,6 +11,7 @@ public final class MessageKeyHolder {
 	public static final String CERTIFICATE_NOT_FOUND_KEY = "exception.certificate.not_found";
 	public static final String CERTIFICATE_INVALID_TAGS_KEY = "exception.certificate.invalid_tags";
 	public static final String CERTIFICATE_NOT_UPDATED_KEY = "exception.certificate.cannot.update";
+	public static final String CERTIFICATE_JSON_PATCH_ERROR = "exception.certificate.jsonpatch.error";
 	public static final String CERTIFICATE_ABSENT_KEY = "exception.certificate.absent";
 	public static final String CERTIFICATE_DELETED_KEY = "message.certificate.successfully.deleted";
 	public static final String CERTIFICATE_INVALID_REQUEST_PARAM_KEY = "exception.certificate.invalid.params";
