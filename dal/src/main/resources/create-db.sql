@@ -69,6 +69,7 @@ CREATE TABLE IF NOT EXISTS `Certificate_service`.`Purchase` (
   `Id` BIGINT NOT NULL AUTO_INCREMENT,
   `Id_user` BIGINT NOT NULL,
   `Creation_date` TIMESTAMP NOT NULL,
+  `Cost` DECIMAL(10,2) NOT NULL,
   PRIMARY KEY (`Id`),
   CONSTRAINT `Order_User_FK`
     FOREIGN KEY (`Id_user`)

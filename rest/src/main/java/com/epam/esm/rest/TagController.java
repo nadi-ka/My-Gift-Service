@@ -61,6 +61,7 @@ public class TagController {
 	 * @param tagId
 	 * @return {@link TagDTO} (in case when the tag with the given Id is not found,
 	 *         the method returns Status Code = 404)
+	 * @throws NotFoundException
 	 */
 	@GetMapping("{tagId}")
 	public TagDTO getTag(@PathVariable long tagId) {
@@ -90,17 +91,16 @@ public class TagController {
 	 * 
 	 * @param tagId, tag
 	 * @return {@link TagDTO} (in case of success, the method returns Status Code = 200)
+	 * @throws NotFoundException
 	 */
 	@PutMapping("{tagId}")
 	public TagDTO updateTag(@PathVariable long tagId, @Valid @RequestBody TagDTO tag) {
-		log.info("FROM CONTROLLER%%%%%%%%%%%%%%%%%%%!!!!!!!");
 		TagDTO tagDTO = tagService.getTag(tagId);
 		if (tagDTO == null) {
 			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.TAG_NOT_UPDATED_KEY),
 					new Object[] { tagId }, Locale.getDefault()));
 		}
-		TagDTO updatedTag = tagService.updateTag(tagId, tag);
-		return updatedTag;
+		return tagService.updateTag(tagId, tag);
 	}
 
 	/**

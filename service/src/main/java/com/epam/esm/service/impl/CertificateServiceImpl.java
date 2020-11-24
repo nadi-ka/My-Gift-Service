@@ -17,7 +17,6 @@ import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.service.CertificateService;
 import com.epam.esm.service.exception.ServiceValidationException;
 import com.epam.esm.service.util.DateTimeFormatterISO;
-import com.epam.esm.service.util.RequestOrderParamsChecker;
 import com.epam.esm.service.validator.RequestFilterParamsValidator;
 import com.epam.esm.service.validator.RequestOrderParamsValidator;
 import com.epam.esm.transferobj.FilterParam;
@@ -79,26 +78,22 @@ public class CertificateServiceImpl implements CertificateService {
 
 	@Override
 	public int deleteCertificate(long id) {
-		int affectedRows = certificateDao.deleteCertificate(id);
-		return affectedRows;
+		return certificateDao.deleteCertificate(id);
 	}
 
 	private GiftCertificateGetDTO convertToDto(GiftCertificate giftCertificate) {
 		if (giftCertificate.getTags() == null) {
 			giftCertificate.setTags(Collections.emptyList());
 		}
-		GiftCertificateGetDTO certificateDTO = modelMapper.map(giftCertificate, GiftCertificateGetDTO.class);
-		return certificateDTO;
+		return modelMapper.map(giftCertificate, GiftCertificateGetDTO.class);
 	}
 
 	private GiftCertificate convertToEntity(GiftCertificateCreateDTO certificateDTO) {
-		GiftCertificate certificate = modelMapper.map(certificateDTO, GiftCertificate.class);
-		return certificate;
+		return modelMapper.map(certificateDTO, GiftCertificate.class);
 	}
 	
 	private GiftCertificate convertToEntity(GiftCertificateUpdateDTO certificateDTO) {
-		GiftCertificate certificate = modelMapper.map(certificateDTO, GiftCertificate.class);
-		return certificate;
+		return modelMapper.map(certificateDTO, GiftCertificate.class);
 	}
 
 }

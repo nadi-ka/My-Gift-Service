@@ -19,5 +19,7 @@ public interface TagDao {
 	int deleteTag(long id);
 
 	boolean certificatesExistForTag(long tagId);
+	
+	Tag findMostPopularTagOfUserWithHighestCostOfAllPurchases();
 
 }

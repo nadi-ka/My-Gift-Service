@@ -11,6 +11,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import com.epam.esm.rest.exception.InvalidRequestParametersException;
 import com.epam.esm.rest.exception.JsonPatchProcessingException;
 import com.epam.esm.rest.exception.NotFoundException;
+import com.epam.esm.service.exception.CertificateCostException;
 import com.epam.esm.service.exception.ServiceValidationException;
 
 @ControllerAdvice
@@ -71,6 +72,13 @@ public class RestExceptionHandler {
 		ErrorResponse error = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), exc.getMessage(),
 				System.currentTimeMillis());
 		return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException exc) {
+		ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), exc.getMessage(),
+				System.currentTimeMillis());
+		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.epam.esm.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,9 @@ public class Purchase {
 	
 	@Column(name="Creation_date")
 	private LocalDateTime creationDate;
+	
+	@Column(name="Cost")
+	private BigDecimal cost;
 	
 	@ManyToOne
 	@JoinColumn(name = "Id_user")
@@ -78,6 +82,14 @@ public class Purchase {
 		this.user = user;
 	}
 	
+	public BigDecimal getCost() {
+		return cost;
+	}
+
+	public void setCost(BigDecimal cost) {
+		this.cost = cost;
+	}
+
 	public void addCertificate(GiftCertificate certificate) {
 		
 		if (certificates == null) {
@@ -91,6 +103,7 @@ public class Purchase {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((certificates == null) ? 0 : certificates.hashCode());
+		result = prime * result + ((cost == null) ? 0 : cost.hashCode());
 		result = prime * result + ((creationDate == null) ? 0 : creationDate.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((user == null) ? 0 : user.hashCode());
@@ -111,6 +124,11 @@ public class Purchase {
 				return false;
 		} else if (!certificates.equals(other.certificates))
 			return false;
+		if (cost == null) {
+			if (other.cost != null)
+				return false;
+		} else if (!cost.equals(other.cost))
+			return false;
 		if (creationDate == null) {
 			if (other.creationDate != null)
 				return false;
@@ -128,7 +146,7 @@ public class Purchase {
 
 	@Override
 	public String toString() {
-		return "Purchase [id=" + id + ", creationDate=" + creationDate + "]";
+		return "Purchase [id=" + id + ", creationDate=" + creationDate + ", cost=" + cost + "]";
 	}
 
 }

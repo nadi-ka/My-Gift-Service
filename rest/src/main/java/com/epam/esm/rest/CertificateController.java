@@ -3,7 +3,6 @@ package com.epam.esm.rest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -66,6 +65,7 @@ public class CertificateController {
 	 * @param certificateId
 	 * @return {@link GiftCertificateGetDTO} (in case when the certificate with the
 	 *         given Id is not found, the method returns Status Code = 404)
+	 * @throws NotFoundException
 	 */
 	@GetMapping("{certificateId}")
 	public GiftCertificateGetDTO getSertificate(@PathVariable long certificateId) {
@@ -84,6 +84,7 @@ public class CertificateController {
 	 *                    the certificate with)
 	 * @return {@link GiftCertificateGetDTO} (in case of success, the method returns
 	 *         Status Code = 200 and the response body contains new certificates)
+	 * @throws InvalidRequestParametersException
 	 */
 	@PostMapping
 	public GiftCertificateGetDTO addCertificate(@Valid @RequestBody GiftCertificateCreateDTO certificate) {
@@ -101,6 +102,7 @@ public class CertificateController {
 	 * @param certificateId, certificate
 	 * @return {@link GiftCertificateGetDTO} (in case of success, the method returns
 	 *         Status Code = 200 and updated entity in the response body)
+	 * @throws NotFoundException
 	 */
 	@PutMapping("{certificateId}")
 	public GiftCertificateGetDTO updateCertificate(@PathVariable long certificateId,
@@ -121,6 +123,7 @@ public class CertificateController {
 	 * @param certificateId, patch
 	 * @return {@link GiftCertificateGetDTO} (in case of success, the method returns
 	 *         Status Code = 200 and updated entity in the response body)
+	 * @throws NotFoundException, JsonPatchProcessingException
 	 */
 	@PatchMapping("{certificateId}")
 	public GiftCertificateGetDTO partialUpdateCertificate(@PathVariable long certificateId,

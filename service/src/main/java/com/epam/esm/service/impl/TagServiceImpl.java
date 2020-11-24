@@ -70,15 +70,22 @@ public class TagServiceImpl implements TagService {
 		int affectedRows = tagDao.deleteTag(id);
 		return affectedRows;
 	}
+	
+	@Override
+	public TagDTO getMostPopularTagOfUserWithHighestCostOfAllPurchases() {
+		Tag tag = tagDao.findMostPopularTagOfUserWithHighestCostOfAllPurchases();
+		if (tag == null) {
+			return new TagDTO();
+		}
+		return convertToDto(tag);
+	}
 
 	private TagDTO convertToDto(Tag tag) {
-		TagDTO tagDTO = modelMapper.map(tag, TagDTO.class);
-		return tagDTO;
+		return modelMapper.map(tag, TagDTO.class);
 	}
 
 	private Tag convertToEntity(TagDTO tagDTO) {
-		Tag tag = modelMapper.map(tagDTO, Tag.class);
-		return tag;
+		return modelMapper.map(tagDTO, Tag.class);
 	}
 
 }

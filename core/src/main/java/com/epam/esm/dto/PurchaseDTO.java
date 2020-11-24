@@ -1,17 +1,23 @@
 package com.epam.esm.dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import javax.persistence.Column;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class PurchaseDTO {
-	
+
 	private long id;
-	
+
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Minsk")
 	private LocalDateTime creationDate;
-	
+
+	@Column(name = "Cost")
+	private BigDecimal cost;
+
 	private List<GiftCertificateGetDTO> certificates;
 
 	public long getId() {
@@ -38,10 +44,17 @@ public class PurchaseDTO {
 		this.certificates = certificates;
 	}
 
-	@Override
-	public String toString() {
-		return "PurchaseDTO [id=" + id + ", creationDate=" + creationDate + "]";
+	public BigDecimal getCost() {
+		return cost;
 	}
 
+	public void setCost(BigDecimal cost) {
+		this.cost = cost;
+	}
+
+	@Override
+	public String toString() {
+		return "PurchaseDTO [id=" + id + ", creationDate=" + creationDate + ", cost=" + cost + "]";
+	}
 
 }

@@ -30,6 +30,14 @@ public class TagDaoSql implements TagDao {
 	private static final String DELETE_TAG_BY_ID = "DELETE FROM Tag WHERE id = :tagId";
 	private static final String PARAM_TAG_ID = "tagId";
 	private static final String PARAM_TAG_NAME = "tagName";
+	private static final String FIND_MOST_POPULAR_TAG = "SELECT tag.id, tag.name FROM Tag "
+			+ "JOIN tag_certificate ON tag.id = tag_certificate.IdTag "
+			+ "JOIN giftcertificate ON tag_certificate.IdCertificate = giftcertificate.id "
+			+ "JOIN purchase_certificate ON giftcertificate.id = purchase_certificate.Id_certificate "
+			+ "JOIN purchase ON purchase_certificate.Id_order = purchase.Id "
+			+ "JOIN user ON purchase.Id_user = user.Id " + "WHERE user.id = " + "(select user.id AS user_id FROM user "
+			+ "ORDER BY (Select sum(cost) FROM purchase WHERE Id_user = user_id) desc LIMIT 1) " + "GROUP BY tag.id "
+			+ "ORDER BY count(tag.Id) desc " + "LIMIT 1;";
 
 	private static Logger logger = LogManager.getLogger(TagDaoSql.class);
 
@@ -83,6 +91,15 @@ public class TagDaoSql implements TagDao {
 		try {
 			return sessionFactory.getCurrentSession().createQuery(FIND_TAG_BY_NAME, Tag.class)
 					.setParameter(PARAM_TAG_NAME, name).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+
+	@Override
+	public Tag findMostPopularTagOfUserWithHighestCostOfAllPurchases() {
+		try {
+			return (Tag) sessionFactory.getCurrentSession().createQuery(FIND_MOST_POPULAR_TAG).getSingleResult();
 		} catch (NoResultException e) {
 			return null;
 		}

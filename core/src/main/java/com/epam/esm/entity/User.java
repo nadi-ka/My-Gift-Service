@@ -38,6 +38,10 @@ public class User {
 	private List<Purchase> purchases;
 	
 	public User() {}
+	
+	public User(Long id) {
+		this.id = id;
+	}
 
 	public User(String firstName, String lastName, LocalDate dateOfBirth, String email) {
 		this.firstName = firstName;

@@ -29,8 +29,9 @@ public class CertificateDaoSql implements CertificateDao {
 	private SessionFactory sessionFactory;
 
 	private static final String DELETE_CERTIFICATE_BY_ID = "DELETE FROM GiftCertificate WHERE id = :certificateId";
+	private static final String GET_SUM_PRICE_OF_CERTIFICATES = "SELECT SUM(price) FROM GiftCertificate c WHERE c.id IN (?1)";
 	private static final String PARAM_CERTIFICATE_ID = "certificateId";
-	
+
 	private static final Logger log = LogManager.getLogger(CertificateDaoSql.class);
 
 	@Autowired
@@ -74,6 +75,12 @@ public class CertificateDaoSql implements CertificateDao {
 	public int deleteCertificate(long id) {
 		return sessionFactory.getCurrentSession().createQuery(DELETE_CERTIFICATE_BY_ID)
 				.setParameter(PARAM_CERTIFICATE_ID, id).executeUpdate();
+	}
+
+	@Override
+	public Double getSumCertificatesPrice(List<Long> certificateIds) {
+		return (Double) sessionFactory.getCurrentSession().createQuery(GET_SUM_PRICE_OF_CERTIFICATES)
+				.setParameter(1, certificateIds).getSingleResult();
 	}
 
 	private void updateTagsBoundedWithCertificate(GiftCertificate certificate) {
