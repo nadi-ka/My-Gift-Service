@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.epam.esm.dto.TagDTO;
+import com.epam.esm.entity.Pagination;
 import com.epam.esm.rest.exception.NotFoundException;
 import com.epam.esm.rest.messagekey.MessageKeyHolder;
 import com.epam.esm.service.TagService;
@@ -50,8 +51,8 @@ public class TagController {
 	 *         empty list;
 	 */
 	@GetMapping
-	public List<TagDTO> getTags() {
-		List<TagDTO> tags = tagService.getTags();
+	public List<TagDTO> getTags(@Valid Pagination pagination) {
+		List<TagDTO> tags = tagService.getTags(pagination);
 		return tags;
 	}
 

@@ -30,6 +30,7 @@ public class CertificateDaoSql implements CertificateDao {
 
 	private static final String DELETE_CERTIFICATE_BY_ID = "DELETE FROM GiftCertificate WHERE id = :certificateId";
 	private static final String GET_SUM_PRICE_OF_CERTIFICATES = "SELECT SUM(price) FROM GiftCertificate c WHERE c.id IN (?1)";
+	private static final String GET_CERTIFICATES_AMOUNT_BY_IDS = "SELECT count(id) FROM GiftCertificate c WHERE c.id IN (?1)";
 	private static final String PARAM_CERTIFICATE_ID = "certificateId";
 
 	private static final Logger log = LogManager.getLogger(CertificateDaoSql.class);
@@ -60,10 +61,9 @@ public class CertificateDaoSql implements CertificateDao {
 
 	@Override
 	public List<GiftCertificate> findCertificates(List<FilterParam> filterParams, List<OrderParam> orderParams) {
-		CriteriaQuery<GiftCertificate> query = sqlBuilder.buildCertificatesQuery(filterParams, orderParams,
+		CriteriaQuery<GiftCertificate> query = sqlBuilder.buildCertificatesFilterOrderQuery(filterParams, orderParams,
 				sessionFactory);
-		List<GiftCertificate> certificates = sessionFactory.getCurrentSession().createQuery(query).getResultList();
-		return certificates;
+		return sessionFactory.getCurrentSession().createQuery(query).getResultList();
 	}
 
 	@Override
@@ -81,6 +81,18 @@ public class CertificateDaoSql implements CertificateDao {
 	public Double getSumCertificatesPrice(List<Long> certificateIds) {
 		return (Double) sessionFactory.getCurrentSession().createQuery(GET_SUM_PRICE_OF_CERTIFICATES)
 				.setParameter(1, certificateIds).getSingleResult();
+	}
+
+	@Override
+	public Long getAmountOfCertificates(List<Long> certificateIds) {
+		return (Long) sessionFactory.getCurrentSession().createQuery(GET_CERTIFICATES_AMOUNT_BY_IDS)
+				.setParameter(1, certificateIds).getSingleResult();
+	}
+
+	@Override
+	public List<GiftCertificate> findCertificatesByTags(Long[] tagIds) {
+		CriteriaQuery<GiftCertificate> query = sqlBuilder.buildSearchCertificatesByTagsQuery(tagIds, sessionFactory);
+		return sessionFactory.getCurrentSession().createQuery(query).getResultList();
 	}
 
 	private void updateTagsBoundedWithCertificate(GiftCertificate certificate) {

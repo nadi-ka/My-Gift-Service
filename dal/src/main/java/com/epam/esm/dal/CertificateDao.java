@@ -19,4 +19,8 @@ public interface CertificateDao {
 	int deleteCertificate(long id);
 	
 	Double getSumCertificatesPrice(List<Long> certificateIds);
+	
+	Long getAmountOfCertificates(List<Long> certificateIds);
+	
+	List<GiftCertificate> findCertificatesByTags(Long[] tagIds);
 }

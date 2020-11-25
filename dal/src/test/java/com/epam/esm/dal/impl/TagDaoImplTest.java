@@ -111,15 +111,15 @@ class TagDaoImplTest {
 	/**
 	 * Test method for {@link com.epam.esm.dal.impl.TagDaoSql#findAllTags()}.
 	 */
-	@Test
-	void testFindAllTags() {
-
-//		TagDaoSql tagDao = getTagDao();
-		List<Tag> actualTags = tagDao.findAllTags();
-
-		assertNotNull(actualTags);
-//		assertEquals(2, actualTags.size());
-	}
+//	@Test
+//	void testFindAllTags() {
+//
+////		TagDaoSql tagDao = getTagDao();
+//		List<Tag> actualTags = tagDao.findAllTags();
+//
+//		assertNotNull(actualTags);
+////		assertEquals(2, actualTags.size());
+//	}
 ////
 ////	/**
 ////	 * Test method for {@link com.epam.esm.dal.impl.TagDaoSql#findTag(long)}.

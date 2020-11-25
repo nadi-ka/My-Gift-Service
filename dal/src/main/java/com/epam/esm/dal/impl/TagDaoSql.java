@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.epam.esm.dal.TagDao;
 import com.epam.esm.entity.GiftCertificate;
+import com.epam.esm.entity.Pagination;
 import com.epam.esm.entity.Tag;
 
 @Repository
@@ -61,9 +62,10 @@ public class TagDaoSql implements TagDao {
 	}
 
 	@Override
-	public List<Tag> findAllTags() {
+	public List<Tag> findAllTags(Pagination pagination) {
 		Session session = sessionFactory.getCurrentSession();
-		return session.createQuery(FIND_TAGS, Tag.class).getResultList();
+		return session.createQuery(FIND_TAGS, Tag.class).setFirstResult(pagination.getOffset())
+				.setMaxResults(pagination.getLimit()).getResultList();
 	}
 
 	@Override

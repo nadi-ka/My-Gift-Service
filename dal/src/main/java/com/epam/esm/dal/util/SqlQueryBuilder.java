@@ -1,10 +1,12 @@
 package com.epam.esm.dal.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -19,12 +21,12 @@ import com.epam.esm.transferobj.OrderParam;
 import com.epam.esm.transferobj.ParameterConstant;
 
 @Component
-public final class SqlQueryBuilder {
+public class SqlQueryBuilder {
 
 	private static final String TAGS = "tags";
 	private static final String PERCENT_SIGN = "%";
 
-	public CriteriaQuery<GiftCertificate> buildCertificatesQuery(List<FilterParam> filterParams,
+	public CriteriaQuery<GiftCertificate> buildCertificatesFilterOrderQuery(List<FilterParam> filterParams,
 			List<OrderParam> orderParams, SessionFactory sessionFactory) {
 		CriteriaBuilder criteriaBuilder = sessionFactory.getCriteriaBuilder();
 		CriteriaQuery<GiftCertificate> query = criteriaBuilder.createQuery(GiftCertificate.class);
@@ -66,4 +68,18 @@ public final class SqlQueryBuilder {
 		}
 		return query.distinct(true);
 	}
+
+	public CriteriaQuery<GiftCertificate> buildSearchCertificatesByTagsQuery(Long[] tagIds,
+			SessionFactory sessionFactory) {
+		CriteriaBuilder criteriaBuilder = sessionFactory.getCriteriaBuilder();
+		CriteriaQuery<GiftCertificate> query = criteriaBuilder.createQuery(GiftCertificate.class);
+		Root<GiftCertificate> certificate = query.from(GiftCertificate.class);
+		Join<GiftCertificate, Tag> tag = certificate.join(TAGS);
+		List<Long> ids = Arrays.asList(tagIds);
+		Expression<Long> expression = tag.get(ParameterConstant.TAG_ID);
+		Predicate predicate = expression.in(ids);
+		return query.select(certificate).where(predicate).groupBy(certificate.get(ParameterConstant.CERTIFICATE_ID))
+				.having(criteriaBuilder.equal(criteriaBuilder.count(tag), ids.size()));
+	}
+
 }

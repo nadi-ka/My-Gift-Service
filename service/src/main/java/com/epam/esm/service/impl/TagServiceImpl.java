@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.epam.esm.dal.TagDao;
 import com.epam.esm.dto.TagDTO;
+import com.epam.esm.entity.Pagination;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.exception.IllegalOperationServiceException;
@@ -30,9 +31,9 @@ public class TagServiceImpl implements TagService {
 	}
 
 	@Override
-	public List<TagDTO> getTags() {
+	public List<TagDTO> getTags(Pagination pagination) {
 		List<Tag> tags;
-		tags = tagDao.findAllTags();
+		tags = tagDao.findAllTags(pagination);
 		return tags.stream().map(this::convertToDto).collect(Collectors.toList());
 	}
 

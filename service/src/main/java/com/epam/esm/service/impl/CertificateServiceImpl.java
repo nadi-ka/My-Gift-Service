@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,8 +19,7 @@ import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.service.CertificateService;
 import com.epam.esm.service.exception.ServiceValidationException;
 import com.epam.esm.service.util.DateTimeFormatterISO;
-import com.epam.esm.service.validator.RequestFilterParamsValidator;
-import com.epam.esm.service.validator.RequestOrderParamsValidator;
+import com.epam.esm.service.validator.RequestParamsValidator;
 import com.epam.esm.transferobj.FilterParam;
 import com.epam.esm.transferobj.OrderParam;
 
@@ -27,6 +28,7 @@ public class CertificateServiceImpl implements CertificateService {
 
 	private CertificateDao certificateDao;
 	private ModelMapper modelMapper;
+	private static final Logger log = LogManager.getLogger(CertificateServiceImpl.class);
 
 	@Autowired
 	public CertificateServiceImpl(CertificateDao certificateDao, ModelMapper modelMapper) {
@@ -37,10 +39,10 @@ public class CertificateServiceImpl implements CertificateService {
 	@Override
 	public List<GiftCertificateGetDTO> getCertificates(List<FilterParam> filterParams, List<OrderParam> orderParams)
 			throws ServiceValidationException {
-		boolean isFilterParamsValid = RequestFilterParamsValidator.validateFilterParams(filterParams);
-		boolean isOrderParamsValid = RequestOrderParamsValidator.validateOrderParams(orderParams);
+		boolean isFilterParamsValid = RequestParamsValidator.validateFilterParams(filterParams);
+		boolean isOrderParamsValid = RequestParamsValidator.validateOrderParams(orderParams);
 		if (!isFilterParamsValid || !isOrderParamsValid) {
-			throw new ServiceValidationException("Request param's value is not valid");
+			throw new ServiceValidationException("Request param's values are not valid");
 		}
 		List<GiftCertificate> certificates = certificateDao.findCertificates(filterParams, orderParams);
 		return certificates.stream().map(this::convertToDto).collect(Collectors.toList());
@@ -81,6 +83,12 @@ public class CertificateServiceImpl implements CertificateService {
 		return certificateDao.deleteCertificate(id);
 	}
 
+	@Override
+	public List<GiftCertificateGetDTO> getCertificatesByTags(Long[] tagIds) {
+		List<GiftCertificate> certificates = certificateDao.findCertificatesByTags(tagIds);
+		return certificates.stream().map(this::convertToDto).collect(Collectors.toList());
+	}
+
 	private GiftCertificateGetDTO convertToDto(GiftCertificate giftCertificate) {
 		if (giftCertificate.getTags() == null) {
 			giftCertificate.setTags(Collections.emptyList());
@@ -91,7 +99,7 @@ public class CertificateServiceImpl implements CertificateService {
 	private GiftCertificate convertToEntity(GiftCertificateCreateDTO certificateDTO) {
 		return modelMapper.map(certificateDTO, GiftCertificate.class);
 	}
-	
+
 	private GiftCertificate convertToEntity(GiftCertificateUpdateDTO certificateDTO) {
 		return modelMapper.map(certificateDTO, GiftCertificate.class);
 	}

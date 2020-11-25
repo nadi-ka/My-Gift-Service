@@ -167,17 +167,25 @@ public class CertificateController {
 	}
 
 	/**
-	 * @param accepts optional parameters tag, name, description, order, direction;
-	 *                parameters could be used in conjunction;
+	 * @param accepts optional parameters tag, name, description, order, direction, tagIds;
+	 *                parameters could be used in conjunction; 
 	 * @return {@link List<GiftCertificateGetDTO>} in the case, when nothing was
 	 *         found, returns empty list;
 	 */
 	@GetMapping
 	public @ResponseBody List<GiftCertificateGetDTO> getCertificates(@RequestParam(required = false) String tag,
 			@RequestParam(required = false) String name, @RequestParam(required = false) String description,
-			@RequestParam(required = false) String order, @RequestParam(required = false) String direction) {
+			@RequestParam(required = false, defaultValue = "creationDate") String order,
+			@RequestParam(required = false, defaultValue = "desc") String direction,
+			@RequestParam(required = false) Long[] tagIds) {
+		if (tagIds != null && tagIds.length != 0) {
+			for (int i = 0; i < tagIds.length; i++) {
+			}
+			return certificateService.getCertificatesByTags(tagIds);
+		}
 		List<FilterParam> filterParams = new ArrayList<>();
 		List<OrderParam> orderParams = new ArrayList<>();
+
 		if (tag != null && !tag.isEmpty()) {
 			filterParams.add(new FilterParam(ParameterConstant.TAG, tag));
 		}
@@ -188,7 +196,6 @@ public class CertificateController {
 			filterParams.add(new FilterParam(ParameterConstant.DESCRIPTION, description));
 		}
 		orderParams.add(new OrderParam(order, direction));
-
 		List<GiftCertificateGetDTO> certificates;
 		try {
 			certificates = certificateService.getCertificates(filterParams, orderParams);

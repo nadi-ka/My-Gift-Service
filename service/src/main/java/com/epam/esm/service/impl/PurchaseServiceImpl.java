@@ -20,7 +20,6 @@ import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Purchase;
 import com.epam.esm.entity.User;
 import com.epam.esm.service.PurchaseService;
-import com.epam.esm.service.exception.CertificateCostException;
 import com.epam.esm.service.util.DateTimeFormatterISO;
 
 @Service
@@ -53,13 +52,12 @@ public class PurchaseServiceImpl implements PurchaseService {
 	public PurchaseDTO savePurchase(long userId, List<GiftCertificateWithIdDTO> certificates) {
 		LocalDateTime creationTime = DateTimeFormatterISO.createAndformatDateTime();
 		List<GiftCertificate> certificatesWithIds = certificates.stream().map(this::convertToEntity).collect(Collectors.toList());
-		for(GiftCertificate certificate: certificatesWithIds) {
-			if (certificateDao.findCertificate(certificate.getId()) == null) {
-				return new PurchaseDTO();
-			}
+		List<Long> certificateIds = formCertificateIdsList(certificatesWithIds);
+		if (certificateIds.size() != certificateDao.getAmountOfCertificates(certificateIds)) {
+			return new PurchaseDTO();
 		}
 		Purchase purchase = new Purchase(creationTime, new User(userId), certificatesWithIds);
-		Double cost = certificateDao.getSumCertificatesPrice(formCertificateIdsList(certificatesWithIds));
+		Double cost = certificateDao.getSumCertificatesPrice(certificateIds);
 		purchase.setCost(new BigDecimal(cost));
 		long purchaseId = purchaseDao.addPurchase(purchase);
 		return convertToDto(purchaseDao.findPurchseById(purchaseId));

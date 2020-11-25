@@ -22,4 +22,6 @@ public interface CertificateService {
 
 	int deleteCertificate(long id);
 
+	List<GiftCertificateGetDTO> getCertificatesByTags(Long[] tagIds);
+
 }

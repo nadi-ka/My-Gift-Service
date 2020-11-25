@@ -11,7 +11,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import com.epam.esm.rest.exception.InvalidRequestParametersException;
 import com.epam.esm.rest.exception.JsonPatchProcessingException;
 import com.epam.esm.rest.exception.NotFoundException;
-import com.epam.esm.service.exception.CertificateCostException;
 import com.epam.esm.service.exception.ServiceValidationException;
 
 @ControllerAdvice
