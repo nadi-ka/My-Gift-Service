@@ -78,8 +78,8 @@ public class TagController {
 	 * POST method which creates new tag;
 	 * 
 	 * @param tag
-	 * @return {@link TagDTO} (in case of success, the method returns Status Code = 200 and
-	 *         the response body contains the tag with the generated Id)
+	 * @return {@link TagDTO} (in case of success, the method returns Status Code =
+	 *         200 and the response body contains the tag with the generated Id)
 	 */
 	@PostMapping
 	public TagDTO addTag(@Valid @RequestBody TagDTO tag) {
@@ -91,7 +91,8 @@ public class TagController {
 	 * PUT method which allows to change the tag's Name;
 	 * 
 	 * @param tagId, tag
-	 * @return {@link TagDTO} (in case of success, the method returns Status Code = 200)
+	 * @return {@link TagDTO} (in case of success, the method returns Status Code =
+	 *         200)
 	 * @throws NotFoundException
 	 */
 	@PutMapping("{tagId}")
@@ -109,8 +110,8 @@ public class TagController {
 	 * are not allowed (bounded certificates must be deleted primarily)
 	 * 
 	 * @param tagId
-	 * @return {@link ResponseEntity} (in case when the tag with the given Id is not found,
-	 *         the method returns Status Code = 200)
+	 * @return {@link ResponseEntity} (in case when the tag with the given Id is not
+	 *         found, the method returns Status Code = 200)
 	 */
 	@DeleteMapping("{tagId}")
 	public ResponseEntity<?> deleteTag(@PathVariable long tagId) {
@@ -129,6 +130,23 @@ public class TagController {
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(messageSource.getMessage((MessageKeyHolder.TAG_DELETED_KEY),
 				new Object[] { tagId }, Locale.getDefault()));
+	}
+
+	/**
+	 * Get method to found the most popular tag of the user with the 
+	 * highest cost of all purchases
+	 * 
+	 * @return {@link TagDTO}
+	 * @throws NotFoundException
+	 */
+	@GetMapping("/cost:highest")
+	public TagDTO getMostPopularTagOfUserWithHighestCostOfPurchases() {
+		TagDTO tagDTO = tagService.getMostPopularTagOfUserWithHighestCostOfAllPurchases();
+		if (tagDTO.getId() == 0) {
+			throw new NotFoundException(
+					messageSource.getMessage((MessageKeyHolder.NOTHING_FOUND_KEY), null, Locale.getDefault()));
+		}
+		return tagDTO;
 	}
 
 }

@@ -2,17 +2,36 @@ package com.epam.esm.dto;
 
 import java.time.LocalDate;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class UserDTO {
 	
 	private long id;
+	
+	@NotBlank
+	@Size(max = 45, message = "must be less or equal to 45")
 	private String firstName;
+	
+	@NotBlank
+	@Size(max = 45, message = "must be less or equal to 45")
 	private String lastName;
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	@NotNull
+	@PastOrPresent
 	private LocalDate dateOfBirth;
 	
+	@NotBlank
+	@Email(message="Please, provide a valid email address")
 	private String email;
 	
 	public UserDTO() {}

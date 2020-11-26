@@ -3,6 +3,7 @@ package com.epam.esm.rest.messagekey;
 public final class MessageKeyHolder {
 	
 	public static final String TAG_NOT_FOUND_KEY = "exception.tag.not_found";
+	public static final String NOTHING_FOUND_KEY = "exception.nothing_found";
 	public static final String TAG_NOT_UPDATED_KEY = "exception.tag.cannot.update";
 	public static final String TAG_ABSENT_KEY = "exception.tag.absent";
 	public static final String TAG_BOUNDED_KEY = "exception.tag.bounded";

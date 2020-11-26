@@ -38,7 +38,7 @@ public class TagDaoSql implements TagDao {
 			+ "JOIN purchase ON purchase_certificate.Id_order = purchase.Id "
 			+ "JOIN user ON purchase.Id_user = user.Id " + "WHERE user.id = " + "(select user.id AS user_id FROM user "
 			+ "ORDER BY (Select sum(cost) FROM purchase WHERE Id_user = user_id) desc LIMIT 1) " + "GROUP BY tag.id "
-			+ "ORDER BY count(tag.Id) desc " + "LIMIT 1;";
+			+ "ORDER BY count(tag.Id) desc LIMIT 1";
 
 	private static Logger logger = LogManager.getLogger(TagDaoSql.class);
 
@@ -101,7 +101,11 @@ public class TagDaoSql implements TagDao {
 	@Override
 	public Tag findMostPopularTagOfUserWithHighestCostOfAllPurchases() {
 		try {
-			return (Tag) sessionFactory.getCurrentSession().createQuery(FIND_MOST_POPULAR_TAG).getSingleResult();
+//			return (Tag) sessionFactory.getCurrentSession().createQuery(FIND_MOST_POPULAR_TAG).getSingleResult();
+			
+			Session session = sessionFactory.getCurrentSession();
+			Tag tag = session.createNativeQuery(FIND_MOST_POPULAR_TAG, Tag.class).getSingleResult();
+			return tag;
 		} catch (NoResultException e) {
 			return null;
 		}
