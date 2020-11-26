@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.epam.esm.dto.GiftCertificateCreateDTO;
 import com.epam.esm.dto.GiftCertificateGetDTO;
 import com.epam.esm.dto.GiftCertificateUpdateDTO;
+import com.epam.esm.entity.Pagination;
 import com.epam.esm.rest.exception.InvalidRequestParametersException;
 import com.epam.esm.rest.exception.JsonPatchProcessingException;
 import com.epam.esm.rest.exception.NotFoundException;
@@ -49,7 +50,7 @@ public class CertificateController {
 
 	private CertificateService certificateService;
 	private MessageSource messageSource;
-	private static final Logger log = LogManager.getLogger(CertificateController.class);
+	private static final Logger LOG = LogManager.getLogger(CertificateController.class);
 	@Autowired
 	ObjectMapper objectMapper;
 
@@ -127,7 +128,7 @@ public class CertificateController {
 	 */
 	@PatchMapping("{certificateId}")
 	public GiftCertificateGetDTO partialUpdateCertificate(@PathVariable long certificateId,
-			@RequestBody JsonPatch patch) {
+			@Valid @RequestBody JsonPatch patch) {
 		try {
 			GiftCertificateGetDTO certificate = certificateService.getCertificate(certificateId);
 			if (certificate == null) {
@@ -137,7 +138,7 @@ public class CertificateController {
 			GiftCertificateGetDTO certificatePatched = applyPatchToCertificate(patch, certificate);
 			return certificateService.updateCertificate(certificateId, certificatePatched);
 		} catch (JsonPatchException | JsonProcessingException e) {
-			log.log(Level.ERROR,
+			LOG.log(Level.ERROR,
 					"Error when calling partialUpdateCertificate() from CertificateController, certificate wasn't updated, id - "
 							+ certificateId,
 					e);
@@ -167,8 +168,9 @@ public class CertificateController {
 	}
 
 	/**
-	 * @param accepts optional parameters tag, name, description, order, direction, tagIds;
-	 *                parameters could be used in conjunction; 
+	 * @param accepts optional parameters tag, name, description, order, direction,
+	 *                tagIds; parameters could be used in conjunction; Required
+	 *                parameter is pagination;
 	 * @return {@link List<GiftCertificateGetDTO>} in the case, when nothing was
 	 *         found, returns empty list;
 	 */
@@ -177,11 +179,11 @@ public class CertificateController {
 			@RequestParam(required = false) String name, @RequestParam(required = false) String description,
 			@RequestParam(required = false, defaultValue = "creationDate") String order,
 			@RequestParam(required = false, defaultValue = "desc") String direction,
-			@RequestParam(required = false) Long[] tagIds) {
+			@RequestParam(required = false) Long[] tagIds, @Valid Pagination pagination) {
 		if (tagIds != null && tagIds.length != 0) {
 			for (int i = 0; i < tagIds.length; i++) {
 			}
-			return certificateService.getCertificatesByTags(tagIds);
+			return certificateService.getCertificatesByTags(tagIds, pagination);
 		}
 		List<FilterParam> filterParams = new ArrayList<>();
 		List<OrderParam> orderParams = new ArrayList<>();
@@ -198,9 +200,9 @@ public class CertificateController {
 		orderParams.add(new OrderParam(order, direction));
 		List<GiftCertificateGetDTO> certificates;
 		try {
-			certificates = certificateService.getCertificates(filterParams, orderParams);
+			certificates = certificateService.getCertificates(filterParams, orderParams, pagination);
 		} catch (ServiceValidationException e) {
-			log.log(Level.ERROR, "Filter param's value is not valid", e);
+			LOG.log(Level.ERROR, "Filter param's value is not valid", e);
 			throw new ServiceValidationException(messageSource
 					.getMessage((MessageKeyHolder.CERTIFICATE_INVALID_REQUEST_PARAM_KEY), null, Locale.getDefault()));
 		}

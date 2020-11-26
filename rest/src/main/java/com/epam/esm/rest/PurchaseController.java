@@ -6,8 +6,6 @@ import java.util.Locale;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.validation.annotation.Validated;
@@ -44,12 +42,10 @@ public class PurchaseController {
 		this.messageSource = messageSource;
 	}
 
-	private static final Logger log = LogManager.getLogger(PurchaseController.class);
-
 	/**
 	 * GET all user's purchases by the long Id;
 	 * 
-	 * @param userId
+	 * @param userId, pagination
 	 * @return {@link List<PurchaseDTO>} (in case when the user with given Id is not
 	 *         found, the method returns Status Code = 404)
 	 * @throws NotFoundException

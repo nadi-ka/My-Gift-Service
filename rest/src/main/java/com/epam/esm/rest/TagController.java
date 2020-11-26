@@ -32,7 +32,7 @@ import com.epam.esm.service.exception.IllegalOperationServiceException;
 @RequestMapping("/tags")
 public class TagController {
 
-	private static final Logger log = LogManager.getLogger(TagController.class);
+	private static final Logger LOG = LogManager.getLogger(TagController.class);
 
 	private TagService tagService;
 	private MessageSource messageSource;
@@ -46,6 +46,8 @@ public class TagController {
 	/**
 	 * GET method, which returns the List, which contains all tags from the
 	 * Database;
+	 * 
+	 * @param pagination
 	 * 
 	 * @return {@link List<TagDTO>} in the case, when nothing was found, returns
 	 *         empty list;
@@ -83,8 +85,7 @@ public class TagController {
 	 */
 	@PostMapping
 	public TagDTO addTag(@Valid @RequestBody TagDTO tag) {
-		TagDTO newTag = tagService.saveTag(tag);
-		return newTag;
+		return tagService.saveTag(tag);
 	}
 
 	/**
@@ -123,7 +124,7 @@ public class TagController {
 		try {
 			tagService.deleteTag(tagId);
 		} catch (IllegalOperationServiceException e) {
-			log.log(Level.WARN,
+			LOG.log(Level.WARN,
 					"The tag couldn't be deleted as it's bounded with one or more certificates - tagId" + tagId, e);
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(messageSource
 					.getMessage((MessageKeyHolder.TAG_BOUNDED_KEY), new Object[] { tagId }, Locale.getDefault()));
@@ -139,7 +140,7 @@ public class TagController {
 	 * @return {@link TagDTO}
 	 * @throws NotFoundException
 	 */
-	@GetMapping("/cost:highest")
+	@GetMapping("/most-popular-tag")
 	public TagDTO getMostPopularTagOfUserWithHighestCostOfPurchases() {
 		TagDTO tagDTO = tagService.getMostPopularTagOfUserWithHighestCostOfAllPurchases();
 		if (tagDTO.getId() == 0) {

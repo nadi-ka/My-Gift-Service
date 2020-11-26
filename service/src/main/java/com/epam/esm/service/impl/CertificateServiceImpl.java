@@ -16,6 +16,7 @@ import com.epam.esm.dto.GiftCertificateCreateDTO;
 import com.epam.esm.dto.GiftCertificateGetDTO;
 import com.epam.esm.dto.GiftCertificateUpdateDTO;
 import com.epam.esm.entity.GiftCertificate;
+import com.epam.esm.entity.Pagination;
 import com.epam.esm.service.CertificateService;
 import com.epam.esm.service.exception.ServiceValidationException;
 import com.epam.esm.service.util.DateTimeFormatterISO;
@@ -37,14 +38,14 @@ public class CertificateServiceImpl implements CertificateService {
 	}
 
 	@Override
-	public List<GiftCertificateGetDTO> getCertificates(List<FilterParam> filterParams, List<OrderParam> orderParams)
+	public List<GiftCertificateGetDTO> getCertificates(List<FilterParam> filterParams, List<OrderParam> orderParams, Pagination pagination)
 			throws ServiceValidationException {
 		boolean isFilterParamsValid = RequestParamsValidator.validateFilterParams(filterParams);
 		boolean isOrderParamsValid = RequestParamsValidator.validateOrderParams(orderParams);
 		if (!isFilterParamsValid || !isOrderParamsValid) {
 			throw new ServiceValidationException("Request param's values are not valid");
 		}
-		List<GiftCertificate> certificates = certificateDao.findCertificates(filterParams, orderParams);
+		List<GiftCertificate> certificates = certificateDao.findCertificates(filterParams, orderParams, pagination);
 		return certificates.stream().map(this::convertToDto).collect(Collectors.toList());
 	}
 
@@ -84,8 +85,8 @@ public class CertificateServiceImpl implements CertificateService {
 	}
 
 	@Override
-	public List<GiftCertificateGetDTO> getCertificatesByTags(Long[] tagIds) {
-		List<GiftCertificate> certificates = certificateDao.findCertificatesByTags(tagIds);
+	public List<GiftCertificateGetDTO> getCertificatesByTags(Long[] tagIds, Pagination pagination) {
+		List<GiftCertificate> certificates = certificateDao.findCertificatesByTags(tagIds, pagination);
 		return certificates.stream().map(this::convertToDto).collect(Collectors.toList());
 	}
 

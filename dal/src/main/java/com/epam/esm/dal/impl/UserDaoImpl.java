@@ -1,7 +1,5 @@
 package com.epam.esm.dal.impl;
 
-import java.util.List;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +10,7 @@ import com.epam.esm.dal.UserDao;
 import com.epam.esm.entity.User;
 
 @Repository
+@Transactional
 public class UserDaoImpl implements UserDao {
 
 	private SessionFactory sessionFactory;
@@ -22,7 +21,6 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	@Transactional
 	public User addUser(User user) {
 		Session session = sessionFactory.getCurrentSession();
 		long id = (Long) session.save(user);
@@ -31,17 +29,8 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public List<User> findUsers() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	@Transactional
 	public User findUser(long id) {
-		Session session = sessionFactory.getCurrentSession();
-		User user = session.get(User.class, id);
-		return user;
+		return sessionFactory.getCurrentSession().get(User.class, id);
 	}
 
 }

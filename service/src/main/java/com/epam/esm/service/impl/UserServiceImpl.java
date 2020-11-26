@@ -10,50 +10,38 @@ import com.epam.esm.entity.User;
 import com.epam.esm.service.UserService;
 
 @Service
-public class UserServiceImpl implements UserService{
-	
-	@Autowired
+public class UserServiceImpl implements UserService {
+
 	private UserDao userDao;
-	
-	@Autowired
 	private ModelMapper modelMapper;
-	
-	public void setModelMapper(ModelMapper mapper) {
-		this.modelMapper = mapper;
+
+	@Autowired
+	public UserServiceImpl(UserDao userDao, ModelMapper modelMapper) {
+		this.userDao = userDao;
+		this.modelMapper = modelMapper;
 	}
 
 	@Override
 	public UserDTO saveUser(UserDTO userDTO) {
-		
 		User user = userDao.addUser(convertToEntity(userDTO));
-		
 		return convertToDto(user);
 	}
-	
+
 	@Override
 	public UserDTO getUser(long id) {
-		
 		User user = userDao.findUser(id);
-		
 		if (user == null) {
-			return null;
+			return new UserDTO();
 		}
 		return convertToDto(user);
 	}
-	
+
 	private UserDTO convertToDto(User user) {
-
-		UserDTO userDTO = modelMapper.map(user, UserDTO.class);
-
-		return userDTO;
+		return modelMapper.map(user, UserDTO.class);
 	}
 
 	private User convertToEntity(UserDTO userDTO) {
-
-		User user = modelMapper.map(userDTO, User.class);
-
-		return user;
+		return modelMapper.map(userDTO, User.class);
 	}
-
 
 }

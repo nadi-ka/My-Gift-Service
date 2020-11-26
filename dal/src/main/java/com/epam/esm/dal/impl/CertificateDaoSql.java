@@ -16,6 +16,7 @@ import com.epam.esm.dal.CertificateDao;
 import com.epam.esm.dal.TagDao;
 import com.epam.esm.dal.util.SqlQueryBuilder;
 import com.epam.esm.entity.GiftCertificate;
+import com.epam.esm.entity.Pagination;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.transferobj.FilterParam;
 import com.epam.esm.transferobj.OrderParam;
@@ -60,10 +61,12 @@ public class CertificateDaoSql implements CertificateDao {
 	}
 
 	@Override
-	public List<GiftCertificate> findCertificates(List<FilterParam> filterParams, List<OrderParam> orderParams) {
+	public List<GiftCertificate> findCertificates(List<FilterParam> filterParams, List<OrderParam> orderParams,
+			Pagination pagination) {
 		CriteriaQuery<GiftCertificate> query = sqlBuilder.buildCertificatesFilterOrderQuery(filterParams, orderParams,
 				sessionFactory);
-		return sessionFactory.getCurrentSession().createQuery(query).getResultList();
+		return sessionFactory.getCurrentSession().createQuery(query).setFirstResult(pagination.getOffset())
+				.setMaxResults(pagination.getLimit()).getResultList();
 	}
 
 	@Override
@@ -90,9 +93,10 @@ public class CertificateDaoSql implements CertificateDao {
 	}
 
 	@Override
-	public List<GiftCertificate> findCertificatesByTags(Long[] tagIds) {
+	public List<GiftCertificate> findCertificatesByTags(Long[] tagIds, Pagination pagination) {
 		CriteriaQuery<GiftCertificate> query = sqlBuilder.buildSearchCertificatesByTagsQuery(tagIds, sessionFactory);
-		return sessionFactory.getCurrentSession().createQuery(query).getResultList();
+		return sessionFactory.getCurrentSession().createQuery(query).setFirstResult(pagination.getOffset())
+				.setMaxResults(pagination.getLimit()).getResultList();
 	}
 
 	private void updateTagsBoundedWithCertificate(GiftCertificate certificate) {
