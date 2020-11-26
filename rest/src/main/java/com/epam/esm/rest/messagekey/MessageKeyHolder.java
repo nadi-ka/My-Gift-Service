@@ -16,5 +16,11 @@ public final class MessageKeyHolder {
 	public static final String CERTIFICATE_ABSENT_KEY = "exception.certificate.absent";
 	public static final String CERTIFICATE_DELETED_KEY = "message.certificate.successfully.deleted";
 	public static final String CERTIFICATE_INVALID_REQUEST_PARAM_KEY = "exception.certificate.invalid.params";
+	
+	public static final String USER_NOT_FOUND_KEY = "exception.user.not_found";
+	
+	public static final String PURCHASE_NOT_FOUND_KEY = "exception.purchase.not_found";
+	public static final String PURCHASE_EMPTY_CERTIFICATES_KEY = "exception.purchase.empty.certificates";
+	public static final String PURCHASE_CERTIFICATE_NOT_FOUND_KEY = "exception.purchase.certificates.not_found";
 
 }

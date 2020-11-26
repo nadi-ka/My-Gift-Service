@@ -17,6 +17,7 @@ import com.epam.esm.dal.PurchaseDao;
 import com.epam.esm.dto.GiftCertificateWithIdDTO;
 import com.epam.esm.dto.PurchaseDTO;
 import com.epam.esm.entity.GiftCertificate;
+import com.epam.esm.entity.Pagination;
 import com.epam.esm.entity.Purchase;
 import com.epam.esm.entity.User;
 import com.epam.esm.service.PurchaseService;
@@ -39,8 +40,8 @@ public class PurchaseServiceImpl implements PurchaseService {
 	}
 
 	@Override
-	public List<PurchaseDTO> getPurchasesByUserId(long userId) {
-		return purchaseDao.findPurchsesByUserId(userId).stream().map(this::convertToDto).collect(Collectors.toList());
+	public List<PurchaseDTO> getPurchasesByUserId(long userId, Pagination pagination) {
+		return purchaseDao.findPurchsesByUserId(userId, pagination).stream().map(this::convertToDto).collect(Collectors.toList());
 	}
 
 	@Override

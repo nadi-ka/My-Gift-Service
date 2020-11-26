@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.epam.esm.dal.PurchaseDao;
+import com.epam.esm.entity.Pagination;
 import com.epam.esm.entity.Purchase;
 
 @Repository
@@ -35,20 +36,21 @@ public class PurchaseDaoImpl implements PurchaseDao {
 	}
 
 	@Override
-	public List<Purchase> findPurchsesByUserId(long userId) {
+	public List<Purchase> findPurchsesByUserId(long userId, Pagination pagination) {
 		return sessionFactory.getCurrentSession().createQuery(GET_PURCHASES_BY_USER_ID, Purchase.class)
-				.setParameter(PARAM_USER_ID, userId).getResultList();
+				.setParameter(PARAM_USER_ID, userId).setFirstResult(pagination.getOffset())
+				.setMaxResults(pagination.getLimit()).getResultList();
 	}
 
 	@Override
 	public Purchase findPurchseById(long purchaseId) {
 		try {
-		Session session = sessionFactory.getCurrentSession();
-		Query<Purchase> query = session.createQuery(GET_PURCHASE_BY_ID, Purchase.class);
-		query.setParameter(PARAM_PURCHASE_ID, purchaseId);
-		Purchase purchase = query.getSingleResult();
-		return purchase;
-		}catch (NoResultException e) {
+			Session session = sessionFactory.getCurrentSession();
+			Query<Purchase> query = session.createQuery(GET_PURCHASE_BY_ID, Purchase.class);
+			query.setParameter(PARAM_PURCHASE_ID, purchaseId);
+			Purchase purchase = query.getSingleResult();
+			return purchase;
+		} catch (NoResultException e) {
 			return new Purchase();
 		}
 	}

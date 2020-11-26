@@ -101,8 +101,6 @@ public class TagDaoSql implements TagDao {
 	@Override
 	public Tag findMostPopularTagOfUserWithHighestCostOfAllPurchases() {
 		try {
-//			return (Tag) sessionFactory.getCurrentSession().createQuery(FIND_MOST_POPULAR_TAG).getSingleResult();
-			
 			Session session = sessionFactory.getCurrentSession();
 			Tag tag = session.createNativeQuery(FIND_MOST_POPULAR_TAG, Tag.class).getSingleResult();
 			return tag;

@@ -4,10 +4,11 @@ import java.util.List;
 
 import com.epam.esm.dto.GiftCertificateWithIdDTO;
 import com.epam.esm.dto.PurchaseDTO;
+import com.epam.esm.entity.Pagination;
 
 public interface PurchaseService {
 	
-	List<PurchaseDTO> getPurchasesByUserId(long userId);
+	List<PurchaseDTO> getPurchasesByUserId(long userId, Pagination pagination);
 	
 	PurchaseDTO getPurchaseById(long purchaseId);
 	
