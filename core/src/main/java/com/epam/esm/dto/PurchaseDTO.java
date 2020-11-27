@@ -6,9 +6,11 @@ import java.util.List;
 
 import javax.persistence.Column;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-public class PurchaseDTO {
+public class PurchaseDTO extends RepresentationModel<PurchaseDTO> {
 
 	private long id;
 

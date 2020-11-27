@@ -6,14 +6,13 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.hateoas.RepresentationModel;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-public class UserDTO {
+public class UserDTO extends RepresentationModel<UserDTO>{
 	
 	private long id;
 	
@@ -25,7 +24,7 @@ public class UserDTO {
 	@Size(max = 45, message = "must be less or equal to 45")
 	private String lastName;
 	
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
 	@NotNull
 	@PastOrPresent
 	private LocalDate dateOfBirth;

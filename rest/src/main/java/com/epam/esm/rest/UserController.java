@@ -6,12 +6,14 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 import com.epam.esm.dto.UserDTO;
 import com.epam.esm.rest.exception.NotFoundException;
@@ -39,8 +41,10 @@ public class UserController {
 	 *         200 and the response body contains new user)
 	 */
 	@PostMapping
-	public UserDTO addUser(@Valid @RequestBody UserDTO userDTO) {
-		return userService.saveUser(userDTO);
+	public EntityModel<UserDTO> addUser(@Valid @RequestBody UserDTO userDTO) {
+		UserDTO createdUser = userService.saveUser(userDTO);
+		EntityModel<UserDTO> entityModel = new EntityModel<>(createdUser);
+		return entityModel.add(linkTo(methodOn(UserController.class).getUser(createdUser.getId())).withSelfRel());
 	}
 
 	/**
@@ -51,13 +55,14 @@ public class UserController {
 	 * @throws NotFoundException
 	 */
 	@GetMapping("{userId}")
-	public UserDTO getUser(@PathVariable long userId) {
+	public EntityModel<UserDTO> getUser(@PathVariable long userId) {
 		UserDTO userDTO = userService.getUser(userId);
 		if (userDTO.getId() == 0) {
 			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.USER_NOT_FOUND_KEY),
 					new Object[] { userId }, Locale.getDefault()));
 		}
-		return userDTO;
+		EntityModel<UserDTO> entityModel = new EntityModel<>(userDTO);
+		return entityModel.add(linkTo(methodOn(UserController.class).getUser(userId)).withSelfRel());
 	}
 
 }

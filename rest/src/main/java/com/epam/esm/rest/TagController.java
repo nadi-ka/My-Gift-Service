@@ -10,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 import com.epam.esm.dto.TagDTO;
 import com.epam.esm.entity.Pagination;
@@ -55,6 +57,7 @@ public class TagController {
 	@GetMapping
 	public List<TagDTO> getTags(@Valid Pagination pagination) {
 		List<TagDTO> tags = tagService.getTags(pagination);
+		tags.forEach(tag -> tag.add(linkTo(methodOn(TagController.class).getTag(tag.getId())).withSelfRel()));
 		return tags;
 	}
 
@@ -67,13 +70,16 @@ public class TagController {
 	 * @throws NotFoundException
 	 */
 	@GetMapping("{tagId}")
-	public TagDTO getTag(@PathVariable long tagId) {
-		TagDTO theTag = tagService.getTag(tagId);
-		if (theTag == null) {
+	public EntityModel<TagDTO> getTag(@PathVariable long tagId) {
+		TagDTO tag = tagService.getTag(tagId);
+		if (tag == null) {
 			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.TAG_NOT_FOUND_KEY),
 					new Object[] { tagId }, Locale.getDefault()));
 		}
-		return theTag;
+		EntityModel<TagDTO> entityModel = new EntityModel<>(tag);
+		return entityModel.add(linkTo(methodOn(TagController.class).getTag(tagId)).withSelfRel()
+				.andAffordance(afford(methodOn(TagController.class).deleteTag(tagId)))
+				.andAffordance(afford(methodOn(TagController.class).updateTag(tagId, null))));
 	}
 
 	/**
@@ -84,8 +90,12 @@ public class TagController {
 	 *         200 and the response body contains the tag with the generated Id)
 	 */
 	@PostMapping
-	public TagDTO addTag(@Valid @RequestBody TagDTO tag) {
-		return tagService.saveTag(tag);
+	public EntityModel<TagDTO> addTag(@Valid @RequestBody TagDTO tag) {
+		TagDTO createdTag = tagService.saveTag(tag);
+		EntityModel<TagDTO> entityModel = new EntityModel<>(createdTag);
+		return entityModel.add(linkTo(methodOn(TagController.class).getTag(createdTag.getId())).withSelfRel()
+				.andAffordance(afford(methodOn(TagController.class).deleteTag(createdTag.getId())))
+				.andAffordance(afford(methodOn(TagController.class).updateTag(createdTag.getId(), null))));
 	}
 
 	/**
@@ -97,13 +107,16 @@ public class TagController {
 	 * @throws NotFoundException
 	 */
 	@PutMapping("{tagId}")
-	public TagDTO updateTag(@PathVariable long tagId, @Valid @RequestBody TagDTO tag) {
+	public EntityModel<TagDTO> updateTag(@PathVariable long tagId, @Valid @RequestBody TagDTO tag) {
 		TagDTO tagDTO = tagService.getTag(tagId);
 		if (tagDTO == null) {
 			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.TAG_NOT_UPDATED_KEY),
 					new Object[] { tagId }, Locale.getDefault()));
 		}
-		return tagService.updateTag(tagId, tag);
+		TagDTO updatedTag = tagService.updateTag(tagId, tag);
+		EntityModel<TagDTO> entityModel = new EntityModel<>(updatedTag);
+		return entityModel.add(linkTo(methodOn(TagController.class).getTag(tagId)).withSelfRel()
+				.andAffordance(afford(methodOn(TagController.class).deleteTag(tagId))));
 	}
 
 	/**
@@ -134,8 +147,8 @@ public class TagController {
 	}
 
 	/**
-	 * Get method to found the most popular tag of the user with the 
-	 * highest cost of all purchases
+	 * Get method to found the most popular tag of the user with the highest cost of
+	 * all purchases
 	 * 
 	 * @return {@link TagDTO}
 	 * @throws NotFoundException

@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 import com.epam.esm.dto.GiftCertificateCreateDTO;
 import com.epam.esm.dto.GiftCertificateGetDTO;
@@ -69,13 +71,15 @@ public class CertificateController {
 	 * @throws NotFoundException
 	 */
 	@GetMapping("{certificateId}")
-	public GiftCertificateGetDTO getSertificate(@PathVariable long certificateId) {
+	public EntityModel<GiftCertificateGetDTO> getCertificate(@PathVariable long certificateId) {
 		GiftCertificateGetDTO giftCertificate = certificateService.getCertificate(certificateId);
 		if (giftCertificate == null) {
 			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.CERTIFICATE_NOT_FOUND_KEY),
 					new Object[] { certificateId }, Locale.getDefault()));
 		}
-		return giftCertificate;
+		EntityModel<GiftCertificateGetDTO> entityModel = new EntityModel<>(giftCertificate);
+		return entityModel
+				.add(linkTo(methodOn(CertificateController.class).getCertificate(certificateId)).withSelfRel());
 	}
 
 	/**
@@ -88,12 +92,19 @@ public class CertificateController {
 	 * @throws InvalidRequestParametersException
 	 */
 	@PostMapping
-	public GiftCertificateGetDTO addCertificate(@Valid @RequestBody GiftCertificateCreateDTO certificate) {
+	public EntityModel<GiftCertificateGetDTO> addCertificate(@Valid @RequestBody GiftCertificateCreateDTO certificate) {
 		if (certificate.getTags() == null || certificate.getTags().isEmpty()) {
 			throw new InvalidRequestParametersException(messageSource
 					.getMessage((MessageKeyHolder.CERTIFICATE_INVALID_TAGS_KEY), null, Locale.getDefault()));
 		}
-		return certificateService.saveCertificate(certificate);
+		GiftCertificateGetDTO createdCertificate = certificateService.saveCertificate(certificate);
+		EntityModel<GiftCertificateGetDTO> entityModel = new EntityModel<>(createdCertificate);
+		return entityModel.add(linkTo(methodOn(CertificateController.class).getCertificate(createdCertificate.getId()))
+				.withSelfRel()
+				.andAffordance(
+						afford(methodOn(CertificateController.class).deleteCertificate(createdCertificate.getId())))
+				.andAffordance(afford(
+						methodOn(CertificateController.class).updateCertificate(createdCertificate.getId(), null))));
 	}
 
 	/**
@@ -106,7 +117,7 @@ public class CertificateController {
 	 * @throws NotFoundException
 	 */
 	@PutMapping("{certificateId}")
-	public GiftCertificateGetDTO updateCertificate(@PathVariable long certificateId,
+	public EntityModel<GiftCertificateGetDTO> updateCertificate(@PathVariable long certificateId,
 			@Valid @RequestBody GiftCertificateUpdateDTO certificate) {
 		GiftCertificateGetDTO giftCertificateGetDTO = certificateService.getCertificate(certificateId);
 		if (giftCertificateGetDTO == null) {
@@ -114,7 +125,11 @@ public class CertificateController {
 					new Object[] { certificateId }, Locale.getDefault()));
 		}
 		certificate.setCreationDate(giftCertificateGetDTO.getCreationDate());
-		return certificateService.updateCertificate(certificateId, certificate);
+		GiftCertificateGetDTO updatedCertificate = certificateService.updateCertificate(certificateId, certificate);
+		EntityModel<GiftCertificateGetDTO> entityModel = new EntityModel<>(updatedCertificate);
+		return entityModel.add(linkTo(methodOn(CertificateController.class).getCertificate(updatedCertificate.getId()))
+				.withSelfRel().andAffordance(
+						afford(methodOn(CertificateController.class).deleteCertificate(updatedCertificate.getId()))));
 	}
 
 	/**
@@ -127,7 +142,7 @@ public class CertificateController {
 	 * @throws NotFoundException, JsonPatchProcessingException
 	 */
 	@PatchMapping("{certificateId}")
-	public GiftCertificateGetDTO partialUpdateCertificate(@PathVariable long certificateId,
+	public EntityModel<GiftCertificateGetDTO> partialUpdateCertificate(@PathVariable long certificateId,
 			@Valid @RequestBody JsonPatch patch) {
 		try {
 			GiftCertificateGetDTO certificate = certificateService.getCertificate(certificateId);
@@ -136,7 +151,13 @@ public class CertificateController {
 						new Object[] { certificateId }, Locale.getDefault()));
 			}
 			GiftCertificateGetDTO certificatePatched = applyPatchToCertificate(patch, certificate);
-			return certificateService.updateCertificate(certificateId, certificatePatched);
+			GiftCertificateGetDTO updatedCertificate = certificateService.updateCertificate(certificateId,
+					convertToCertificateUpdateDTO(certificatePatched));
+			EntityModel<GiftCertificateGetDTO> entityModel = new EntityModel<>(updatedCertificate);
+			return entityModel
+					.add(linkTo(methodOn(CertificateController.class).getCertificate(updatedCertificate.getId()))
+							.withSelfRel().andAffordance(afford(methodOn(CertificateController.class)
+									.deleteCertificate(updatedCertificate.getId()))));
 		} catch (JsonPatchException | JsonProcessingException e) {
 			LOG.log(Level.ERROR,
 					"Error when calling partialUpdateCertificate() from CertificateController, certificate wasn't updated, id - "
@@ -198,21 +219,29 @@ public class CertificateController {
 			filterParams.add(new FilterParam(ParameterConstant.DESCRIPTION, description));
 		}
 		orderParams.add(new OrderParam(order, direction));
-		List<GiftCertificateGetDTO> certificates;
 		try {
-			certificates = certificateService.getCertificates(filterParams, orderParams, pagination);
+			List<GiftCertificateGetDTO> certificates = certificateService.getCertificates(filterParams, orderParams,
+					pagination);
+			certificates.forEach(certificate -> certificate.add(
+					linkTo(methodOn(CertificateController.class).getCertificate(certificate.getId())).withSelfRel()));
+			return certificates;
 		} catch (ServiceValidationException e) {
 			LOG.log(Level.ERROR, "Filter param's value is not valid", e);
 			throw new ServiceValidationException(messageSource
 					.getMessage((MessageKeyHolder.CERTIFICATE_INVALID_REQUEST_PARAM_KEY), null, Locale.getDefault()));
 		}
-		return certificates;
 	}
 
 	private GiftCertificateGetDTO applyPatchToCertificate(JsonPatch patch, GiftCertificateGetDTO targetCertificate)
 			throws JsonPatchException, JsonProcessingException {
 		JsonNode patched = patch.apply(objectMapper.convertValue(targetCertificate, JsonNode.class));
 		return objectMapper.treeToValue(patched, GiftCertificateGetDTO.class);
+	}
+
+	private GiftCertificateUpdateDTO convertToCertificateUpdateDTO(GiftCertificateGetDTO certificateGetDTO) {
+		return new GiftCertificateUpdateDTO(certificateGetDTO.getId(), certificateGetDTO.getName(),
+				certificateGetDTO.getDescription(), certificateGetDTO.getPrice(), certificateGetDTO.getDuration(),
+				certificateGetDTO.getTags(), certificateGetDTO.getCreationDate());
 	}
 
 }

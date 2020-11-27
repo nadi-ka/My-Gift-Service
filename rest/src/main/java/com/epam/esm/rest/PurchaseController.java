@@ -8,6 +8,7 @@ import javax.validation.constraints.NotEmpty;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 import com.epam.esm.dto.GiftCertificateWithIdDTO;
 import com.epam.esm.dto.PurchaseDTO;
@@ -57,7 +59,9 @@ public class PurchaseController {
 			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.USER_NOT_FOUND_KEY),
 					new Object[] { userId }, Locale.getDefault()));
 		}
-		return purchaseService.getPurchasesByUserId(userId, pagination);
+		List<PurchaseDTO> purchases = purchaseService.getPurchasesByUserId(userId, pagination);
+		purchases.forEach(purchase -> purchase.add(linkTo(methodOn(PurchaseController.class).getPurchase(purchase.getId())).withSelfRel()));
+		return purchases;
 	}
 
 	/**
@@ -69,13 +73,14 @@ public class PurchaseController {
 	 * @throws NotFoundException
 	 */
 	@GetMapping("/purchases/{purchaseId}")
-	public PurchaseDTO getPurchase(@PathVariable long purchaseId) {
+	public EntityModel<PurchaseDTO> getPurchase(@PathVariable long purchaseId) {
 		PurchaseDTO purchaseDTO = purchaseService.getPurchaseById(purchaseId);
 		if (purchaseDTO.getId() == 0) {
 			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.PURCHASE_NOT_FOUND_KEY),
 					new Object[] { purchaseId }, Locale.getDefault()));
 		}
-		return purchaseDTO;
+		EntityModel<PurchaseDTO> entityModel = new EntityModel<>(purchaseDTO);
+		return entityModel.add(linkTo(methodOn(PurchaseController.class).getPurchase(purchaseId)).withSelfRel());
 	}
 
 	/**
@@ -88,7 +93,7 @@ public class PurchaseController {
 	 * is not found)
 	 */
 	@PostMapping("/users/{userId}/purchases")
-	public PurchaseDTO addPurchase(@PathVariable long userId,
+	public EntityModel<PurchaseDTO> addPurchase(@PathVariable long userId,
 			@RequestBody @NotEmpty List<@Valid GiftCertificateWithIdDTO> certificates) {
 		if (certificates.isEmpty()) {
 			throw new InvalidRequestParametersException(messageSource.getMessage((MessageKeyHolder.PURCHASE_EMPTY_CERTIFICATES_KEY),
@@ -104,7 +109,8 @@ public class PurchaseController {
 			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.PURCHASE_CERTIFICATE_NOT_FOUND_KEY),
 					null, Locale.getDefault()));
 		}
-		return purchaseDTO;
+		EntityModel<PurchaseDTO> entityModel = new EntityModel<>(purchaseDTO);
+		return entityModel.add(linkTo(methodOn(PurchaseController.class).getPurchase(purchaseDTO.getId())).withSelfRel());
 	}
 
 }

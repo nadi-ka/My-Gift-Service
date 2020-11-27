@@ -3,10 +3,12 @@ package com.epam.esm.dto;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-public class TagDTO {
+import org.springframework.hateoas.RepresentationModel;
+
+public class TagDTO extends RepresentationModel<TagDTO> {
 
 	private long id;
-	
+
 	@NotBlank
 	@Size(max = 45, message = "must be less or equal to 45")
 	private String name;

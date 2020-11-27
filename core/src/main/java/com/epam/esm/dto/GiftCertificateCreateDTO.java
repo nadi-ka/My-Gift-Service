@@ -11,28 +11,44 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class GiftCertificateCreateDTO {
-	
+
 	private long id;
-	
+
 	@NotBlank
 	@Size(max = 45, message = "must be less or equal to 45")
 	private String name;
-	
+
 	@NotBlank(message = "is required")
 	@Size(max = 100, message = "must be less or equal to 100")
 	private String description;
-	
+
 	@NotNull(message = "is required")
 	@DecimalMin("0.1")
 	@DecimalMax("10000.0")
 	private Double price;
-	
+
 	@NotNull(message = "is required")
 	@Min(value = 1, message = "must be grater or equal to 1")
 	@Max(value = 1000, message = "must be less or equal to 1000")
 	private Integer duration;
-	
+
 	private List<TagDTO> tags;
+	
+	public GiftCertificateCreateDTO() {}
+
+	public GiftCertificateCreateDTO(long id,
+			@NotBlank @Size(max = 45, message = "must be less or equal to 45") String name,
+			@NotBlank(message = "is required") @Size(max = 100, message = "must be less or equal to 100") String description,
+			@NotNull(message = "is required") @DecimalMin("0.1") @DecimalMax("10000.0") Double price,
+			@NotNull(message = "is required") @Min(value = 1, message = "must be grater or equal to 1") @Max(value = 1000, 
+			message = "must be less or equal to 1000") Integer duration, List<TagDTO> tags) {
+		this.id = id;
+		this.name = name;
+		this.description = description;
+		this.price = price;
+		this.duration = duration;
+		this.tags = tags;
+	}
 
 	public long getId() {
 		return id;
