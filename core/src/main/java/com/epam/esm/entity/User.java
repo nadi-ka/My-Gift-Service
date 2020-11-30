@@ -14,7 +14,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="User")
+@Table(name="User", schema = "Certificate_service")
 public class User {
 
 	@Id

@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,8 +27,6 @@ public class PurchaseServiceImpl implements PurchaseService {
 	private PurchaseDao purchaseDao;
 	private ModelMapper modelMapper;
 	private CertificateDao certificateDao;
-
-	private static final Logger log = LogManager.getLogger(PurchaseServiceImpl.class);
 
 	@Autowired
 	public PurchaseServiceImpl(PurchaseDao purchaseDao, ModelMapper modelMapper, CertificateDao certificateDao) {

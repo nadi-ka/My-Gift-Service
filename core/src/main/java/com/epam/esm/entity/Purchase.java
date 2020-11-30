@@ -18,7 +18,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="Purchase")
+@Table(name="Purchase", schema = "Certificate_service")
 public class Purchase {
 
 	@Id
