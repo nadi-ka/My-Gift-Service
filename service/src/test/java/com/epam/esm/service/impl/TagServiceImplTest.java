@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -12,145 +14,145 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import com.epam.esm.dal.TagDao;
 import com.epam.esm.dto.TagDTO;
+import com.epam.esm.entity.Pagination;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.service.TagService;
+import com.epam.esm.service.config.ServiceSpringConfig;
+import com.epam.esm.service.exception.IllegalOperationServiceException;
 
 @ExtendWith(MockitoExtension.class)
+@SpringJUnitConfig(ServiceSpringConfig.class)
+@SpringBootTest
+@EnableAutoConfiguration
 class TagServiceImplTest {
-	
-//	@Mock
-//	private TagDao tagDao;
-//	
-//	@InjectMocks
-//	private TagService tagService = new TagServiceImpl(tagDao, new ModelMapper());
-//
-//	/**
-//	 * Test method for {@link com.epam.esm.service.impl.TagServiceImpl#getTags()}.
-//	 */
-//	@Test
-//	void testGetTags() {
-//		
-//		 Mockito.when(tagDao.findAllTags()).thenReturn(getListOfTags());
-//		 List<TagDTO> actualList = tagService.getTags();
-//		 
-//	     assertTrue(actualList.size() == 2);
-//	     assertEquals("#Romance", actualList.get(1).getName());
-//	     assertTrue(actualList.get(0).getId() == 1);
-//	}
-//
-//	/**
-//	 * Test method for {@link com.epam.esm.service.impl.TagServiceImpl#saveTag(com.epam.esm.dto.TagDTO)}.
-//	 */
-//	@Test
-//	void testSaveTag() {
-//		
-//		Tag tag = new Tag();
-//		tag.setName("#SPA");
-//		Tag savedTag = new Tag(3, "#SPA");
-//		
-//		Mockito.when(tagDao.addTag(tag)).thenReturn(savedTag);
-//		
-//		TagDTO tagDTO = new TagDTO();
-//		tagDTO.setName("#SPA");
-//		TagDTO actualTag = tagService.saveTag(tagDTO);
-//		
-//		assertTrue(actualTag.getId() == 3);
-//	}
-//	
-//	/**
-//	 * Test method for {@link com.epam.esm.service.impl.TagServiceImpl#getTag(long)}.
-//	 */
-//	@Test
-//	void testGetTag_PositiveResult() {
-//		
-//		Tag tag = new Tag(1, "#Sport");
-//		
-//		Mockito.when(tagDao.findTag(1)).thenReturn(tag);
-//		TagDTO tagActual = tagService.getTag(1);
-//		
-//		assertEquals("#Sport", tagActual.getName());
-//		assertTrue(tagActual.getId() == 1);
-//		
-//	}
-//	
-//	@Test
-//	void testGetTag_NotFound() {
-//		
-//		Mockito.when(tagDao.findTag(999)).thenReturn(null);
-//		TagDTO tagActual = tagService.getTag(999);
-//		
-//		assertNull(tagActual);	
-//	}
-//
-//	/**
-//	 * Test method for {@link com.epam.esm.service.impl.TagServiceImpl#updateTag(com.epam.esm.dto.TagDTO)}.
-//	 */
-////	@Test
-////	void testUpdateTag_PositiveResult() {
-////		
-////		Tag tag = new Tag();
-////		tag.setName("#SPA");
-////		TagDTO tagDTO = new TagDTO();
-////		tagDTO.setName("#SPA");
-////		
-////		Mockito.when(tagDao.updateTag(1, tag)).thenReturn(1);
-////		Mockito.when(tagDao.findTag(1)).thenReturn(new Tag(1, "#SPA"));
-////		TagDTO actualTag = tagService.updateTag(1, tagDTO);
-////		
-////		assertNotNull(actualTag);
-////		assertEquals("#SPA", actualTag.getName());
-////	}
-////	
-////	@Test
-////	void testUpdateTag_NegativeResult_NotFound() {
-////		
-////		Tag tag = new Tag();
-////		tag.setName("#SPA");
-////		TagDTO tagDTO = new TagDTO();
-////		tagDTO.setName("#SPA");
-////		
-////		Mockito.when(tagDao.updateTag(999, tag)).thenReturn(0);
-////		TagDTO actualTag = tagService.updateTag(999, tagDTO);
-////		
-////		assertNotNull(actualTag);
-////		assertNull(actualTag.getName());
-////	}
-//
-//	/**
-//	 * Test method for {@link com.epam.esm.service.impl.TagServiceImpl#deleteTag(long)}.
-//	 */
-//	@Test
-//	void testDeleteTag_SuccessfullyDeleted() {
-//		
-//		Mockito.when(tagDao.certificatesExistForTag(1)).thenReturn(false);
-//		Mockito.when(tagDao.deleteTag(1)).thenReturn(1);
-//		
-//		int affectedRows = tagService.deleteTag(1);
-//		
-//		assertTrue(affectedRows == 1);
-//	}
-//	
-//	@Test
-//	void testDeleteTag_NotDeleted_AsBoundWithCertificate() {
-//		
-//		Mockito.when(tagDao.certificatesExistForTag(1)).thenReturn(true);
-//		
-//		IllegalOperationServiceException thrown = assertThrows(IllegalOperationServiceException.class, () -> tagService.deleteTag(1),
-//				"Expected deleteTag() to throw, but it didn't");
-//
-//				assertTrue(thrown.getMessage().contains("The tag is bounded with one or more certififcates"));
-//	}
-//	
-//	private List<Tag> getListOfTags() {
-//		List<Tag> tags = new ArrayList<Tag>();
-//		tags.add(new Tag(1, "#Sport"));
-//		tags.add(new Tag(2, "#Romance"));
-//		
-//		return tags;
-//	}
-//	
+
+	@Mock
+	private TagDao tagDao;
+	private ModelMapper modelMapper;
+	private Tag tag1;
+	private Tag tag2;
+	private List<Tag> tags;
+	private static final String NAME_SPORT = "#Sport";
+	private static final String NAME_ROMANCE = "#Romance";
+	private static final String NAME_SPA = "#SPA";
+	private static final long ID_ABSENT = 9999;
+
+	@InjectMocks
+	@Autowired
+	private TagService tagService = new TagServiceImpl(tagDao, modelMapper);
+
+	@BeforeEach
+	void setUp() {
+		tag1 = new Tag(1, NAME_SPORT);
+		tag2 = new Tag(2, NAME_ROMANCE);
+		tags = new ArrayList<>();
+		tags.add(tag1);
+		tags.add(tag2);
+	}
+
+	@AfterEach
+	public void tearDown() {
+		tag1 = null;
+		tag2 = null;
+		tags = null;
+	}
+
+	/**
+	 * Test method for
+	 * {@link com.epam.esm.service.impl.TagServiceImpl#getTags(com.epam.esm.entity.Pagination)}.
+	 */
+	@Test
+	void testGetTags() {
+		Pagination pagination = new Pagination(2, 0);
+		Mockito.when(tagDao.findAllTags(pagination)).thenReturn(tags);
+		int sizeExpected = 2;
+
+		assertTrue(tagService.getTags(pagination).size() == sizeExpected);
+	}
+
+	/**
+	 * Test method for
+	 * {@link com.epam.esm.service.impl.TagServiceImpl#saveTag(com.epam.esm.dto.TagDTO)}.
+	 */
+	@Test
+	void testSaveTag() {
+		long savedTagId = 3;
+		Mockito.when(tagDao.addTag(Mockito.any(Tag.class))).thenReturn(new Tag(savedTagId, NAME_SPA));
+		TagDTO tagDTO = new TagDTO();
+		tagDTO.setName(NAME_SPA);
+
+		assertTrue(tagService.saveTag(tagDTO).getId() == savedTagId);
+	}
+
+	/**
+	 * Test method for
+	 * {@link com.epam.esm.service.impl.TagServiceImpl#getTag(long)}.
+	 */
+	@Test
+	void testGetTag_PositiveResult() {
+		Mockito.when(tagDao.findTag(1)).thenReturn(tag1);
+
+		assertEquals(NAME_SPORT, tagService.getTag(1).getName());
+	}
+
+	@Test
+	void testGetTag_NotFound() {
+		Mockito.when(tagDao.findTag(ID_ABSENT)).thenReturn(null);
+		TagDTO tagActual = tagService.getTag(ID_ABSENT);
+
+		assertNull(tagActual);
+	}
+
+	/**
+	 * Test method for
+	 * {@link com.epam.esm.service.impl.TagServiceImpl#updateTag(long, com.epam.esm.dto.TagDTO)}.
+	 */
+	@Test
+	void testUpdateTag_PositiveResult() {
+		TagDTO tagDTO = new TagDTO();
+		tagDTO.setName(NAME_SPA);
+		Mockito.when(tagDao.updateTag(Mockito.anyLong(), Mockito.any(Tag.class))).thenReturn(new Tag(1, NAME_SPA));
+
+		assertEquals(NAME_SPA, tagService.updateTag(1, tagDTO).getName());
+	}
+
+	/**
+	 * Test method for
+	 * {@link com.epam.esm.service.impl.TagServiceImpl#deleteTag(long)}.
+	 */
+	@Test
+	void testDeleteTag_SuccessfullyDeleted() {
+		Mockito.when(tagDao.certificatesExistForTag(1)).thenReturn(false);
+		Mockito.when(tagDao.deleteTag(1)).thenReturn(1);
+
+		assertTrue(tagService.deleteTag(1) == 1);
+	}
+
+	@Test
+	void testDeleteTag_NotDeleted_AsBoundWithCertificate() {
+		Mockito.when(tagDao.certificatesExistForTag(1)).thenReturn(true);
+		IllegalOperationServiceException thrown = assertThrows(IllegalOperationServiceException.class,
+				() -> tagService.deleteTag(1), "Expected deleteTag() to throw, but it didn't");
+
+		assertTrue(thrown.getMessage().contains("The tag is bounded with one or more certififcates"));
+	}
+
+	/**
+	 * Test method for
+	 * {@link com.epam.esm.service.impl.TagServiceImpl#getMostPopularTagOfUserWithHighestCostOfAllPurchases()}.
+	 */
+	@Test
+	void testGetMostPopularTagOfUserWithHighestCostOfAllPurchases() {
+		Mockito.when(tagDao.findMostPopularTagOfUserWithHighestCostOfAllPurchases()).thenReturn(tag1);
+
+		assertEquals(NAME_SPORT, tagService.getMostPopularTagOfUserWithHighestCostOfAllPurchases().getName());
+	}
 
 }

@@ -89,6 +89,7 @@ class CertificateDaoImplTest {
 
 		assertNotNull(createdCertificate);
 		assertEquals(NAME_CHOCOLATIER, createdCertificate.getName());
+		certificateDao.deleteCertificate(createdCertificate.getId());
 	}
 
 	/**

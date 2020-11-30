@@ -56,8 +56,8 @@ class TagDaoImplTest {
 		Tag savedTag = tagDao.addTag(tag);
 
 		assertNotNull(savedTag);
-		assertEquals(3, tag.getId());
 		assertEquals(NAME_SPA, tag.getName());
+		tagDao.deleteTag(savedTag.getId());
 	}
 
 	@Test

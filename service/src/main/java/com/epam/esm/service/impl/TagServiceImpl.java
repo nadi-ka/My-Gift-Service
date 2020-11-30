@@ -21,8 +21,6 @@ public class TagServiceImpl implements TagService {
 
 	private TagDao tagDao;
 	private ModelMapper modelMapper;
-	
-	private static Logger logger = LogManager.getLogger(TagServiceImpl.class);
 
 	@Autowired
 	public TagServiceImpl(TagDao tagDao, ModelMapper modelMapper) {
