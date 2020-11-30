@@ -94,4 +94,3 @@ CREATE TABLE IF NOT EXISTS `Certificate_service`.`Purchase_Certificate` (
     REFERENCES `Certificate_service`.`GiftCertificate` (`Id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
-

@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.persistence.NoResultException;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -31,16 +29,16 @@ public class TagDaoSql implements TagDao {
 	private static final String DELETE_TAG_BY_ID = "DELETE FROM Tag WHERE id = :tagId";
 	private static final String PARAM_TAG_ID = "tagId";
 	private static final String PARAM_TAG_NAME = "tagName";
-	private static final String FIND_MOST_POPULAR_TAG = "SELECT tag.id, tag.name FROM Tag "
-			+ "JOIN tag_certificate ON tag.id = tag_certificate.IdTag "
-			+ "JOIN giftcertificate ON tag_certificate.IdCertificate = giftcertificate.id "
-			+ "JOIN purchase_certificate ON giftcertificate.id = purchase_certificate.Id_certificate "
-			+ "JOIN purchase ON purchase_certificate.Id_order = purchase.Id "
-			+ "JOIN user ON purchase.Id_user = user.Id " + "WHERE user.id = " + "(select user.id AS user_id FROM user "
-			+ "ORDER BY (Select sum(cost) FROM purchase WHERE Id_user = user_id) desc LIMIT 1) " + "GROUP BY tag.id "
-			+ "ORDER BY count(tag.Id) desc LIMIT 1";
-
-	private static Logger logger = LogManager.getLogger(TagDaoSql.class);
+	private static final String FIND_MOST_POPULAR_TAG = "SELECT Tag.Id, Tag.Name FROM Certificate_service.Tag "
+			+ "JOIN Certificate_service.Tag_Certificate ON Tag.Id = Tag_Certificate.IdTag "
+			+ "JOIN Certificate_service.GiftCertificate ON Tag_Certificate.IdCertificate = GiftCertificate.Id "
+			+ "JOIN Certificate_service.Purchase_Certificate ON GiftCertificate.Id = Purchase_Certificate.Id_certificate "
+			+ "JOIN Certificate_service.Purchase ON Purchase_Certificate.Id_order = Purchase.Id "
+			+ "JOIN Certificate_service.User ON Purchase.Id_user = User.Id "
+			+ "WHERE User.Id = (SELECT User.Id FROM Certificate_service.User "
+			+ "ORDER BY (SELECT sum(Cost) FROM Certificate_service.Purchase "
+			+ "WHERE Id_user = User.Id) desc LIMIT 1) GROUP BY Tag.Id "
+			+ "ORDER BY count(Tag.Id) desc LIMIT 1";
 
 	@Autowired
 	public TagDaoSql(SessionFactory sessionFactory) {

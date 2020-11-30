@@ -1,11 +1,10 @@
 package com.epam.esm.rest;
 
-import java.util.Locale;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,7 +58,7 @@ public class UserController {
 		UserDTO userDTO = userService.getUser(userId);
 		if (userDTO.getId() == 0) {
 			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.USER_NOT_FOUND_KEY),
-					new Object[] { userId }, Locale.getDefault()));
+					new Object[] { userId }, LocaleContextHolder.getLocale()));
 		}
 		EntityModel<UserDTO> entityModel = new EntityModel<>(userDTO);
 		return entityModel.add(linkTo(methodOn(UserController.class).getUser(userId)).withSelfRel());

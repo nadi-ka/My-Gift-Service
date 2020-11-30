@@ -1,13 +1,13 @@
 package com.epam.esm.rest;
 
 import java.util.List;
-import java.util.Locale;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,7 +57,7 @@ public class PurchaseController {
 		UserDTO userDTO = userService.getUser(userId);
 		if (userDTO == null) {
 			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.USER_NOT_FOUND_KEY),
-					new Object[] { userId }, Locale.getDefault()));
+					new Object[] { userId }, LocaleContextHolder.getLocale()));
 		}
 		List<PurchaseDTO> purchases = purchaseService.getPurchasesByUserId(userId, pagination);
 		purchases.forEach(purchase -> purchase.add(linkTo(methodOn(PurchaseController.class).getPurchase(purchase.getId())).withSelfRel()));
@@ -77,7 +77,7 @@ public class PurchaseController {
 		PurchaseDTO purchaseDTO = purchaseService.getPurchaseById(purchaseId);
 		if (purchaseDTO.getId() == 0) {
 			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.PURCHASE_NOT_FOUND_KEY),
-					new Object[] { purchaseId }, Locale.getDefault()));
+					new Object[] { purchaseId }, LocaleContextHolder.getLocale()));
 		}
 		EntityModel<PurchaseDTO> entityModel = new EntityModel<>(purchaseDTO);
 		return entityModel.add(linkTo(methodOn(PurchaseController.class).getPurchase(purchaseId)).withSelfRel());
@@ -97,17 +97,17 @@ public class PurchaseController {
 			@RequestBody @NotEmpty List<@Valid GiftCertificateWithIdDTO> certificates) {
 		if (certificates.isEmpty()) {
 			throw new InvalidRequestParametersException(messageSource.getMessage((MessageKeyHolder.PURCHASE_EMPTY_CERTIFICATES_KEY),
-					null, Locale.getDefault()));
+					null, LocaleContextHolder.getLocale()));
 		}
 		UserDTO userDTO = userService.getUser(userId);
 		if (userDTO == null) {
 			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.USER_NOT_FOUND_KEY),
-					new Object[] { userId }, Locale.getDefault()));
+					new Object[] { userId }, LocaleContextHolder.getLocale()));
 		}
 		PurchaseDTO purchaseDTO = purchaseService.savePurchase(userId, certificates);
 		if (purchaseDTO.getId() == 0) {
 			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.PURCHASE_CERTIFICATE_NOT_FOUND_KEY),
-					null, Locale.getDefault()));
+					null, LocaleContextHolder.getLocale()));
 		}
 		EntityModel<PurchaseDTO> entityModel = new EntityModel<>(purchaseDTO);
 		return entityModel.add(linkTo(methodOn(PurchaseController.class).getPurchase(purchaseDTO.getId())).withSelfRel());

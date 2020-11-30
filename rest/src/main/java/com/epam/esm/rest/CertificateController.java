@@ -2,7 +2,6 @@ package com.epam.esm.rest;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import javax.validation.Valid;
 
@@ -11,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -75,7 +75,7 @@ public class CertificateController {
 		GiftCertificateGetDTO giftCertificate = certificateService.getCertificate(certificateId);
 		if (giftCertificate == null) {
 			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.CERTIFICATE_NOT_FOUND_KEY),
-					new Object[] { certificateId }, Locale.getDefault()));
+					new Object[] { certificateId }, LocaleContextHolder.getLocale()));
 		}
 		EntityModel<GiftCertificateGetDTO> entityModel = new EntityModel<>(giftCertificate);
 		return entityModel
@@ -95,7 +95,7 @@ public class CertificateController {
 	public EntityModel<GiftCertificateGetDTO> addCertificate(@Valid @RequestBody GiftCertificateCreateDTO certificate) {
 		if (certificate.getTags() == null || certificate.getTags().isEmpty()) {
 			throw new InvalidRequestParametersException(messageSource
-					.getMessage((MessageKeyHolder.CERTIFICATE_INVALID_TAGS_KEY), null, Locale.getDefault()));
+					.getMessage((MessageKeyHolder.CERTIFICATE_INVALID_TAGS_KEY), null, LocaleContextHolder.getLocale()));
 		}
 		GiftCertificateGetDTO createdCertificate = certificateService.saveCertificate(certificate);
 		EntityModel<GiftCertificateGetDTO> entityModel = new EntityModel<>(createdCertificate);
@@ -122,7 +122,7 @@ public class CertificateController {
 		GiftCertificateGetDTO giftCertificateGetDTO = certificateService.getCertificate(certificateId);
 		if (giftCertificateGetDTO == null) {
 			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.CERTIFICATE_NOT_UPDATED_KEY),
-					new Object[] { certificateId }, Locale.getDefault()));
+					new Object[] { certificateId }, LocaleContextHolder.getLocale()));
 		}
 		certificate.setCreationDate(giftCertificateGetDTO.getCreationDate());
 		GiftCertificateGetDTO updatedCertificate = certificateService.updateCertificate(certificateId, certificate);
@@ -148,7 +148,7 @@ public class CertificateController {
 			GiftCertificateGetDTO certificate = certificateService.getCertificate(certificateId);
 			if (certificate == null) {
 				throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.CERTIFICATE_NOT_FOUND_KEY),
-						new Object[] { certificateId }, Locale.getDefault()));
+						new Object[] { certificateId }, LocaleContextHolder.getLocale()));
 			}
 			GiftCertificateGetDTO certificatePatched = applyPatchToCertificate(patch, certificate);
 			GiftCertificateGetDTO updatedCertificate = certificateService.updateCertificate(certificateId,
@@ -165,7 +165,7 @@ public class CertificateController {
 					e);
 			throw new JsonPatchProcessingException(
 					messageSource.getMessage((MessageKeyHolder.CERTIFICATE_JSON_PATCH_ERROR),
-							new Object[] { certificateId }, Locale.getDefault()));
+							new Object[] { certificateId }, LocaleContextHolder.getLocale()));
 		}
 	}
 
@@ -181,11 +181,11 @@ public class CertificateController {
 		GiftCertificateGetDTO certificate = certificateService.getCertificate(certificateId);
 		if (certificate == null) {
 			return ResponseEntity.status(HttpStatus.OK).body(messageSource.getMessage(
-					(MessageKeyHolder.CERTIFICATE_ABSENT_KEY), new Object[] { certificateId }, Locale.getDefault()));
+					(MessageKeyHolder.CERTIFICATE_ABSENT_KEY), new Object[] { certificateId }, LocaleContextHolder.getLocale()));
 		}
 		certificateService.deleteCertificate(certificateId);
 		return ResponseEntity.status(HttpStatus.OK).body(messageSource.getMessage(
-				(MessageKeyHolder.CERTIFICATE_DELETED_KEY), new Object[] { certificateId }, Locale.getDefault()));
+				(MessageKeyHolder.CERTIFICATE_DELETED_KEY), new Object[] { certificateId }, LocaleContextHolder.getLocale()));
 	}
 
 	/**
@@ -228,7 +228,7 @@ public class CertificateController {
 		} catch (ServiceValidationException e) {
 			LOG.log(Level.ERROR, "Filter param's value is not valid", e);
 			throw new ServiceValidationException(messageSource
-					.getMessage((MessageKeyHolder.CERTIFICATE_INVALID_REQUEST_PARAM_KEY), null, Locale.getDefault()));
+					.getMessage((MessageKeyHolder.CERTIFICATE_INVALID_REQUEST_PARAM_KEY), null, LocaleContextHolder.getLocale()));
 		}
 	}
 

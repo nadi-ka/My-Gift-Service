@@ -10,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -74,7 +75,7 @@ public class TagController {
 		TagDTO tag = tagService.getTag(tagId);
 		if (tag == null) {
 			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.TAG_NOT_FOUND_KEY),
-					new Object[] { tagId }, Locale.getDefault()));
+					new Object[] { tagId }, LocaleContextHolder.getLocale()));
 		}
 		EntityModel<TagDTO> entityModel = new EntityModel<>(tag);
 		return entityModel.add(linkTo(methodOn(TagController.class).getTag(tagId)).withSelfRel()
@@ -111,7 +112,7 @@ public class TagController {
 		TagDTO tagDTO = tagService.getTag(tagId);
 		if (tagDTO == null) {
 			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.TAG_NOT_UPDATED_KEY),
-					new Object[] { tagId }, Locale.getDefault()));
+					new Object[] { tagId }, LocaleContextHolder.getLocale()));
 		}
 		TagDTO updatedTag = tagService.updateTag(tagId, tag);
 		EntityModel<TagDTO> entityModel = new EntityModel<>(updatedTag);
@@ -132,7 +133,7 @@ public class TagController {
 		TagDTO tag = tagService.getTag(tagId);
 		if (tag == null) {
 			return ResponseEntity.status(HttpStatus.OK).body(messageSource.getMessage((MessageKeyHolder.TAG_ABSENT_KEY),
-					new Object[] { tagId }, Locale.getDefault()));
+					new Object[] { tagId }, LocaleContextHolder.getLocale()));
 		}
 		try {
 			tagService.deleteTag(tagId);
@@ -143,7 +144,7 @@ public class TagController {
 					.getMessage((MessageKeyHolder.TAG_BOUNDED_KEY), new Object[] { tagId }, Locale.getDefault()));
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(messageSource.getMessage((MessageKeyHolder.TAG_DELETED_KEY),
-				new Object[] { tagId }, Locale.getDefault()));
+				new Object[] { tagId }, LocaleContextHolder.getLocale()));
 	}
 
 	/**
@@ -158,7 +159,7 @@ public class TagController {
 		TagDTO tagDTO = tagService.getMostPopularTagOfUserWithHighestCostOfAllPurchases();
 		if (tagDTO.getId() == 0) {
 			throw new NotFoundException(
-					messageSource.getMessage((MessageKeyHolder.NOTHING_FOUND_KEY), null, Locale.getDefault()));
+					messageSource.getMessage((MessageKeyHolder.NOTHING_FOUND_KEY), null, LocaleContextHolder.getLocale()));
 		}
 		return tagDTO;
 	}

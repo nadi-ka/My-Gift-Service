@@ -19,7 +19,7 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
-@Table(name = "GiftCertificate")
+@Table(name = "GiftCertificate", schema = "Certificate_service")
 public class GiftCertificate {
 
 	@Id
@@ -47,9 +47,10 @@ public class GiftCertificate {
 	@Column(name = "Duration")
 	private int duration;
 
-	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH }, 
-			fetch = FetchType.LAZY)
-	@JoinTable(name = "Tag_Certificate", joinColumns = @JoinColumn(name = "IdCertificate"), inverseJoinColumns = @JoinColumn(name = "IdTag"))
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH,
+			CascadeType.REFRESH }, fetch = FetchType.LAZY)
+	@JoinTable(name = "Tag_Certificate", schema = "Certificate_service", 
+	joinColumns = @JoinColumn(name = "IdCertificate"), inverseJoinColumns = @JoinColumn(name = "IdTag"))
 	private List<Tag> tags;
 
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "certificates")

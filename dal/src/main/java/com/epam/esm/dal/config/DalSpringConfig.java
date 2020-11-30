@@ -2,24 +2,16 @@ package com.epam.esm.dal.config;
 
 import java.util.Properties;
 
-import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
@@ -43,29 +35,12 @@ public class DalSpringConfig {
 	@Bean
 	public BasicDataSource dataSource() {
 		BasicDataSource ds = new BasicDataSource();
-//		ds.setDriverClassName(env.getProperty("db.driver"));
-//		ds.setUrl(env.getProperty("db.url"));
-//		ds.setUsername(env.getProperty("db.user"));
-//		ds.setPassword(env.getProperty("db.password"));
-//		ds.setInitialSize(Integer.parseInt(env.getProperty("db.pool")));
 		ds.setDriverClassName(env.getProperty("spring.datasource.driver-class-name"));
 		ds.setUrl(env.getProperty("spring.datasource.jdbc-url"));
 		ds.setUsername(env.getProperty("spring.datasource.username"));
 		ds.setPassword(env.getProperty("spring.datasource.password"));
 		ds.setInitialSize(Integer.parseInt(env.getProperty("spring.datasource.pool-size")));
 		return ds;
-	}
-	
-//	@Bean
-//	@Primary
-//    @ConfigurationProperties(prefix = "spring.datasource")
-//    public DataSource dataSource() {
-//      return DataSourceBuilder.create().build();
-//    }
-
-	@Bean
-	public JdbcTemplate jdbcTemplate(DataSource dataSource) throws NamingException {
-		return new JdbcTemplate(dataSource);
 	}
 
 	@Bean

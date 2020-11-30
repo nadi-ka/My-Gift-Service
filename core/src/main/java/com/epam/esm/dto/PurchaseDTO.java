@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import javax.persistence.Column;
-
 import org.springframework.hateoas.RepresentationModel;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -17,7 +15,6 @@ public class PurchaseDTO extends RepresentationModel<PurchaseDTO> {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Minsk")
 	private LocalDateTime creationDate;
 
-	@Column(name = "Cost")
 	private BigDecimal cost;
 
 	private List<GiftCertificateGetDTO> certificates;
