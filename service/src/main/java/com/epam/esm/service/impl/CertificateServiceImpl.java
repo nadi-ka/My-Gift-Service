@@ -5,8 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +27,6 @@ public class CertificateServiceImpl implements CertificateService {
 
 	private CertificateDao certificateDao;
 	private ModelMapper modelMapper;
-	private static final Logger log = LogManager.getLogger(CertificateServiceImpl.class);
 
 	@Autowired
 	public CertificateServiceImpl(CertificateDao certificateDao, ModelMapper modelMapper) {
