@@ -14,140 +14,201 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
+import com.epam.esm.dal.CertificateDao;
 import com.epam.esm.dal.TagDao;
+import com.epam.esm.dal.config.DalSpringConfig;
 import com.epam.esm.dal.util.SqlQueryBuilder;
 import com.epam.esm.entity.GiftCertificate;
+import com.epam.esm.entity.Pagination;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.transferobj.FilterParam;
+import com.epam.esm.transferobj.OrderParam;
 
+@ActiveProfiles("test")
+@DataJpaTest
+@SpringJUnitConfig(DalSpringConfig.class)
+@EnableAutoConfiguration
 class CertificateDaoImplTest {
 
-//	private EmbeddedDatabase db;
-//	@Autowired
-//	private SessionFactory sessionFactory;
-//
-//	@BeforeEach
-//	void setUp() {
-//		db = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2)
-//				.setName("testDB;DATABASE_TO_UPPER=false;IGNORECASE=TRUE;CASE_INSENSITIVE_IDENTIFIERS=TRUE;MODE=MySQL")
-//				.addScript("create-db.sql").addScript("insert-data.sql").build();
-//	}
-//
-//	@AfterEach
-//	void tearDown() {
-//		db.shutdown();
-//	}
-//
-//	/**
-//	 * Test method for
-//	 * {@link com.epam.esm.dal.impl.CertificateDaoSql#addCertificate(com.epam.esm.entity.GiftCertificate)}.
-//	 */
-//	@Test
-//	void testAddCertificate() {
-//		CertificateDaoSql certificateDao = getCertificateDao();
-//		GiftCertificate savedCertificate = certificateDao.addCertificate(getCertificate());
-//
-//		assertNotNull(savedCertificate);
-//		assertEquals(4, savedCertificate.getId());
-//		assertEquals("Master-class from chocolatier", savedCertificate.getName());
-//	}
-//
-//	/**
-//	 * Test method for
-//	 * {@link com.epam.esm.dal.impl.CertificateDaoSql#updateCertificate(com.epam.esm.entity.GiftCertificate)}.
-//	 */
-//	@Test
-//	void testUpdateCertificate() {
-//		CertificateDaoSql certificateDao = getCertificateDao();
-//		GiftCertificate certificate = getCertificate();
-//		int affectedRows = certificateDao.updateCertificate(1, certificate);
-//		GiftCertificate certificateActual = certificateDao.findCertificate(1);
-//
-//		assertNotNull(certificateActual);
-//		assertTrue(affectedRows == 1);
-//		assertEquals(1, certificateActual.getId());
-//		assertEquals("Master-class from chocolatier", certificateActual.getName());
-//	}
-//
-//	/**
-//	 * Test method for
-//	 * {@link com.epam.esm.dal.impl.CertificateDaoSql#findCertificates(java.util.List, java.util.List)}.
-//	 */
-//
-//	/**
-//	 * Test method for
-//	 * {@link com.epam.esm.dal.impl.CertificateDaoSql#findCertificate(long)}.
-//	 */
-//	@Test
-//	void testFindCertificate_PositiveResult() {
-//		CertificateDaoSql certificateDao = getCertificateDao();
-//		GiftCertificate certificateActual = certificateDao.findCertificate(1);
-//
-//		assertNotNull(certificateActual);
-//		assertEquals(1, certificateActual.getId());
-//		assertEquals("Skydiving", certificateActual.getName());
-//	}
-//
-//	@Test
-//	void testFindCertificate_NegativaResult_notFound() {
-//		CertificateDaoSql certificateDao = getCertificateDao();
-//		GiftCertificate certificate = certificateDao.findCertificate(9999);
-//
-//		assertNull(certificate);
-//	}
-//
-//	/**
-//	 * Test method for
-//	 * {@link com.epam.esm.dal.impl.CertificateDaoSql#deleteCertificate(long)}.
-//	 */
-//	@Test
-//	void testDeleteCertificate_PositiveResult_DeletedSuccessfully() {
-//		CertificateDaoSql certificateDao = getCertificateDao();
-//		certificateDao.deleteCertificate(1);
-//		GiftCertificate certificate = certificateDao.findCertificate(1);
-//
-//		assertNull(certificate);
-//	}
-//
-//	@Test
-//	void testDeleteCertificate_NegativeResult_CertificateAbsent() {
-//		CertificateDaoSql certificateDao = getCertificateDao();
-//		int[] affectedRowsActual = certificateDao.deleteCertificate(9999);
-//		int[] expected = new int[] { 0, 0 };
-//
-//		assertArrayEquals(expected, affectedRowsActual);
-//	}
-//
-//	private CertificateDaoSql getCertificateDao() {
-//		JdbcTemplate template = new JdbcTemplate(db);
-//		SqlQueryBuilder builder = new SqlQueryBuilder();
-//		TagDao tagDao = new TagDaoSql(sessionFactory);
-//		CertificateDaoSql certificateDao = new CertificateDaoSql(template, builder, tagDao);
-//		return certificateDao;
-//	}
-//
-//	private GiftCertificate getCertificate() {
-//		ZonedDateTime zoneEuropeMinsk = ZonedDateTime.now(ZoneId.of("Europe/Minsk"));
-//		String formatPattern = "yyyy-MM-dd HH:mm:ss";
-//		LocalDateTime stamp = zoneEuropeMinsk.toLocalDateTime();
-//		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatPattern);
-//		zoneEuropeMinsk.format(formatter);
-//
-//		List<Tag> tags = new ArrayList<Tag>();
-//		tags.add(new Tag(2, "#Romance"));
-//		GiftCertificate certificate = new GiftCertificate();
-//		certificate.setName("Master-class from chocolatier");
-//		certificate.setDescription("Two hours master-class for couple");
-//		certificate.setPrice(95.50);
-//		certificate.setCreationDate(stamp);
-//		certificate.setLastUpdateDate(stamp);
-//		certificate.setDuration(90);
-//		certificate.setTags(tags);
-//		return certificate;
-//	}
+	private SessionFactory sessionFactory;
+	private SqlQueryBuilder builder;
+	private GiftCertificate certificate;
+	private LocalDateTime timeStamp;
+	private static final String TAG_NAME_ROMANCE = "#Romance";
+	private static final String NAME_CHOCOLATIER = "Master-class from chocolatier";
+	private static final String NAME_SKYDIVING = "Skydiving";
+	private static final String DESCRIPTION_CHOCOLATIER = "Two hours master-class for couple";
+	private static final Double CERT_PRICE = 92.90;
+	private static final int CERT_DURATION = 100;
+	private static final String FORMAT_PATTERN = "yyyy-MM-dd HH:mm:ss";
+	private static final String ZONE = "Europe/Minsk";
+	private static final long ID_CERT_TO_UPDATE = 3;
+	private static final long ID_ABSENT = 9999;
+
+	@Autowired
+	private TagDao tagDao = new TagDaoSql(sessionFactory);
+
+	@Autowired
+	private CertificateDao certificateDao = new CertificateDaoSql(sessionFactory, builder, tagDao);
+
+	@BeforeEach
+	public void setUp() {
+		timeStamp = getTimestamp();
+		List<Tag> tags = new ArrayList<Tag>();
+		Tag tag = new Tag();
+		tag.setName(TAG_NAME_ROMANCE);
+		tags.add(tag);
+		certificate = new GiftCertificate();
+		certificate.setName(NAME_CHOCOLATIER);
+		certificate.setDescription(DESCRIPTION_CHOCOLATIER);
+		certificate.setPrice(CERT_PRICE);
+		certificate.setCreationDate(timeStamp);
+		certificate.setLastUpdateDate(timeStamp);
+		certificate.setDuration(CERT_DURATION);
+		certificate.setTags(tags);
+	}
+
+	@AfterEach
+	public void tearDown() {
+		timeStamp = null;
+		certificate = null;
+	}
+
+	/**
+	 * Test method for
+	 * {@link com.epam.esm.dal.impl.CertificateDaoSql#addCertificate(com.epam.esm.entity.GiftCertificate)}.
+	 */
+	@Test
+	void testAddCertificate() {
+		GiftCertificate createdCertificate = certificateDao.addCertificate(certificate);
+
+		assertNotNull(createdCertificate);
+		assertEquals(NAME_CHOCOLATIER, createdCertificate.getName());
+	}
+
+	/**
+	 * Test method for
+	 * {@link com.epam.esm.dal.impl.CertificateDaoSql#updateCertificate(com.epam.esm.entity.GiftCertificate)}.
+	 */
+	@Test
+	void testUpdateCertificate() {
+		GiftCertificate updatedCertificate = certificateDao.updateCertificate(ID_CERT_TO_UPDATE, certificate);
+
+		assertNotNull(updatedCertificate);
+		assertEquals(ID_CERT_TO_UPDATE, updatedCertificate.getId());
+		assertEquals(NAME_CHOCOLATIER, updatedCertificate.getName());
+	}
+
+	/**
+	 * Test method for
+	 * {@link com.epam.esm.dal.impl.CertificateDaoSql#findCertificates(java.util.List, java.util.List, com.epam.esm.entity.Pagination)}.
+	 */
+	@Test
+	void testfindCertificates() {
+		Pagination pagination = new Pagination(2, 0);
+		List<FilterParam> filterParams = new ArrayList<>();
+		String filterParamName = "name";
+		String filterParamVal = "Skydiving";
+		filterParams.add(new FilterParam(filterParamName, filterParamVal));
+		List<OrderParam> orderParams = new ArrayList<>();
+		String orderParamName = "creationDate";
+		String orderParamDirection = "desc";
+		orderParams.add(new OrderParam(orderParamName, orderParamDirection));
+		List<GiftCertificate> actualCertificates = certificateDao.findCertificates(filterParams, orderParams, pagination);
+
+		assertNotNull(actualCertificates);
+		assertTrue(actualCertificates.size() == 2);
+		assertTrue(actualCertificates.get(0).getId() == 2);
+	}
+
+	/**
+	 * Test method for
+	 * {@link com.epam.esm.dal.impl.CertificateDaoSql#findCertificate(long)}.
+	 */
+	@Test
+	void testFindCertificate_PositiveResult() {
+		GiftCertificate certificateActual = certificateDao.findCertificate(1);
+
+		assertNotNull(certificateActual);
+		assertEquals(1, certificateActual.getId());
+		assertEquals(NAME_SKYDIVING, certificateActual.getName());
+	}
+
+	@Test
+	void testFindCertificate_NegativaResult_NotFound() {
+		GiftCertificate certificate = certificateDao.findCertificate(ID_ABSENT);
+
+		assertNull(certificate);
+	}
+
+	/**
+	 * Test method for
+	 * {@link com.epam.esm.dal.impl.CertificateDaoSql#deleteCertificate(long)}.
+	 */
+	@Test
+	void testDeleteCertificate_PositiveResult_DeletedSuccessfully() {
+		GiftCertificate createdCertificate = certificateDao.addCertificate(certificate);
+		
+		assertTrue(certificateDao.deleteCertificate(createdCertificate.getId()) == 1);
+	}
+
+	@Test
+	void testDeleteCertificate_NegativeResult_CertificateAbsent() {
+		
+		assertTrue(certificateDao.deleteCertificate(ID_ABSENT) == 0);
+	}
+	
+	/**
+	 * Test method for
+	 * {@link com.epam.esm.dal.impl.CertificateDaoSql#getSumCertificatesPrice(java.util.List)}.
+	 */
+	@Test
+	void getSumCertificatesPrice() {
+		List<Long> ids = new ArrayList<>();
+		ids.add(1L);
+		ids.add(2L);
+		
+		Double sumExpected = 140.0;
+		assertEquals(sumExpected, certificateDao.getSumCertificatesPrice(ids));
+	}
+	
+	/**
+	 * Test method for
+	 * {@link com.epam.esm.dal.impl.CertificateDaoSql#getAmountOfCertificates(java.util.List)}.
+	 */
+	@Test
+	void getAmountOfCertificates() {
+		List<Long> ids = new ArrayList<>();
+		ids.add(1L);
+		ids.add(2L);
+
+		assertEquals(ids.size(), certificateDao.getAmountOfCertificates(ids));
+	}
+	
+	/**
+	 * Test method for
+	 * {@link com.epam.esm.dal.impl.CertificateDaoSql#findCertificatesByTags(java.util.List, com.epam.esm.entity.Pagination)}.
+	 */
+	@Test
+	void findCertificatesByTags() {
+		Long[] ids = {1L};
+		int sizeExpected = 2;
+		
+		assertTrue(certificateDao.findCertificatesByTags(ids, new Pagination(2, 0)).size() == sizeExpected);
+	}
+	
+
+	private LocalDateTime getTimestamp() {
+		ZonedDateTime zoneEuropeMinsk = ZonedDateTime.now(ZoneId.of(ZONE));
+		LocalDateTime ldt = zoneEuropeMinsk.toLocalDateTime();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(FORMAT_PATTERN);
+		zoneEuropeMinsk.format(formatter);
+		return ldt;
+	}
 
 }

@@ -10,7 +10,7 @@ INSERT INTO `Certificate_service`.`Tag` (`Id`, `Name`) VALUES (2, '#Romance');
 -- -----------------------------------------------------
 USE `Certificate_service`;
 INSERT INTO `Certificate_service`.`GiftCertificate` (`Id`, `Name`, `Description`, `Price`, `CreateDate`, `LastUpdateDate`, `Duration`) VALUES (1, 'Skydiving', 'For 1 person', 50.0, '2020-10-19 12:40:30', '2020-10-19 12:40:30', 90);
-INSERT INTO `Certificate_service`.`GiftCertificate` (`Id`, `Name`, `Description`, `Price`, `CreateDate`, `LastUpdateDate`, `Duration`) VALUES (2, 'Skydiving', 'For 2 persons', 90.0, '2020-10-19 12:40:30', '2020-10-20 12:40:30', 90);
+INSERT INTO `Certificate_service`.`GiftCertificate` (`Id`, `Name`, `Description`, `Price`, `CreateDate`, `LastUpdateDate`, `Duration`) VALUES (2, 'Skydiving', 'For 2 persons', 90.0, '2020-10-20 12:40:30', '2020-10-20 12:40:30', 90);
 INSERT INTO `Certificate_service`.`GiftCertificate` (`Id`, `Name`, `Description`, `Price`, `CreateDate`, `LastUpdateDate`, `Duration`) VALUES (3, 'Dinner by candlelight ', 'For couple in the restorant \"Troffea\"', 10.50, '2020-10-21 12:40:30', '2020-10-19 12:40:30', 90);
 
 

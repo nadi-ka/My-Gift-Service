@@ -33,8 +33,8 @@ public class CertificateDaoSql implements CertificateDao {
 	private static final String GET_SUM_PRICE_OF_CERTIFICATES = "SELECT SUM(price) FROM GiftCertificate c WHERE c.id IN (?1)";
 	private static final String GET_CERTIFICATES_AMOUNT_BY_IDS = "SELECT count(id) FROM GiftCertificate c WHERE c.id IN (?1)";
 	private static final String PARAM_CERTIFICATE_ID = "certificateId";
-
-	private static final Logger log = LogManager.getLogger(CertificateDaoSql.class);
+	
+	private static final Logger LOG = LogManager.getLogger(CertificateDaoSql.class);
 
 	@Autowired
 	public CertificateDaoSql(SessionFactory sessionFactory, SqlQueryBuilder builder, TagDao tagDao) {

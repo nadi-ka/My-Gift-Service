@@ -31,6 +31,7 @@ class TagDaoImplTest {
 	private static final String NAME_SPORT = "#Sport";
 	private static final String NAME_ABSENT = "Something";
 	private static final long ID_ABSENT = 9999;
+	private static final long ID_TAG_TO_UPDATE = 2;
 
 	@Autowired
 	private TagDao tagDao = new TagDaoSql(sessionFactory);
@@ -73,14 +74,14 @@ class TagDaoImplTest {
 	 */
 	@Test
 	void testUpdateTag_PositiveResult() {
-		Tag actualTag = tagDao.updateTag(2, tag);
+		Tag actualTag = tagDao.updateTag(ID_TAG_TO_UPDATE, tag);
 
 		assertNotNull(actualTag);
 		assertEquals(NAME_SPA, tag.getName());
 	}
 
 	/**
-	 * Test method for {@link com.epam.esm.dal.impl.TagDaoSql#findAllTags()}.
+	 * Test method for {@link com.epam.esm.dal.impl.TagDaoSql#findAllTags(com.epam.esm.entity.Pagination)}.
 	 */
 	@Test
 	void testFindAllTags() {
@@ -88,7 +89,7 @@ class TagDaoImplTest {
 		List<Tag> actualTags = tagDao.findAllTags(pagination);
 
 		assertNotNull(actualTags);
-		assertEquals(2, actualTags.size());
+		assertTrue(actualTags.size() == 2);
 	}
 
 	/**
@@ -116,14 +117,14 @@ class TagDaoImplTest {
 	@Test
 	void testDeleteTag_PositiveResult_DeletedSuccessfully() {
 		Tag createdTag = tagDao.addTag(tag);
-
-		assertEquals(1, tagDao.deleteTag(createdTag.getId()));
+		
+		assertTrue(tagDao.deleteTag(createdTag.getId()) == 1);
 	}
 
 	@Test
 	void testDeleteTag_NegativeResult_TagAbsent() {
-
-		assertEquals(0, tagDao.deleteTag(ID_ABSENT));
+		
+		assertTrue(tagDao.deleteTag(ID_ABSENT) == 0);
 	}
 
 	/**

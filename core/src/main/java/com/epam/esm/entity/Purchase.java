@@ -37,7 +37,7 @@ public class Purchase {
 	private User user;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "Purchase_Certificate", 
+	@JoinTable(name = "Purchase_Certificate", schema = "Certificate_service", 
 	joinColumns = {@JoinColumn(name = "Id_order")}, 
 	inverseJoinColumns = {@JoinColumn(name = "Id_certificate")})
 	private List<GiftCertificate> certificates;
