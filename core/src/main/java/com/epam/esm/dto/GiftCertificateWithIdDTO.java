@@ -6,6 +6,12 @@ public class GiftCertificateWithIdDTO {
 	
 	@NotNull(message = "Field value cannot be null")
 	private Long id;
+	
+	public GiftCertificateWithIdDTO() {}
+	
+	public GiftCertificateWithIdDTO(Long id) {
+		this.id = id;
+	}
 
 	public Long getId() {
 		return id;
