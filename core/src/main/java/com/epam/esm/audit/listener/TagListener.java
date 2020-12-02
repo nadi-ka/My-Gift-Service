@@ -5,22 +5,29 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PostPersist;
 import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
+import javax.transaction.Transactional;
 
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.epam.esm.audit.AuditOperation;
 import com.epam.esm.audit.entity.TagAudit;
 import com.epam.esm.entity.Tag;
 
+@Component
 public class TagListener {
 	
-	@PersistenceContext
-	private EntityManager entityManager;
+//	@PersistenceContext
+//	private EntityManager entityManager;
 	
 	@Autowired
-	public TagListener(EntityManager entityManager) {
-		this.entityManager = entityManager;
-	}
+	private SessionFactory sessionFactory;
+	
+//	@Autowired
+//	public TagListener(EntityManager entityManager) {
+//		this.entityManager = entityManager;
+//	}
 	
 	@PostPersist
     public void postPersist(Tag tag){
@@ -37,8 +44,12 @@ public class TagListener {
         insertIntoAuditTable(AuditOperation.DELETE, tag);
     }
 	
-	private void insertIntoAuditTable(AuditOperation operation, Tag tag){
-        entityManager.persist(new TagAudit(0, tag.getId(), tag.getName(), operation));
+//	private void insertIntoAuditTable(AuditOperation operation, Tag tag){
+//        entityManager.persist(new TagAudit(0, tag.getId(), tag.getName(), operation));
+//    }
+    
+    private void insertIntoAuditTable(AuditOperation operation, Tag tag){
+        sessionFactory.getCurrentSession().persist(new TagAudit(0, tag.getId(), tag.getName(), operation));
     }
 
 }

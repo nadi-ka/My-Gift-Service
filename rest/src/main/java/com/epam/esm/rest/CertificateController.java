@@ -77,8 +77,7 @@ public class CertificateController {
 			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.CERTIFICATE_NOT_FOUND_KEY),
 					new Object[] { certificateId }, LocaleContextHolder.getLocale()));
 		}
-		EntityModel<GiftCertificateGetDTO> entityModel = new EntityModel<>(giftCertificate);
-		return entityModel
+		return new EntityModel<>(giftCertificate)
 				.add(linkTo(methodOn(CertificateController.class).getCertificate(certificateId)).withSelfRel());
 	}
 
@@ -94,17 +93,16 @@ public class CertificateController {
 	@PostMapping
 	public EntityModel<GiftCertificateGetDTO> addCertificate(@Valid @RequestBody GiftCertificateCreateDTO certificate) {
 		if (certificate.getTags() == null || certificate.getTags().isEmpty()) {
-			throw new InvalidRequestParametersException(messageSource
-					.getMessage((MessageKeyHolder.CERTIFICATE_INVALID_TAGS_KEY), null, LocaleContextHolder.getLocale()));
+			throw new InvalidRequestParametersException(messageSource.getMessage(
+					(MessageKeyHolder.CERTIFICATE_INVALID_TAGS_KEY), null, LocaleContextHolder.getLocale()));
 		}
 		GiftCertificateGetDTO createdCertificate = certificateService.saveCertificate(certificate);
-		EntityModel<GiftCertificateGetDTO> entityModel = new EntityModel<>(createdCertificate);
-		return entityModel.add(linkTo(methodOn(CertificateController.class).getCertificate(createdCertificate.getId()))
-				.withSelfRel()
-				.andAffordance(
-						afford(methodOn(CertificateController.class).deleteCertificate(createdCertificate.getId())))
-				.andAffordance(afford(
-						methodOn(CertificateController.class).updateCertificate(createdCertificate.getId(), null))));
+		return new EntityModel<>(createdCertificate).add(
+				linkTo(methodOn(CertificateController.class).getCertificate(createdCertificate.getId())).withSelfRel()
+						.andAffordance(afford(
+								methodOn(CertificateController.class).deleteCertificate(createdCertificate.getId())))
+						.andAffordance(afford(methodOn(CertificateController.class)
+								.updateCertificate(createdCertificate.getId(), null))));
 	}
 
 	/**
@@ -126,10 +124,10 @@ public class CertificateController {
 		}
 		certificate.setCreationDate(giftCertificateGetDTO.getCreationDate());
 		GiftCertificateGetDTO updatedCertificate = certificateService.updateCertificate(certificateId, certificate);
-		EntityModel<GiftCertificateGetDTO> entityModel = new EntityModel<>(updatedCertificate);
-		return entityModel.add(linkTo(methodOn(CertificateController.class).getCertificate(updatedCertificate.getId()))
-				.withSelfRel().andAffordance(
-						afford(methodOn(CertificateController.class).deleteCertificate(updatedCertificate.getId()))));
+		return new EntityModel<>(updatedCertificate)
+				.add(linkTo(methodOn(CertificateController.class).getCertificate(updatedCertificate.getId()))
+						.withSelfRel().andAffordance(afford(
+								methodOn(CertificateController.class).deleteCertificate(updatedCertificate.getId()))));
 	}
 
 	/**
@@ -151,10 +149,15 @@ public class CertificateController {
 						new Object[] { certificateId }, LocaleContextHolder.getLocale()));
 			}
 			GiftCertificateGetDTO certificatePatched = applyPatchToCertificate(patch, certificate);
+			if (certificatePatched.certificatesWithoutIdEquals(certificate)) {
+				return new EntityModel<>(certificate)
+						.add(linkTo(methodOn(CertificateController.class).getCertificate(certificate.getId()))
+								.withSelfRel().andAffordance(afford(
+										methodOn(CertificateController.class).deleteCertificate(certificate.getId()))));
+			}
 			GiftCertificateGetDTO updatedCertificate = certificateService.updateCertificate(certificateId,
 					convertToCertificateUpdateDTO(certificatePatched));
-			EntityModel<GiftCertificateGetDTO> entityModel = new EntityModel<>(updatedCertificate);
-			return entityModel
+			return new EntityModel<>(updatedCertificate)
 					.add(linkTo(methodOn(CertificateController.class).getCertificate(updatedCertificate.getId()))
 							.withSelfRel().andAffordance(afford(methodOn(CertificateController.class)
 									.deleteCertificate(updatedCertificate.getId()))));
@@ -166,6 +169,10 @@ public class CertificateController {
 			throw new JsonPatchProcessingException(
 					messageSource.getMessage((MessageKeyHolder.CERTIFICATE_JSON_PATCH_ERROR),
 							new Object[] { certificateId }, LocaleContextHolder.getLocale()));
+		} catch (ServiceValidationException e) {
+			LOG.log(Level.ERROR, "Certificate properties are not valid", e);
+			throw new ServiceValidationException(messageSource.getMessage(
+					(MessageKeyHolder.CERTIFICATE_NOT_VALID), null, LocaleContextHolder.getLocale()));
 		}
 	}
 
@@ -180,12 +187,14 @@ public class CertificateController {
 	public ResponseEntity<?> deleteCertificate(@PathVariable long certificateId) {
 		GiftCertificateGetDTO certificate = certificateService.getCertificate(certificateId);
 		if (certificate == null) {
-			return ResponseEntity.status(HttpStatus.OK).body(messageSource.getMessage(
-					(MessageKeyHolder.CERTIFICATE_ABSENT_KEY), new Object[] { certificateId }, LocaleContextHolder.getLocale()));
+			return ResponseEntity.status(HttpStatus.OK)
+					.body(messageSource.getMessage((MessageKeyHolder.CERTIFICATE_ABSENT_KEY),
+							new Object[] { certificateId }, LocaleContextHolder.getLocale()));
 		}
 		certificateService.deleteCertificate(certificateId);
-		return ResponseEntity.status(HttpStatus.OK).body(messageSource.getMessage(
-				(MessageKeyHolder.CERTIFICATE_DELETED_KEY), new Object[] { certificateId }, LocaleContextHolder.getLocale()));
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(messageSource.getMessage((MessageKeyHolder.CERTIFICATE_DELETED_KEY),
+						new Object[] { certificateId }, LocaleContextHolder.getLocale()));
 	}
 
 	/**
@@ -227,8 +236,8 @@ public class CertificateController {
 			return certificates;
 		} catch (ServiceValidationException e) {
 			LOG.log(Level.ERROR, "Filter param's value is not valid", e);
-			throw new ServiceValidationException(messageSource
-					.getMessage((MessageKeyHolder.CERTIFICATE_INVALID_REQUEST_PARAM_KEY), null, LocaleContextHolder.getLocale()));
+			throw new ServiceValidationException(messageSource.getMessage(
+					(MessageKeyHolder.CERTIFICATE_INVALID_REQUEST_PARAM_KEY), null, LocaleContextHolder.getLocale()));
 		}
 	}
 

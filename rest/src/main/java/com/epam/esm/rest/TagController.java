@@ -77,8 +77,7 @@ public class TagController {
 			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.TAG_NOT_FOUND_KEY),
 					new Object[] { tagId }, LocaleContextHolder.getLocale()));
 		}
-		EntityModel<TagDTO> entityModel = new EntityModel<>(tag);
-		return entityModel.add(linkTo(methodOn(TagController.class).getTag(tagId)).withSelfRel()
+		return new EntityModel<>(tag).add(linkTo(methodOn(TagController.class).getTag(tagId)).withSelfRel()
 				.andAffordance(afford(methodOn(TagController.class).deleteTag(tagId)))
 				.andAffordance(afford(methodOn(TagController.class).updateTag(tagId, null))));
 	}
@@ -93,9 +92,8 @@ public class TagController {
 	@PostMapping
 	public EntityModel<TagDTO> addTag(@Valid @RequestBody TagDTO tag) {
 		TagDTO createdTag = tagService.saveTag(tag);
-		EntityModel<TagDTO> entityModel = new EntityModel<>(createdTag);
-		return entityModel.add(linkTo(methodOn(TagController.class).getTag(createdTag.getId())).withSelfRel()
-				.andAffordance(afford(methodOn(TagController.class).deleteTag(createdTag.getId())))
+		return new EntityModel<>(createdTag).add(linkTo(methodOn(TagController.class).getTag(createdTag.getId()))
+				.withSelfRel().andAffordance(afford(methodOn(TagController.class).deleteTag(createdTag.getId())))
 				.andAffordance(afford(methodOn(TagController.class).updateTag(createdTag.getId(), null))));
 	}
 
@@ -114,9 +112,12 @@ public class TagController {
 			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.TAG_NOT_UPDATED_KEY),
 					new Object[] { tagId }, LocaleContextHolder.getLocale()));
 		}
+		if (tag.tagsWithoutIdEquals(tag)) {
+			return new EntityModel<>(tagDTO).add(linkTo(methodOn(TagController.class).getTag(tagDTO.getId()))
+					.withSelfRel().andAffordance(afford(methodOn(TagController.class).deleteTag(tagDTO.getId()))));
+		}
 		TagDTO updatedTag = tagService.updateTag(tagId, tag);
-		EntityModel<TagDTO> entityModel = new EntityModel<>(updatedTag);
-		return entityModel.add(linkTo(methodOn(TagController.class).getTag(tagId)).withSelfRel()
+		return new EntityModel<>(updatedTag).add(linkTo(methodOn(TagController.class).getTag(tagId)).withSelfRel()
 				.andAffordance(afford(methodOn(TagController.class).deleteTag(tagId))));
 	}
 
@@ -158,8 +159,8 @@ public class TagController {
 	public TagDTO getMostPopularTagOfUserWithHighestCostOfPurchases() {
 		TagDTO tagDTO = tagService.getMostPopularTagOfUserWithHighestCostOfAllPurchases();
 		if (tagDTO.getId() == 0) {
-			throw new NotFoundException(
-					messageSource.getMessage((MessageKeyHolder.NOTHING_FOUND_KEY), null, LocaleContextHolder.getLocale()));
+			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.NOTHING_FOUND_KEY), null,
+					LocaleContextHolder.getLocale()));
 		}
 		return tagDTO;
 	}

@@ -12,7 +12,7 @@
         </Console>
  
         <RollingFile name="appLog"
-            fileName="${APP_LOG_ROOT}/SpringBoot2App/application.log"
+            fileName="${APP_LOG_ROOT}/SpringBoot2App/app.log"
             filePattern="${APP_LOG_ROOT}/SpringBoot2App/application-%d{yyyy-MM-dd}-%i.log">
             <PatternLayout pattern="${LOG_PATTERN}" />
             <Policies>

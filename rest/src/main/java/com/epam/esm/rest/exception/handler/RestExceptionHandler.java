@@ -70,9 +70,9 @@ public class RestExceptionHandler {
 	
 	@ExceptionHandler
 	public ResponseEntity<ErrorResponse> handleJsonPatchProcessingException(JsonPatchProcessingException exc) {
-		ErrorResponse error = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), exc.getMessage(),
+		ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), exc.getMessage(),
 				System.currentTimeMillis());
-		return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
 	
 	@ExceptionHandler

@@ -90,7 +90,7 @@
         <artifactId>hibernate-envers</artifactId>
         <version>5.4.23.Final</version>
     </dependency>
-	
+  	
   </dependencies>
   
 </project>

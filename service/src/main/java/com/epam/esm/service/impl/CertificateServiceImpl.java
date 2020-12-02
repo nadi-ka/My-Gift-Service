@@ -18,6 +18,7 @@ import com.epam.esm.entity.Pagination;
 import com.epam.esm.service.CertificateService;
 import com.epam.esm.service.exception.ServiceValidationException;
 import com.epam.esm.service.util.DateTimeFormatterISO;
+import com.epam.esm.service.validator.CertificateValidator;
 import com.epam.esm.service.validator.RequestParamsValidator;
 import com.epam.esm.transferobj.FilterParam;
 import com.epam.esm.transferobj.OrderParam;
@@ -35,8 +36,8 @@ public class CertificateServiceImpl implements CertificateService {
 	}
 
 	@Override
-	public List<GiftCertificateGetDTO> getCertificates(List<FilterParam> filterParams, List<OrderParam> orderParams, Pagination pagination)
-			throws ServiceValidationException {
+	public List<GiftCertificateGetDTO> getCertificates(List<FilterParam> filterParams, List<OrderParam> orderParams,
+			Pagination pagination) {
 		boolean isFilterParamsValid = RequestParamsValidator.validateFilterParams(filterParams);
 		boolean isOrderParamsValid = RequestParamsValidator.validateOrderParams(orderParams);
 		if (!isFilterParamsValid || !isOrderParamsValid) {
@@ -67,6 +68,10 @@ public class CertificateServiceImpl implements CertificateService {
 
 	@Override
 	public GiftCertificateGetDTO updateCertificate(long certificateId, GiftCertificateUpdateDTO certificate) {
+		CertificateValidator validator = new CertificateValidator();
+		if (!validator.validateCertificate(certificate)) {
+			throw new ServiceValidationException("Certificate properties are not valid");
+		}
 		GiftCertificate certificateToUpdate = convertToEntity(certificate);
 		certificateToUpdate.setLastUpdateDate(DateTimeFormatterISO.createAndformatDateTime());
 		GiftCertificate updatedCertificate = certificateDao.updateCertificate(certificateId, certificateToUpdate);

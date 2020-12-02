@@ -12,6 +12,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
+//@EntityListeners(TagListener.class)
 @Table(name = "Tag", schema = "Certificate_service")
 public class Tag {
 
