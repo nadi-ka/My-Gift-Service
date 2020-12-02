@@ -112,7 +112,7 @@ public class TagController {
 			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.TAG_NOT_UPDATED_KEY),
 					new Object[] { tagId }, LocaleContextHolder.getLocale()));
 		}
-		if (tag.tagsWithoutIdEquals(tag)) {
+		if (tag.tagsWithoutIdEquals(tagDTO)) {
 			return new EntityModel<>(tagDTO).add(linkTo(methodOn(TagController.class).getTag(tagDTO.getId()))
 					.withSelfRel().andAffordance(afford(methodOn(TagController.class).deleteTag(tagDTO.getId()))));
 		}

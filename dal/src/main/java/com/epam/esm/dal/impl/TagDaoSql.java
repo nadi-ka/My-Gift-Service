@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.persistence.NoResultException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -21,6 +23,8 @@ import com.epam.esm.entity.Tag;
 public class TagDaoSql implements TagDao {
 
 	private SessionFactory sessionFactory;
+	
+	private static final Logger LOG = LogManager.getLogger(TagDaoSql.class);
 
 	private static final String FIND_TAGS = "FROM Tag";
 	private static final String FIND_CERTIFICATE_ID_BY_TAG_ID = "SELECT c "
@@ -29,7 +33,8 @@ public class TagDaoSql implements TagDao {
 	private static final String DELETE_TAG_BY_ID = "DELETE FROM Tag WHERE id = :tagId";
 	private static final String PARAM_TAG_ID = "tagId";
 	private static final String PARAM_TAG_NAME = "tagName";
-	private static final String FIND_MOST_POPULAR_TAG = "SELECT Tag.Id, Tag.Name FROM Certificate_service.Tag "
+	private static final String FIND_MOST_POPULAR_TAG = "SELECT Tag.Id, Tag.Name, Tag.Created_on, Tag.Updated_on "
+			+ "FROM Certificate_service.Tag "
 			+ "JOIN Certificate_service.Tag_Certificate ON Tag.Id = Tag_Certificate.IdTag "
 			+ "JOIN Certificate_service.GiftCertificate ON Tag_Certificate.IdCertificate = GiftCertificate.Id "
 			+ "JOIN Certificate_service.Purchase_Certificate ON GiftCertificate.Id = Purchase_Certificate.Id_certificate "
@@ -100,7 +105,9 @@ public class TagDaoSql implements TagDao {
 	public Tag findMostPopularTagOfUserWithHighestCostOfAllPurchases() {
 		try {
 			Session session = sessionFactory.getCurrentSession();
+			LOG.info("Before^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 			Tag tag = session.createNativeQuery(FIND_MOST_POPULAR_TAG, Tag.class).getSingleResult();
+			LOG.info("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 			return tag;
 		} catch (NoResultException e) {
 			return null;

@@ -2,8 +2,8 @@
 -- Data for table `Certificate_service`.`Tag`
 -- -----------------------------------------------------
 USE `Certificate_service`;
-INSERT INTO `Certificate_service`.`Tag` (`Id`, `Name`) VALUES (1, '#Sport');
-INSERT INTO `Certificate_service`.`Tag` (`Id`, `Name`) VALUES (2, '#Romance');
+INSERT INTO `Certificate_service`.`Tag` (`Id`, `Name`, `Created_on`, `Updated_on`) VALUES (1, '#Sport', NULL, NULL);
+INSERT INTO `Certificate_service`.`Tag` (`Id`, `Name`, `Created_on`, `Updated_on`) VALUES (2, '#Romance', NULL, NULL);
 
 -- -----------------------------------------------------
 -- Data for table `Certificate_service`.`GiftCertificate`

@@ -3,6 +3,7 @@ package com.epam.esm.entity;
 import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -11,8 +12,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.epam.esm.audit.Audit;
+
 @Entity
-//@EntityListeners(TagListener.class)
 @Table(name = "Tag", schema = "Certificate_service")
 public class Tag {
 
@@ -27,6 +29,9 @@ public class Tag {
 	@ManyToMany(fetch = FetchType.LAZY, 
 			mappedBy = "tags")
 	private List<GiftCertificate> certificates;
+	
+	@Embedded
+	private Audit audit = new Audit(); 
 
 	public Tag() {
 	}
@@ -102,7 +107,6 @@ public class Tag {
 	@Override
 	public String toString() {
 		return "Tag [id=" + id + ", name=" + name + "]";
-	}
-	
+	}	
 
 }

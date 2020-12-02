@@ -18,6 +18,8 @@ USE `Certificate_service` ;
 CREATE TABLE IF NOT EXISTS `Certificate_service`.`Tag` (
   `Id` BIGINT NOT NULL AUTO_INCREMENT,
   `Name` VARCHAR(45) NOT NULL,
+  `Created_on` TIMESTAMP NULL,
+  `Updated_on` TIMESTAMP NULL,
   PRIMARY KEY (`Id`));
 
 -- -----------------------------------------------------
