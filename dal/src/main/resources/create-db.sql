@@ -62,6 +62,8 @@ CREATE TABLE IF NOT EXISTS `Certificate_service`.`User` (
   `Last_name` VARCHAR(45) NOT NULL,
   `Date_of_birth` DATE NOT NULL,
   `Email` VARCHAR(45) NOT NULL,
+  `Created_on` TIMESTAMP NULL,
+  `Updated_on` TIMESTAMP NULL,
   PRIMARY KEY (`Id`));
 
 -- -----------------------------------------------------
@@ -72,6 +74,8 @@ CREATE TABLE IF NOT EXISTS `Certificate_service`.`Purchase` (
   `Id_user` BIGINT NOT NULL,
   `Creation_date` TIMESTAMP NOT NULL,
   `Cost` DECIMAL(10,2) NOT NULL,
+  `Created_on` TIMESTAMP NULL,
+  `Updated_on` TIMESTAMP NULL,
   PRIMARY KEY (`Id`),
   CONSTRAINT `Order_User_FK`
     FOREIGN KEY (`Id_user`)

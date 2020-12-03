@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -16,6 +17,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.epam.esm.audit.Audit;
 
 @Entity
 @Table(name="Purchase", schema = "Certificate_service")
@@ -41,6 +44,9 @@ public class Purchase {
 	joinColumns = {@JoinColumn(name = "Id_order")}, 
 	inverseJoinColumns = {@JoinColumn(name = "Id_certificate")})
 	private List<GiftCertificate> certificates;
+	
+	@Embedded
+	private Audit audit = new Audit(); 
 	
 	public Purchase() {}
 
