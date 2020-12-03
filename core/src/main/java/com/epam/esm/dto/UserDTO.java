@@ -17,11 +17,11 @@ public class UserDTO extends RepresentationModel<UserDTO>{
 	private long id;
 	
 	@NotBlank
-	@Size(max = 45, message = "must be less or equal to 45")
+	@Size(max = 45)
 	private String firstName;
 	
 	@NotBlank
-	@Size(max = 45, message = "must be less or equal to 45")
+	@Size(max = 45)
 	private String lastName;
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
@@ -30,7 +30,7 @@ public class UserDTO extends RepresentationModel<UserDTO>{
 	private LocalDate dateOfBirth;
 	
 	@NotBlank
-	@Email(message="Please, provide a valid email address")
+	@Email
 	private String email;
 	
 	public UserDTO() {}

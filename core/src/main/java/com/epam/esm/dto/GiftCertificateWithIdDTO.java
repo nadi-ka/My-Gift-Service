@@ -4,7 +4,7 @@ import javax.validation.constraints.NotNull;
 
 public class GiftCertificateWithIdDTO {
 	
-	@NotNull(message = "Field value cannot be null")
+	@NotNull
 	private Long id;
 	
 	public GiftCertificateWithIdDTO() {}

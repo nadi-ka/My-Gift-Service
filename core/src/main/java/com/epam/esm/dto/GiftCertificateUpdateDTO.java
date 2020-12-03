@@ -14,7 +14,7 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class GiftCertificateUpdateDTO extends GiftCertificateCreateDTO {
-	
+
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Minsk")
 	private LocalDateTime creationDate;
 
@@ -22,12 +22,11 @@ public class GiftCertificateUpdateDTO extends GiftCertificateCreateDTO {
 		super();
 	}
 
-	public GiftCertificateUpdateDTO(long id,
-			@NotBlank @Size(max = 45, message = "must be less or equal to 45") String name,
-			@NotBlank(message = "is required") @Size(max = 100, message = "must be less or equal to 100") String description,
-			@NotNull(message = "is required") @DecimalMin("0.1") @DecimalMax("10000.0") Double price,
-			@NotNull(message = "is required") @Min(value = 1, message = "must be grater or equal to 1") @Max(value = 1000, message = "must be less or equal to 1000") Integer duration,
-			List<TagDTO> tags, LocalDateTime creationDate) {
+	public GiftCertificateUpdateDTO(long id, @NotBlank @Size(max = 45) String name,
+			@NotBlank @Size(max = 100) String description,
+			@NotNull @DecimalMin("0.1") @DecimalMax("10000.0") Double price,
+			@NotNull @Min(value = 1) @Max(value = 1000) Integer duration, List<TagDTO> tags,
+			LocalDateTime creationDate) {
 		super(id, name, description, price, duration, tags);
 		this.creationDate = creationDate;
 	}

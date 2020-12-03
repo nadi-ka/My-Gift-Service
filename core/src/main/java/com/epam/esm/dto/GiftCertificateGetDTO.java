@@ -22,21 +22,21 @@ public class GiftCertificateGetDTO extends RepresentationModel<GiftCertificateGe
 	private long id;
 
 	@NotBlank
-	@Size(max = 45, message = "must be less or equal to 45")
+	@Size(max = 45)
 	private String name;
 
-	@NotBlank(message = "is required")
-	@Size(max = 100, message = "must be less or equal to 100")
+	@NotBlank
+	@Size(max = 100)
 	private String description;
 
-	@NotNull(message = "is required")
+	@NotNull
 	@DecimalMin("0.1")
 	@DecimalMax("10000.0")
 	private Double price;
 
-	@NotNull(message = "is required")
-	@Min(value = 1, message = "must be grater or equal to 1")
-	@Max(value = 1000, message = "must be less or equal to 1000")
+	@NotNull
+	@Min(value = 1)
+	@Max(value = 1000)
 	private Integer duration;
 
 	private List<TagDTO> tags;

@@ -10,7 +10,7 @@ public class TagDTO extends RepresentationModel<TagDTO> implements Comparable<Ta
 	private long id;
 
 	@NotBlank
-	@Size(max = 45, message = "must be less or equal to 45")
+	@Size(max = 45)
 	private String name;
 
 	public TagDTO() {
