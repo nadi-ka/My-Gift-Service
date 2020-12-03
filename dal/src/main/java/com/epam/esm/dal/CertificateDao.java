@@ -17,7 +17,7 @@ public interface CertificateDao {
 
 	GiftCertificate findCertificate(long id);
 
-	int deleteCertificate(long id);
+	void deleteCertificate(long id);
 	
 	Double getSumCertificatesPrice(List<Long> certificateIds);
 	

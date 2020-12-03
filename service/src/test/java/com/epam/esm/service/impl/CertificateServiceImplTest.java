@@ -177,17 +177,6 @@ class CertificateServiceImplTest {
 		assertNotNull(actual);
 		assertNull(actual.getName());
 	}
-
-	/**
-	 * Test method for
-	 * {@link com.epam.esm.service.impl.CertificateServiceImpl#deleteCertificate(long)}.
-	 */
-	@Test
-	void testDeleteCertificate() {
-		Mockito.when(certificateDao.deleteCertificate(1)).thenReturn(1);
-
-		assertTrue(certificateService.deleteCertificate(1) == 1);
-	}
 	
 	/**
 	 * Test method for

@@ -82,8 +82,8 @@ public class CertificateServiceImpl implements CertificateService {
 	}
 
 	@Override
-	public int deleteCertificate(long id) {
-		return certificateDao.deleteCertificate(id);
+	public void deleteCertificate(long id) {
+		certificateDao.deleteCertificate(id);
 	}
 
 	@Override

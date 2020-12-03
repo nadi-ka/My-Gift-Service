@@ -76,9 +76,10 @@ public class CertificateDaoSql implements CertificateDao {
 	}
 
 	@Override
-	public int deleteCertificate(long id) {
-		return sessionFactory.getCurrentSession().createQuery(DELETE_CERTIFICATE_BY_ID)
-				.setParameter(PARAM_CERTIFICATE_ID, id).executeUpdate();
+	public void deleteCertificate(long id) {
+		Session session = sessionFactory.getCurrentSession();
+		GiftCertificate certificate = session.find(GiftCertificate.class, id);
+		session.remove(certificate);
 	}
 
 	@Override

@@ -127,13 +127,6 @@ class TagServiceImplTest {
 	 * Test method for
 	 * {@link com.epam.esm.service.impl.TagServiceImpl#deleteTag(long)}.
 	 */
-	@Test
-	void testDeleteTag_SuccessfullyDeleted() {
-		Mockito.when(tagDao.certificatesExistForTag(1)).thenReturn(false);
-		Mockito.when(tagDao.deleteTag(1)).thenReturn(1);
-
-		assertTrue(tagService.deleteTag(1) == 1);
-	}
 
 	@Test
 	void testDeleteTag_NotDeleted_AsBoundWithCertificate() {

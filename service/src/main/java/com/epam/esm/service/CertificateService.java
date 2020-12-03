@@ -21,7 +21,7 @@ public interface CertificateService {
 
 	GiftCertificateGetDTO updateCertificate(long certificateId, GiftCertificateUpdateDTO certificate);
 
-	int deleteCertificate(long id);
+	void deleteCertificate(long id);
 
 	List<GiftCertificateGetDTO> getCertificatesByTags(Long[] tagIds, Pagination pagination);
 

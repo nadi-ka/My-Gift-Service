@@ -75,9 +75,10 @@ public class TagDaoSql implements TagDao {
 	}
 
 	@Override
-	public int deleteTag(long id) {
-		return sessionFactory.getCurrentSession().createQuery(DELETE_TAG_BY_ID).setParameter(PARAM_TAG_ID, id)
-				.executeUpdate();
+	public void deleteTag(long id) {
+		Session session = sessionFactory.getCurrentSession();
+		Tag tag = session.find(Tag.class, id);
+		session.remove(tag);
 	}
 
 	@Override

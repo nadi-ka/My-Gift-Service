@@ -117,14 +117,9 @@ class TagDaoImplTest {
 	@Test
 	void testDeleteTag_PositiveResult_DeletedSuccessfully() {
 		Tag createdTag = tagDao.addTag(tag);
+		tagDao.deleteTag(createdTag.getId());
 		
-		assertTrue(tagDao.deleteTag(createdTag.getId()) == 1);
-	}
-
-	@Test
-	void testDeleteTag_NegativeResult_TagAbsent() {
-		
-		assertTrue(tagDao.deleteTag(ID_ABSENT) == 0);
+		assertNull(tagDao.findTag(createdTag.getId()));
 	}
 
 	/**

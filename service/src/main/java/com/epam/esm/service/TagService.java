@@ -16,7 +16,7 @@ public interface TagService {
 
 	TagDTO updateTag(long tagId, TagDTO tag);
 
-	int deleteTag(long id) throws IllegalOperationServiceException;
+	void deleteTag(long id) throws IllegalOperationServiceException;
 	
 	TagDTO getMostPopularTagOfUserWithHighestCostOfAllPurchases();
 

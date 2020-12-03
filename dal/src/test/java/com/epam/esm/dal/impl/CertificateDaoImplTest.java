@@ -154,14 +154,9 @@ class CertificateDaoImplTest {
 	@Test
 	void testDeleteCertificate_PositiveResult_DeletedSuccessfully() {
 		GiftCertificate createdCertificate = certificateDao.addCertificate(certificate);
+		certificateDao.deleteCertificate(createdCertificate.getId());
 		
-		assertTrue(certificateDao.deleteCertificate(createdCertificate.getId()) == 1);
-	}
-
-	@Test
-	void testDeleteCertificate_NegativeResult_CertificateAbsent() {
-		
-		assertTrue(certificateDao.deleteCertificate(ID_ABSENT) == 0);
+		assertNull(certificateDao.findCertificate(createdCertificate.getId()));
 	}
 	
 	/**
