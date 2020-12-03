@@ -30,6 +30,7 @@ import com.epam.esm.rest.exception.NotFoundException;
 import com.epam.esm.rest.messagekey.MessageKeyHolder;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.exception.IllegalOperationServiceException;
+import com.epam.esm.service.exception.ServiceValidationException;
 
 @RestController
 @RequestMapping("/tags")
@@ -91,10 +92,15 @@ public class TagController {
 	 */
 	@PostMapping
 	public EntityModel<TagDTO> addTag(@Valid @RequestBody TagDTO tag) {
+		try {
 		TagDTO createdTag = tagService.saveTag(tag);
 		return new EntityModel<>(createdTag).add(linkTo(methodOn(TagController.class).getTag(createdTag.getId()))
 				.withSelfRel().andAffordance(afford(methodOn(TagController.class).deleteTag(createdTag.getId())))
 				.andAffordance(afford(methodOn(TagController.class).updateTag(createdTag.getId(), null))));
+		}catch (ServiceValidationException e) {
+			throw new ServiceValidationException(messageSource.getMessage(
+					(MessageKeyHolder.TAG_NAME_NOT_UNIQUE), null, LocaleContextHolder.getLocale()));
+		}
 	}
 
 	/**

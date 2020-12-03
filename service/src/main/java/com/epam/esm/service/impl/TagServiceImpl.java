@@ -13,6 +13,7 @@ import com.epam.esm.entity.Pagination;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.exception.IllegalOperationServiceException;
+import com.epam.esm.service.exception.ServiceValidationException;
 
 @Service
 public class TagServiceImpl implements TagService {
@@ -35,6 +36,9 @@ public class TagServiceImpl implements TagService {
 
 	@Override
 	public TagDTO saveTag(TagDTO tag) {
+		if (tagDao.findTagByName(tag.getName()) != null) {
+			throw new ServiceValidationException("Not unique tag name"); 
+		}
 		Tag resultTag = tagDao.addTag(convertToEntity(tag));
 		return convertToDto(resultTag);
 	}

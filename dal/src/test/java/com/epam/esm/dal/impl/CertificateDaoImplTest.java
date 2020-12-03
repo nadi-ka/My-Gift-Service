@@ -173,9 +173,17 @@ class CertificateDaoImplTest {
 		List<Long> ids = new ArrayList<>();
 		ids.add(1L);
 		ids.add(2L);
-		
 		Double sumExpected = 140.0;
+		
 		assertEquals(sumExpected, certificateDao.getSumCertificatesPrice(ids));
+	}
+	
+	@Test
+	void getSumCertificatesPrice_Not_Found() {
+		List<Long> ids = new ArrayList<>();
+		ids.add(ID_ABSENT);
+		
+		assertNull(certificateDao.getSumCertificatesPrice(ids));
 	}
 	
 	/**
@@ -189,6 +197,14 @@ class CertificateDaoImplTest {
 		ids.add(2L);
 
 		assertEquals(ids.size(), certificateDao.getAmountOfCertificates(ids));
+	}
+	
+	@Test
+	void getAmountOfCertificates_Not_Found() {
+		List<Long> ids = new ArrayList<>();
+		ids.add(ID_ABSENT);
+
+		assertTrue(certificateDao.getAmountOfCertificates(ids) == 0);
 	}
 	
 	/**

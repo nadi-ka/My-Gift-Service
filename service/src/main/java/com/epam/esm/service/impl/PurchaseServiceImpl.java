@@ -42,7 +42,11 @@ public class PurchaseServiceImpl implements PurchaseService {
 
 	@Override
 	public PurchaseDTO getPurchaseById(long purchaseId) {
-		return convertToDto(purchaseDao.findPurchseById(purchaseId));
+		Purchase purchase = purchaseDao.findPurchseById(purchaseId);
+		if (purchase == null) {
+			return new PurchaseDTO();
+		}
+		return convertToDto(purchase);
 	}
 
 	@Override
@@ -55,6 +59,9 @@ public class PurchaseServiceImpl implements PurchaseService {
 		}
 		Purchase purchase = new Purchase(creationTime, new User(userId), certificatesWithIds);
 		Double cost = certificateDao.getSumCertificatesPrice(certificateIds);
+		if (cost == null || cost == 0.0) {
+			return new PurchaseDTO();
+		}
 		purchase.setCost(new BigDecimal(cost));
 		long purchaseId = purchaseDao.addPurchase(purchase);
 		return convertToDto(purchaseDao.findPurchseById(purchaseId));

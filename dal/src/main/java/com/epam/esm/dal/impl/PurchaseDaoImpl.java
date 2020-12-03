@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.persistence.NoResultException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -25,6 +27,8 @@ public class PurchaseDaoImpl implements PurchaseDao {
 	private static final String PARAM_PURCHASE_ID = "purchaseId";
 
 	private SessionFactory sessionFactory;
+	
+	private static final Logger LOG = LogManager.getLogger(PurchaseDaoImpl.class);
 
 	@Autowired
 	public PurchaseDaoImpl(SessionFactory sessionFactory) {
@@ -39,16 +43,8 @@ public class PurchaseDaoImpl implements PurchaseDao {
 	}
 
 	@Override
-	public Purchase findPurchseById(long purchaseId) {
-		try {
-			Session session = sessionFactory.getCurrentSession();
-			Query<Purchase> query = session.createQuery(GET_PURCHASE_BY_ID, Purchase.class);
-			query.setParameter(PARAM_PURCHASE_ID, purchaseId);
-			Purchase purchase = query.getSingleResult();
-			return purchase;
-		} catch (NoResultException e) {
-			return new Purchase();
-		}
+	public Purchase findPurchseById(long purchaseId) {	
+		return sessionFactory.getCurrentSession().find(Purchase.class, purchaseId);
 	}
 
 	@Override

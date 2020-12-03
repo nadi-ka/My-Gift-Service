@@ -23,7 +23,7 @@ import com.epam.esm.entity.Tag;
 public class TagDaoSql implements TagDao {
 
 	private SessionFactory sessionFactory;
-	
+
 	private static final Logger LOG = LogManager.getLogger(TagDaoSql.class);
 
 	private static final String FIND_TAGS = "FROM Tag";
@@ -42,8 +42,7 @@ public class TagDaoSql implements TagDao {
 			+ "JOIN Certificate_service.User ON Purchase.Id_user = User.Id "
 			+ "WHERE User.Id = (SELECT User.Id FROM Certificate_service.User "
 			+ "ORDER BY (SELECT sum(Cost) FROM Certificate_service.Purchase "
-			+ "WHERE Id_user = User.Id) desc LIMIT 1) GROUP BY Tag.Id "
-			+ "ORDER BY count(Tag.Id) desc LIMIT 1";
+			+ "WHERE Id_user = User.Id) desc LIMIT 1) GROUP BY Tag.Id " + "ORDER BY count(Tag.Id) desc LIMIT 1";
 
 	@Autowired
 	public TagDaoSql(SessionFactory sessionFactory) {
@@ -92,23 +91,22 @@ public class TagDaoSql implements TagDao {
 
 	@Override
 	public Tag findTagByName(String name) {
-		try {
-			return sessionFactory.getCurrentSession().createQuery(FIND_TAG_BY_NAME, Tag.class)
-					.setParameter(PARAM_TAG_NAME, name).getSingleResult();
-		} catch (NoResultException e) {
+		List<Tag> tags = sessionFactory.getCurrentSession().createQuery(FIND_TAG_BY_NAME, Tag.class)
+				.setParameter(PARAM_TAG_NAME, name).getResultList();
+		if (tags.isEmpty()) {
 			return null;
 		}
+		return tags.get(0);
 	}
 
 	@Override
 	public Tag findMostPopularTagOfUserWithHighestCostOfAllPurchases() {
-		try {
-			Session session = sessionFactory.getCurrentSession();
-			Tag tag = session.createNativeQuery(FIND_MOST_POPULAR_TAG, Tag.class).getSingleResult();
-			return tag;
-		} catch (NoResultException e) {
+		List<Tag> tags = sessionFactory.getCurrentSession().createNativeQuery(FIND_MOST_POPULAR_TAG, Tag.class)
+				.getResultList();
+		if (tags.isEmpty()) {
 			return null;
 		}
+		return tags.get(0);
 	}
 
 }

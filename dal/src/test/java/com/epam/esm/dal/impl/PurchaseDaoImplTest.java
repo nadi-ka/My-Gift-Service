@@ -90,7 +90,7 @@ class PurchaseDaoImplTest {
 	@Test
 	void testFindPurchseById_Not_Found() {
 
-		assertTrue(purchaseDao.findPurchseById(ID_ABSENT).getId() == 0);
+		assertNull(purchaseDao.findPurchseById(ID_ABSENT));
 	}
 
 	/**
