@@ -23,8 +23,7 @@ public class UserDaoImpl implements UserDao {
 	@Override
 	public User addUser(User user) {
 		Session session = sessionFactory.getCurrentSession();
-		long id = (Long) session.save(user);
-		user.setId(id);
+		session.persist(user);
 		return user;
 	}
 

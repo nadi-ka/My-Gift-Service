@@ -54,8 +54,8 @@ public class PurchaseDaoImpl implements PurchaseDao {
 	@Override
 	public long addPurchase(Purchase purchase) {
 		Session session = sessionFactory.getCurrentSession();
-		long purchaseId = (Long) session.save(purchase);
-		return purchaseId;
+		session.persist(purchase);
+		return purchase.getId();
 	}
 
 }

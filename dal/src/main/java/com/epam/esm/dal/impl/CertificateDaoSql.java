@@ -47,8 +47,8 @@ public class CertificateDaoSql implements CertificateDao {
 	public GiftCertificate addCertificate(GiftCertificate certificate) {
 		Session session = sessionFactory.getCurrentSession();
 		updateTagsBoundedWithCertificate(certificate);
-		long id = (Long) session.save(certificate);
-		return session.get(GiftCertificate.class, id);
+		session.persist(certificate);
+		return certificate;
 	}
 
 	@Override

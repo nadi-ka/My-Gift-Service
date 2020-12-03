@@ -53,8 +53,7 @@ public class TagDaoSql implements TagDao {
 	@Override
 	public Tag addTag(Tag tag) {
 		Session session = sessionFactory.getCurrentSession();
-		long id = (Long) session.save(tag);
-		tag.setId(id);
+		session.persist(tag);
 		return tag;
 	}
 
@@ -105,9 +104,7 @@ public class TagDaoSql implements TagDao {
 	public Tag findMostPopularTagOfUserWithHighestCostOfAllPurchases() {
 		try {
 			Session session = sessionFactory.getCurrentSession();
-			LOG.info("Before^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 			Tag tag = session.createNativeQuery(FIND_MOST_POPULAR_TAG, Tag.class).getSingleResult();
-			LOG.info("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 			return tag;
 		} catch (NoResultException e) {
 			return null;
