@@ -9,7 +9,9 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import org.hibernate.SessionFactory;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,7 +33,8 @@ import com.epam.esm.entity.User;
 @EnableAutoConfiguration
 class PurchaseDaoImplTest {
 	
-	private SessionFactory sessionFactory;
+	@PersistenceContext
+	private EntityManager entityManager;
 	private Purchase purchase;
 	private static final String FORMAT_PATTERN = "yyyy-MM-dd HH:mm:ss";
 	private static final String ZONE = "Europe/Minsk";
@@ -39,7 +42,7 @@ class PurchaseDaoImplTest {
 	private static final long ID_ABSENT = 9999;
 	
 	@Autowired
-	private PurchaseDao purchaseDao = new PurchaseDaoImpl(sessionFactory);
+	private PurchaseDao purchaseDao = new PurchaseDaoImpl(entityManager);
 
 	/**
 	 * @throws java.lang.Exception

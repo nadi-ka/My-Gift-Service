@@ -1,7 +1,8 @@
 package com.epam.esm.dal.impl;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,27 +10,27 @@ import org.springframework.transaction.annotation.Transactional;
 import com.epam.esm.dal.UserDao;
 import com.epam.esm.entity.User;
 
-@Repository
+@Repository("userDao")
 @Transactional
 public class UserDaoImpl implements UserDao {
-
-	private SessionFactory sessionFactory;
+	
+	@PersistenceContext
+	private EntityManager entityManager;
 	
 	@Autowired
-	public  UserDaoImpl(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
+	public  UserDaoImpl(EntityManager entityManager) {
+		this.entityManager = entityManager;
 	}
 
 	@Override
 	public User addUser(User user) {
-		Session session = sessionFactory.getCurrentSession();
-		session.persist(user);
+		entityManager.persist(user);
 		return user;
 	}
-
+	
 	@Override
 	public User findUser(long id) {
-		return sessionFactory.getCurrentSession().get(User.class, id);
+		return entityManager.find(User.class, id);
 	}
 
 }

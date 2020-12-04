@@ -9,7 +9,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.SessionFactory;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,7 +37,8 @@ import com.epam.esm.transferobj.OrderParam;
 @EnableAutoConfiguration
 class CertificateDaoImplTest {
 
-	private SessionFactory sessionFactory;
+	@PersistenceContext
+	private EntityManager entityManager;
 	private SqlQueryBuilder builder;
 	private GiftCertificate certificate;
 	private LocalDateTime timeStamp;
@@ -51,10 +54,10 @@ class CertificateDaoImplTest {
 	private static final long ID_ABSENT = 9999;
 
 	@Autowired
-	private TagDao tagDao = new TagDaoSql(sessionFactory);
+	private TagDao tagDao = new TagDaoSql(entityManager);
 
 	@Autowired
-	private CertificateDao certificateDao = new CertificateDaoSql(sessionFactory, builder, tagDao);
+	private CertificateDao certificateDao = new CertificateDaoSql(entityManager, builder, tagDao);
 
 	@BeforeEach
 	public void setUp() {

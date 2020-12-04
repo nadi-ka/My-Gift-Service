@@ -14,12 +14,11 @@ public class SpringWebAppInitializer implements WebApplicationInitializer {
 
 	@Override
 	public void onStartup(ServletContext servletContext) throws ServletException {
-
 		AnnotationConfigWebApplicationContext root = new AnnotationConfigWebApplicationContext();
-
 		root.scan("com.epam.esm");
-		servletContext.addListener(new ContextLoaderListener(root));
+		root.setServletContext(servletContext);
 
+		servletContext.addListener(new ContextLoaderListener(root));
 		ServletRegistration.Dynamic appServlet = servletContext.addServlet("mvc",
 				new DispatcherServlet(new GenericWebApplicationContext()));
 		appServlet.setLoadOnStartup(1);

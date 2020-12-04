@@ -4,7 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
 
-import org.hibernate.SessionFactory;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +26,8 @@ import com.epam.esm.entity.User;
 @EnableAutoConfiguration
 class UserDaoImplTest {
 
-	private SessionFactory sessionFactory;
+	@PersistenceContext
+	private EntityManager entityManager;
 	private User user;
 	private static final String USER_FIRST_NAME = "Ann";
 	private static final String FIRST_USER_LAST_NAME = "Smith";
@@ -33,7 +36,7 @@ class UserDaoImplTest {
 	private static final long ID_ABSENT = 9999;
 
 	@Autowired
-	private UserDao userDao = new UserDaoImpl(sessionFactory);
+	private UserDao userDao = new UserDaoImpl(entityManager);
 
 	/**
 	 * @throws java.lang.Exception

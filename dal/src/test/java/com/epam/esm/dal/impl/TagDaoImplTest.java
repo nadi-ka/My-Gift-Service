@@ -4,7 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
-import org.hibernate.SessionFactory;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +27,8 @@ import com.epam.esm.entity.Tag;
 @EnableAutoConfiguration
 class TagDaoImplTest {
 
-	private SessionFactory sessionFactory;
+	@PersistenceContext
+	private EntityManager entityManager;
 	private Tag tag;
 	private static final String NAME_SPA = "#SPA";
 	private static final String NAME_SPORT = "#Sport";
@@ -34,7 +37,7 @@ class TagDaoImplTest {
 	private static final long ID_TAG_TO_UPDATE = 2;
 
 	@Autowired
-	private TagDao tagDao = new TagDaoSql(sessionFactory);
+	private TagDao tagDao = new TagDaoSql(entityManager);
 
 	@BeforeEach
 	public void setUp() {
