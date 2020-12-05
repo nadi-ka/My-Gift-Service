@@ -9,19 +9,13 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.persistence.criteria.SetJoin;
-import javax.persistence.criteria.Subquery;
 
-import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Component;
 
 import com.epam.esm.entity.GiftCertificate;
-import com.epam.esm.entity.Purchase;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.entity.User;
 import com.epam.esm.transferobj.FilterParam;
 import com.epam.esm.transferobj.OrderParam;
 import com.epam.esm.transferobj.ParameterConstant;
@@ -30,9 +24,6 @@ import com.epam.esm.transferobj.ParameterConstant;
 public class SqlQueryBuilder {
 
 	private static final String TAGS = "tags";
-	private static final String CERTIFICATES = "certificates";
-	private static final String PURCHASES = "purchases";
-	private static final String USER = "user";
 	private static final String PERCENT_SIGN = "%";
 
 	public CriteriaQuery<GiftCertificate> buildCertificatesFilterOrderQuery(List<FilterParam> filterParams,
@@ -90,28 +81,5 @@ public class SqlQueryBuilder {
 		return query.select(certificate).where(predicate).groupBy(certificate.get(ParameterConstant.CERTIFICATE_ID))
 				.having(criteriaBuilder.equal(criteriaBuilder.count(tag), ids.size()));
 	}
-
-//	public CriteriaQuery<Tag> buildSearchMostPopularTagOfUserWithHighestCostOfAllPurchases(SessionFactory sessionFactory) {
-//		CriteriaBuilder criteriaBuilder = sessionFactory.getCriteriaBuilder();
-//		CriteriaQuery<Tag> query = criteriaBuilder.createQuery(Tag.class);
-//		Root<Tag> tag = query.from(Tag.class);
-//		Join<Tag, GiftCertificate> certificate = tag.join(CERTIFICATES);
-//		Join<GiftCertificate, Purchase> purchase = certificate.join(PURCHASES);
-//		Join<Purchase, User> user = certificate.join(USER);
-//		
-//		Subquery<Double> subquerySum = query.subquery(Double.class);
-//		Root<Purchase> fromPurchase = subquerySum.from(Purchase.class);
-//		subquerySum.select(criteriaBuilder.sum(fromPurchase.get("cost")))
-//		.where(criteriaBuilder.equal(fromPurchase.get("Id_user"), user.get("id")));
-//		
-//		Subquery<Long> subqueryUserId = query.subquery(Long.class);
-//		Root<User> fromUser = subqueryUserId.from(User.class);
-//		Order sumCost = criteriaBuilder.desc(subquerySum);
-//		subqueryUserId.select(fromUser.get("id")).orderBy(sumCost);
-//		
-//		query.select(tag).where(criteriaBuilder.equal(user.get("id"), subqueryUserId))
-//		.groupBy(tag.get("id")).orderBy(criteriaBuilder.desc(criteriaBuilder.count(tag)));
-//		
-//	}
 
 }

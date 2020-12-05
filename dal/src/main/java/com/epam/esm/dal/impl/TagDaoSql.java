@@ -32,17 +32,17 @@ public class TagDaoSql implements TagDao {
 	private static final String FIND_TAG_BY_NAME = "FROM Tag WHERE name = :tagName";
 	private static final String PARAM_TAG_ID = "tagId";
 	private static final String PARAM_TAG_NAME = "tagName";
-	private static final String FIND_MOST_POPULAR_TAG = "SELECT Tag.Id, Tag.Name, Tag.Created_on, Tag.Updated_on "
-			+ "FROM Certificate_service.Tag "
-			+ "JOIN Certificate_service.Tag_Certificate ON Tag.Id = Tag_Certificate.IdTag "
-			+ "JOIN Certificate_service.GiftCertificate ON Tag_Certificate.IdCertificate = GiftCertificate.Id "
-			+ "JOIN Certificate_service.Purchase_Certificate ON GiftCertificate.Id = Purchase_Certificate.Id_certificate "
-			+ "JOIN Certificate_service.Purchase ON Purchase_Certificate.Id_order = Purchase.Id "
-			+ "JOIN Certificate_service.User ON Purchase.Id_user = User.Id "
-			+ "WHERE User.Id = (SELECT User.Id FROM Certificate_service.User "
-			+ "ORDER BY (SELECT sum(Cost) FROM Certificate_service.Purchase "
-			+ "WHERE Id_user = User.Id) desc LIMIT 1) GROUP BY Tag.Id "
-			+ "ORDER BY count(Tag.Id) desc LIMIT 1";
+	private static final String FIND_MOST_POPULAR_TAG = "FROM Tag t "
+			+ "JOIN GiftCertificate gc "
+			+ "JOIN Purchase p "
+			+ "JOIN User u "
+			+ "WHERE u.id = (SELECT t1.Id_user FROM "
+			+ "(SELECT Id_user, SUM(p.cost) totalCost "
+			+ "FROM p GROUP BY Id_user) t1 "
+			+ "WHERE t1.totalCost = (SELECT MAX(t2.totalCost) FROM "
+			+ "(SELECT Id_user, sum(p.cost) totalCost "
+			+ "FROM p GROUP BY Id_user) t2)) "
+			+ "GROUP BY t.id ORDER BY count(t.id) desc";
 
 	@Autowired
 	public TagDaoSql(EntityManager entityManager) {
@@ -99,12 +99,15 @@ public class TagDaoSql implements TagDao {
 
 	@Override
 	public Tag findMostPopularTagOfUserWithHighestCostOfAllPurchases() {
-		List<Tag> tags = entityManager.createNativeQuery(FIND_MOST_POPULAR_TAG, Tag.class)
-				.getResultList();
-		if (tags.isEmpty()) {
-			return null;
-		}
-		return tags.get(0);
+//		List<Tag> tags = entityManager.createNativeQuery(FIND_MOST_POPULAR_TAG, Tag.class)
+//				.getResultList();
+//		if (tags.isEmpty()) {
+//			return null;
+//		}
+//		return tags.get(0);
+		
+		return (Tag)entityManager.createQuery(FIND_MOST_POPULAR_TAG, Tag.class).setFirstResult(0)
+				.setMaxResults(1).getResultList();
 	}
 
 }
