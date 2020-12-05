@@ -45,9 +45,9 @@ public class PurchaseDaoImpl implements PurchaseDao {
 	}
 
 	@Override
-	public long addPurchase(Purchase purchase) {
+	public Purchase addPurchase(Purchase purchase) {
 		entityManager.persist(purchase);
-		return purchase.getId();
+		return purchase;
 	}
 
 }

@@ -3,7 +3,10 @@ package com.epam.esm.service.impl;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -63,8 +66,9 @@ public class PurchaseServiceImpl implements PurchaseService {
 			return new PurchaseDTO();
 		}
 		purchase.setCost(new BigDecimal(cost));
-		long purchaseId = purchaseDao.addPurchase(purchase);
-		return convertToDto(purchaseDao.findPurchseById(purchaseId));
+		Purchase createdPurchase = purchaseDao.addPurchase(purchase);
+		createdPurchase.setCertificates(new ArrayList<GiftCertificate>());
+		return convertToDto(createdPurchase);
 	}
 
 	private PurchaseDTO convertToDto(Purchase order) {

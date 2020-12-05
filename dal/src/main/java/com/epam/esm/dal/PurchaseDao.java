@@ -9,7 +9,7 @@ public interface PurchaseDao {
 	
 	List<Purchase> findPurchsesByUserId(long userId, Pagination pagination);
 	
-	long addPurchase(Purchase purchase);
+	Purchase addPurchase(Purchase purchase);
 	
 	Purchase findPurchseById(long purchaseId);
 

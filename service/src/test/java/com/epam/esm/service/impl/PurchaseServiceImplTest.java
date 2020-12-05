@@ -133,8 +133,7 @@ class PurchaseServiceImplTest {
 		ids.add(2L);
 		Mockito.when(certificateDao.getAmountOfCertificates(Mockito.any())).thenReturn(2L);
 		Mockito.when(certificateDao.getSumCertificatesPrice(ids)).thenReturn(PURCHASE_COST_FIRST.doubleValue());
-		Mockito.when(purchaseDao.addPurchase(Mockito.any(Purchase.class))).thenReturn(1L);
-		Mockito.when(purchaseDao.findPurchseById(1L)).thenReturn(purchase1);
+		Mockito.when(purchaseDao.addPurchase(Mockito.any(Purchase.class))).thenReturn(purchase1);
 
 		assertNotNull(purchaseService.savePurchase(1L, getCertificatesWithIds()));
 	}

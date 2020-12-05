@@ -101,9 +101,8 @@ class PurchaseDaoImplTest {
 	 */
 	@Test
 	void testAddPurchase() {
-		long idExpected = 5L;
 		
-		assertTrue(purchaseDao.addPurchase(purchase) == idExpected);
+		assertNotNull(purchaseDao.addPurchase(purchase));
 	}
 	
 	private LocalDateTime getTimestamp() {
