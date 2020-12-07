@@ -13,7 +13,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @Configuration
-@EnableWebMvc
 @EnableHypermediaSupport(type = EnableHypermediaSupport.HypermediaType.HAL_FORMS)
 public class RestSpringConfig {
 

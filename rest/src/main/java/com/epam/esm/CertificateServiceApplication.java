@@ -1,16 +1,14 @@
-package com.epam.esm.rest.config;
+package com.epam.esm;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
-//@ComponentScan(basePackages = {"com"})
-//@SpringBootApplication
-public class CertificateServiceApplication {
+@SpringBootApplication
+public class CertificateServiceApplication extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
 		SpringApplication.run(CertificateServiceApplication.class, args);
 
 	}
-
 }
