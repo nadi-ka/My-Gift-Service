@@ -32,17 +32,25 @@ public class TagDaoSql implements TagDao {
 	private static final String FIND_TAG_BY_NAME = "FROM Tag WHERE name = :tagName";
 	private static final String PARAM_TAG_ID = "tagId";
 	private static final String PARAM_TAG_NAME = "tagName";
-	private static final String FIND_MOST_POPULAR_TAG = "FROM Tag t "
-			+ "JOIN GiftCertificate gc "
-			+ "JOIN Purchase p "
+//	private static final String FIND_MOST_POPULAR_TAG = "FROM Tag t "
+//			+ "JOIN GiftCertificate gc "
+//			+ "JOIN Purchase p "
+//			+ "JOIN User u "
+//			+ "WHERE u.id = (SELECT t1.Id_user FROM "
+//			+ "(SELECT p.Id_user, SUM(p.cost) totalCost "
+//			+ "FROM Purchase p GROUP BY p.Id_user) t1 "
+//			+ "WHERE t1.totalCost = (SELECT MAX(t2.totalCost) FROM "
+//			+ "(SELECT p.Id_user, sum(p.cost) totalCost "
+//			+ "FROM Purchase p GROUP BY p.Id_user) t2)) "
+//			+ "GROUP BY t.id ORDER BY count(t.id) desc";
+	
+	private static final String FIND_MOST_POPULAR_TAG = "select t FROM Tag t "
+			+ "JOIN t.certificates tc "
+			+ "JOIN tc.GiftCertificate gc "
+			+ "JOIN gc.purchases gp "
+			+ "JOIN gp.Purchase p "
 			+ "JOIN User u "
-			+ "WHERE u.id = (SELECT t1.Id_user FROM "
-			+ "(SELECT Id_user, SUM(p.cost) totalCost "
-			+ "FROM p GROUP BY Id_user) t1 "
-			+ "WHERE t1.totalCost = (SELECT MAX(t2.totalCost) FROM "
-			+ "(SELECT Id_user, sum(p.cost) totalCost "
-			+ "FROM p GROUP BY Id_user) t2)) "
-			+ "GROUP BY t.id ORDER BY count(t.id) desc";
+			+ "WHERE u.id = 1";
 
 	@Autowired
 	public TagDaoSql(EntityManager entityManager) {
@@ -106,8 +114,12 @@ public class TagDaoSql implements TagDao {
 //		}
 //		return tags.get(0);
 		
-		return (Tag)entityManager.createQuery(FIND_MOST_POPULAR_TAG, Tag.class).setFirstResult(0)
+//		return (Tag)entityManager.createQuery(FIND_MOST_POPULAR_TAG, Tag.class).setFirstResult(0)
+//				.setMaxResults(1).getResultList();
+		
+		List<Tag> tags = entityManager.createQuery(FIND_MOST_POPULAR_TAG, Tag.class).setFirstResult(0)
 				.setMaxResults(1).getResultList();
+		return tags.get(0);
 	}
 
 }
