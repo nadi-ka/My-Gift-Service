@@ -192,7 +192,7 @@ public class CertificateController {
 							new Object[] { certificateId }, LocaleContextHolder.getLocale()));
 		}
 		certificateService.deleteCertificate(certificateId);
-		return ResponseEntity.status(HttpStatus.OK)
+		return ResponseEntity.status(HttpStatus.NO_CONTENT)
 				.body(messageSource.getMessage((MessageKeyHolder.CERTIFICATE_DELETED_KEY),
 						new Object[] { certificateId }, LocaleContextHolder.getLocale()));
 	}

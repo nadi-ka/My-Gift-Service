@@ -155,7 +155,7 @@ public class TagController {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(messageSource
 					.getMessage((MessageKeyHolder.TAG_BOUNDED_KEY), new Object[] { tagId }, Locale.getDefault()));
 		}
-		return ResponseEntity.status(HttpStatus.OK).body(messageSource.getMessage((MessageKeyHolder.TAG_DELETED_KEY),
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(messageSource.getMessage((MessageKeyHolder.TAG_DELETED_KEY),
 				new Object[] { tagId }, LocaleContextHolder.getLocale()));
 	}
 
