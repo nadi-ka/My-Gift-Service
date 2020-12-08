@@ -84,12 +84,6 @@
     	<artifactId>validation-api</artifactId>
     	<version>1.0.0.GA</version>
 	</dependency>
-	
-	<dependency>
-        <groupId>org.hibernate</groupId>
-        <artifactId>hibernate-envers</artifactId>
-        <version>5.4.23.Final</version>
-    </dependency>
   	
   </dependencies>
   
