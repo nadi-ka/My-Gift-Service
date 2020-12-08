@@ -23,6 +23,9 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserDTO saveUser(UserDTO userDTO) {
+		if (userDTO.getId() != 0) {
+			userDTO.setId(0);
+		}
 		User user = userDao.addUser(convertToEntity(userDTO));
 		return convertToDto(user);
 	}

@@ -3,10 +3,7 @@ package com.epam.esm.service.impl;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;

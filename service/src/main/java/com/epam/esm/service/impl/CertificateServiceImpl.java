@@ -58,6 +58,9 @@ public class CertificateServiceImpl implements CertificateService {
 
 	@Override
 	public GiftCertificateGetDTO saveCertificate(GiftCertificateCreateDTO certificate) {
+		if (certificate.getId() != 0) {
+			certificate.setId(0);
+		}
 		GiftCertificate certificateToAdd = convertToEntity(certificate);
 		LocalDateTime creationTime = DateTimeFormatterISO.createAndformatDateTime();
 		certificateToAdd.setCreationDate(creationTime);

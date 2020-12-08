@@ -39,6 +39,9 @@ public class TagServiceImpl implements TagService {
 		if (tagDao.findTagByName(tag.getName()) != null) {
 			throw new ServiceValidationException("Not unique tag name"); 
 		}
+		if (tag.getId() != 0) {
+			tag.setId(0);
+		}
 		Tag resultTag = tagDao.addTag(convertToEntity(tag));
 		return convertToDto(resultTag);
 	}
@@ -54,6 +57,9 @@ public class TagServiceImpl implements TagService {
 
 	@Override
 	public TagDTO updateTag(long tagId, TagDTO tag) {
+		if (tagDao.findTagByName(tag.getName()) != null) {
+			throw new ServiceValidationException("Not unique tag name"); 
+		}
 		Tag updatedTag = tagDao.updateTag(tagId, convertToEntity(tag));
 		if (updatedTag == null) {
 			return new TagDTO();

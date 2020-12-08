@@ -122,9 +122,14 @@ public class TagController {
 			return new EntityModel<>(tagDTO).add(linkTo(methodOn(TagController.class).getTag(tagDTO.getId()))
 					.withSelfRel().andAffordance(afford(methodOn(TagController.class).deleteTag(tagDTO.getId()))));
 		}
+		try {
 		TagDTO updatedTag = tagService.updateTag(tagId, tag);
 		return new EntityModel<>(updatedTag).add(linkTo(methodOn(TagController.class).getTag(tagId)).withSelfRel()
 				.andAffordance(afford(methodOn(TagController.class).deleteTag(tagId))));
+		}catch (ServiceValidationException e) {
+			throw new ServiceValidationException(messageSource.getMessage(
+					(MessageKeyHolder.TAG_NAME_NOT_UNIQUE), null, LocaleContextHolder.getLocale()));
+		}
 	}
 
 	/**
