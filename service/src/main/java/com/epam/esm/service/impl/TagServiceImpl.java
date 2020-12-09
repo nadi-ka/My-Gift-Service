@@ -61,9 +61,6 @@ public class TagServiceImpl implements TagService {
 			throw new ServiceValidationException("Not unique tag name"); 
 		}
 		Tag updatedTag = tagDao.updateTag(tagId, convertToEntity(tag));
-		if (updatedTag == null) {
-			return new TagDTO();
-		}
 		return convertToDto(updatedTag);
 	}
 

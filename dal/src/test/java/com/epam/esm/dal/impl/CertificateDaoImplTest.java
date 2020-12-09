@@ -98,6 +98,7 @@ class CertificateDaoImplTest {
 	 * Test method for
 	 * {@link com.epam.esm.dal.impl.CertificateDaoSql#updateCertificate(com.epam.esm.entity.GiftCertificate)}.
 	 */
+	
 	@Test
 	void testUpdateCertificate() {
 		GiftCertificate updatedCertificate = certificateDao.updateCertificate(ID_CERT_TO_UPDATE, certificate);

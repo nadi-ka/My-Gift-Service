@@ -77,11 +77,7 @@ public class CertificateServiceImpl implements CertificateService {
 		}
 		GiftCertificate certificateToUpdate = convertToEntity(certificate);
 		certificateToUpdate.setLastUpdateDate(DateTimeFormatterISO.createAndformatDateTime());
-		GiftCertificate updatedCertificate = certificateDao.updateCertificate(certificateId, certificateToUpdate);
-		if (updatedCertificate == null) {
-			return new GiftCertificateGetDTO();
-		}
-		return convertToDto(updatedCertificate);
+		return convertToDto(certificateDao.updateCertificate(certificateId, certificateToUpdate));
 	}
 
 	@Override
