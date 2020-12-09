@@ -80,23 +80,15 @@ public class CertificateDaoSql implements CertificateDao {
 	}
 
 	@Override
-	public Double getSumCertificatesPrice(List<Long> certificateIds) {
-		try {
-			return (Double) entityManager.createQuery(GET_SUM_PRICE_OF_CERTIFICATES)
-					.setParameter(1, certificateIds).getSingleResult();
-		} catch (NoResultException e) {
-			return 0.0;
-		}
+	public Double getCertificatesTotalCost(List<Long> certificateIds) {
+		return (Double) entityManager.createQuery(GET_SUM_PRICE_OF_CERTIFICATES).setParameter(1, certificateIds)
+				.getSingleResult();
 	}
 
 	@Override
-	public Long getAmountOfCertificates(List<Long> certificateIds) {
-		try {
-			return (Long) entityManager.createQuery(GET_CERTIFICATES_AMOUNT_BY_IDS)
-					.setParameter(1, certificateIds).getSingleResult();
-		} catch (NoResultException e) {
-			return 0L;
-		}
+	public boolean certificatesExistForPurchase(List<Long> certificateIds) {
+		return (Long) entityManager.createQuery(GET_CERTIFICATES_AMOUNT_BY_IDS).setParameter(1, certificateIds)
+				.getSingleResult() == certificateIds.size();
 	}
 
 	@Override

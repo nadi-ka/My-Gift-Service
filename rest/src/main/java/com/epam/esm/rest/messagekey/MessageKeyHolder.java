@@ -25,6 +25,6 @@ public final class MessageKeyHolder {
 	
 	public static final String PURCHASE_NOT_FOUND_KEY = "exception.purchase.not_found";
 	public static final String PURCHASE_EMPTY_CERTIFICATES_KEY = "exception.purchase.empty.certificates";
-	public static final String PURCHASE_CERTIFICATE_NOT_FOUND_KEY = "exception.purchase.certificates.not_found";
+	public static final String PURCHASE_NOT_CREATED = "exception.purchase.not_created";
 
 }

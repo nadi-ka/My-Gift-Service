@@ -2,14 +2,14 @@ package com.epam.esm.dto;
 
 import javax.validation.constraints.NotNull;
 
-public class GiftCertificateWithIdDTO {
+public class GiftCertificateIdsOnlyDTO {
 	
 	@NotNull
 	private Long id;
 	
-	public GiftCertificateWithIdDTO() {}
+	public GiftCertificateIdsOnlyDTO() {}
 	
-	public GiftCertificateWithIdDTO(Long id) {
+	public GiftCertificateIdsOnlyDTO(Long id) {
 		this.id = id;
 	}
 

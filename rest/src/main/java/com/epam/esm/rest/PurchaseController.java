@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
-import com.epam.esm.dto.GiftCertificateWithIdDTO;
+import com.epam.esm.dto.GiftCertificateIdsOnlyDTO;
 import com.epam.esm.dto.PurchaseDTO;
 import com.epam.esm.dto.UserDTO;
 import com.epam.esm.entity.Pagination;
@@ -27,6 +27,7 @@ import com.epam.esm.rest.exception.NotFoundException;
 import com.epam.esm.rest.messagekey.MessageKeyHolder;
 import com.epam.esm.service.PurchaseService;
 import com.epam.esm.service.UserService;
+import com.epam.esm.service.exception.EntityNotFoundServiceException;
 
 @Validated
 @RestController
@@ -60,7 +61,8 @@ public class PurchaseController {
 					new Object[] { userId }, LocaleContextHolder.getLocale()));
 		}
 		List<PurchaseDTO> purchases = purchaseService.getPurchasesByUserId(userId, pagination);
-		purchases.forEach(purchase -> purchase.add(linkTo(methodOn(PurchaseController.class).getPurchase(purchase.getId())).withSelfRel()));
+		purchases.forEach(purchase -> purchase
+				.add(linkTo(methodOn(PurchaseController.class).getPurchase(purchase.getId())).withSelfRel()));
 		return purchases;
 	}
 
@@ -79,38 +81,33 @@ public class PurchaseController {
 			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.PURCHASE_NOT_FOUND_KEY),
 					new Object[] { purchaseId }, LocaleContextHolder.getLocale()));
 		}
-		EntityModel<PurchaseDTO> entityModel = new EntityModel<>(purchaseDTO);
-		return entityModel.add(linkTo(methodOn(PurchaseController.class).getPurchase(purchaseId)).withSelfRel());
+		return new EntityModel<>(purchaseDTO)
+				.add(linkTo(methodOn(PurchaseController.class).getPurchase(purchaseId)).withSelfRel());
 	}
 
 	/**
 	 * Add new purchase for user;
 	 * 
-	 * @param userId, certificateIds
+	 * @param userId, certificates
 	 * @return {@link PurchaseDTO} (in case of success, the method returns Status
 	 *         Code = 200 and the response body contains new purchase;
-	 * @throws NotFoundException (in case when the user with given id 
-	 * is not found)
+	 * @throws NotFoundException (in case when the user with given id is not found)
 	 */
 	@PostMapping("/users/{userId}/purchases")
 	public EntityModel<PurchaseDTO> addPurchase(@PathVariable long userId,
-			@RequestBody @NotEmpty List<@Valid GiftCertificateWithIdDTO> certificates) {
+			@RequestBody @NotEmpty List<@Valid GiftCertificateIdsOnlyDTO> certificates) {
 		if (certificates.isEmpty()) {
-			throw new InvalidRequestParametersException(messageSource.getMessage((MessageKeyHolder.PURCHASE_EMPTY_CERTIFICATES_KEY),
-					null, LocaleContextHolder.getLocale()));
+			throw new InvalidRequestParametersException(messageSource.getMessage(
+					(MessageKeyHolder.PURCHASE_EMPTY_CERTIFICATES_KEY), null, LocaleContextHolder.getLocale()));
 		}
-		UserDTO userDTO = userService.getUser(userId);
-		if (userDTO == null) {
-			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.USER_NOT_FOUND_KEY),
+		try {
+		PurchaseDTO purchaseDTO = purchaseService.savePurchase(userId, certificates);
+		return new EntityModel<>(purchaseDTO)
+				.add(linkTo(methodOn(PurchaseController.class).getPurchase(purchaseDTO.getId())).withSelfRel());
+		}catch (EntityNotFoundServiceException e) {
+			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.PURCHASE_NOT_CREATED),
 					new Object[] { userId }, LocaleContextHolder.getLocale()));
 		}
-		PurchaseDTO purchaseDTO = purchaseService.savePurchase(userId, certificates);
-		if (purchaseDTO.getId() == 0) {
-			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.PURCHASE_CERTIFICATE_NOT_FOUND_KEY),
-					null, LocaleContextHolder.getLocale()));
-		}
-		EntityModel<PurchaseDTO> entityModel = new EntityModel<>(purchaseDTO);
-		return entityModel.add(linkTo(methodOn(PurchaseController.class).getPurchase(purchaseDTO.getId())).withSelfRel());
 	}
 
 }

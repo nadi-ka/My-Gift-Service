@@ -22,12 +22,14 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import com.epam.esm.dal.CertificateDao;
 import com.epam.esm.dal.PurchaseDao;
-import com.epam.esm.dto.GiftCertificateWithIdDTO;
+import com.epam.esm.dal.UserDao;
+import com.epam.esm.dto.GiftCertificateIdsOnlyDTO;
 import com.epam.esm.entity.Pagination;
 import com.epam.esm.entity.Purchase;
 import com.epam.esm.entity.User;
 import com.epam.esm.service.PurchaseService;
 import com.epam.esm.service.config.ServiceSpringConfig;
+import com.epam.esm.service.exception.EntityNotFoundServiceException;
 import com.epam.esm.service.util.DateTimeFormatterISO;
 
 @ExtendWith(MockitoExtension.class)
@@ -41,6 +43,8 @@ class PurchaseServiceImplTest {
 
 	@Mock
 	private CertificateDao certificateDao;
+	@Mock
+	private UserDao userDao;
 	private ModelMapper modelMapper;
 	private Purchase purchase1;
 	private Purchase purchase2;
@@ -51,7 +55,8 @@ class PurchaseServiceImplTest {
 
 	@InjectMocks
 	@Autowired
-	private PurchaseService purchaseService = new PurchaseServiceImpl(purchaseDao, modelMapper, certificateDao);
+	private PurchaseService purchaseService = new PurchaseServiceImpl(purchaseDao, userDao, modelMapper,
+			certificateDao);
 
 	/**
 	 * @throws java.lang.Exception
@@ -131,17 +136,30 @@ class PurchaseServiceImplTest {
 		List<Long> ids = new ArrayList<>();
 		ids.add(1L);
 		ids.add(2L);
-		Mockito.when(certificateDao.getAmountOfCertificates(Mockito.any())).thenReturn(2L);
-		Mockito.when(certificateDao.getSumCertificatesPrice(ids)).thenReturn(PURCHASE_COST_FIRST.doubleValue());
+		Mockito.when(userDao.findUser(Mockito.anyLong())).thenReturn(new User());
+		Mockito.when(certificateDao.certificatesExistForPurchase(Mockito.any())).thenReturn(true);
+		Mockito.when(certificateDao.getCertificatesTotalCost(ids)).thenReturn(PURCHASE_COST_FIRST.doubleValue());
 		Mockito.when(purchaseDao.addPurchase(Mockito.any(Purchase.class))).thenReturn(purchase1);
 
 		assertNotNull(purchaseService.savePurchase(1L, getCertificatesWithIds()));
 	}
-	
-	private List<GiftCertificateWithIdDTO> getCertificatesWithIds() {
-		List<GiftCertificateWithIdDTO> ids = new ArrayList<GiftCertificateWithIdDTO>();
-		ids.add(new GiftCertificateWithIdDTO(1L));
-		ids.add(new GiftCertificateWithIdDTO(2L));
+
+	@Test
+	void testSavePurchase_User_Not_Found() {
+		List<Long> ids = new ArrayList<>();
+		ids.add(1L);
+		ids.add(2L);
+		Mockito.when(userDao.findUser(Mockito.anyLong())).thenReturn(null);
+
+		assertThrows(EntityNotFoundServiceException.class, 
+				() -> purchaseService.savePurchase(ID_ABSENT, new ArrayList<GiftCertificateIdsOnlyDTO>()),
+		           "Expected to throw, but it didn't");
+	}
+
+	private List<GiftCertificateIdsOnlyDTO> getCertificatesWithIds() {
+		List<GiftCertificateIdsOnlyDTO> ids = new ArrayList<GiftCertificateIdsOnlyDTO>();
+		ids.add(new GiftCertificateIdsOnlyDTO(1L));
+		ids.add(new GiftCertificateIdsOnlyDTO(2L));
 		return ids;
 	}
 

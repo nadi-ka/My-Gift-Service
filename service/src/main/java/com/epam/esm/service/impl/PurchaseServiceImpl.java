@@ -12,25 +12,29 @@ import org.springframework.stereotype.Service;
 
 import com.epam.esm.dal.CertificateDao;
 import com.epam.esm.dal.PurchaseDao;
-import com.epam.esm.dto.GiftCertificateWithIdDTO;
+import com.epam.esm.dal.UserDao;
+import com.epam.esm.dto.GiftCertificateIdsOnlyDTO;
 import com.epam.esm.dto.PurchaseDTO;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Pagination;
 import com.epam.esm.entity.Purchase;
 import com.epam.esm.entity.User;
 import com.epam.esm.service.PurchaseService;
+import com.epam.esm.service.exception.EntityNotFoundServiceException;
 import com.epam.esm.service.util.DateTimeFormatterISO;
 
 @Service
 public class PurchaseServiceImpl implements PurchaseService {
 
 	private PurchaseDao purchaseDao;
+	private UserDao userDao;
 	private ModelMapper modelMapper;
 	private CertificateDao certificateDao;
 
 	@Autowired
-	public PurchaseServiceImpl(PurchaseDao purchaseDao, ModelMapper modelMapper, CertificateDao certificateDao) {
+	public PurchaseServiceImpl(PurchaseDao purchaseDao, UserDao userDao, ModelMapper modelMapper, CertificateDao certificateDao) {
 		this.purchaseDao = purchaseDao;
+		this.userDao = userDao;
 		this.modelMapper = modelMapper;
 		this.certificateDao = certificateDao;
 	}
@@ -50,18 +54,18 @@ public class PurchaseServiceImpl implements PurchaseService {
 	}
 
 	@Override
-	public PurchaseDTO savePurchase(long userId, List<GiftCertificateWithIdDTO> certificates) {
+	public PurchaseDTO savePurchase(long userId, List<GiftCertificateIdsOnlyDTO> certificates) {
+		if (userDao.findUser(userId) == null) {
+			throw new EntityNotFoundServiceException("User not exists, id=" + userId);
+		}
 		LocalDateTime creationTime = DateTimeFormatterISO.createAndformatDateTime();
 		List<GiftCertificate> certificatesWithIds = certificates.stream().map(this::convertToEntity).collect(Collectors.toList());
 		List<Long> certificateIds = formCertificateIdsList(certificatesWithIds);
-		if (certificateIds.size() != certificateDao.getAmountOfCertificates(certificateIds)) {
-			return new PurchaseDTO();
+		if (!certificateDao.certificatesExistForPurchase(certificateIds)) {
+			throw new EntityNotFoundServiceException("One or more certificates to bound purchase with not exists");
 		}
 		Purchase purchase = new Purchase(creationTime, new User(userId), certificatesWithIds);
-		Double cost = certificateDao.getSumCertificatesPrice(certificateIds);
-		if (cost == null || cost == 0.0) {
-			return new PurchaseDTO();
-		}
+		Double cost = certificateDao.getCertificatesTotalCost(certificateIds);
 		purchase.setCost(new BigDecimal(cost));
 		Purchase createdPurchase = purchaseDao.addPurchase(purchase);
 		createdPurchase.setCertificates(new ArrayList<GiftCertificate>());
@@ -72,7 +76,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 		return modelMapper.map(order, PurchaseDTO.class);
 	}
 
-	private GiftCertificate convertToEntity(GiftCertificateWithIdDTO certificateDTO) {
+	private GiftCertificate convertToEntity(GiftCertificateIdsOnlyDTO certificateDTO) {
 		return modelMapper.map(certificateDTO, GiftCertificate.class);
 	}
 	

@@ -162,45 +162,45 @@ class CertificateDaoImplTest {
 	
 	/**
 	 * Test method for
-	 * {@link com.epam.esm.dal.impl.CertificateDaoSql#getSumCertificatesPrice(java.util.List)}.
+	 * {@link com.epam.esm.dal.impl.CertificateDaoSql#getCertificatesTotalCost(java.util.List)}.
 	 */
 	@Test
-	void getSumCertificatesPrice() {
+	void getCertificatesTotalCost() {
 		List<Long> ids = new ArrayList<>();
 		ids.add(1L);
 		ids.add(2L);
 		Double sumExpected = 140.0;
 		
-		assertEquals(sumExpected, certificateDao.getSumCertificatesPrice(ids));
+		assertEquals(sumExpected, certificateDao.getCertificatesTotalCost(ids));
 	}
 	
 	@Test
-	void getSumCertificatesPrice_Not_Found() {
+	void getCertificatesTotalCost_Not_Found() {
 		List<Long> ids = new ArrayList<>();
 		ids.add(ID_ABSENT);
 		
-		assertNull(certificateDao.getSumCertificatesPrice(ids));
+		assertNull(certificateDao.getCertificatesTotalCost(ids));
 	}
 	
 	/**
 	 * Test method for
-	 * {@link com.epam.esm.dal.impl.CertificateDaoSql#getAmountOfCertificates(java.util.List)}.
+	 * {@link com.epam.esm.dal.impl.CertificateDaoSql#certificatesExistForPurchase(java.util.List)}.
 	 */
 	@Test
-	void getAmountOfCertificates() {
+	void certificatesExistForPurchase() {
 		List<Long> ids = new ArrayList<>();
 		ids.add(1L);
 		ids.add(2L);
 
-		assertEquals(ids.size(), certificateDao.getAmountOfCertificates(ids));
+		assertTrue(certificateDao.certificatesExistForPurchase(ids));
 	}
 	
 	@Test
-	void getAmountOfCertificates_Not_Found() {
+	void certificatesExistForPurchase_Not_Found() {
 		List<Long> ids = new ArrayList<>();
 		ids.add(ID_ABSENT);
 
-		assertTrue(certificateDao.getAmountOfCertificates(ids) == 0);
+		assertFalse(certificateDao.certificatesExistForPurchase(ids));
 	}
 	
 	/**
