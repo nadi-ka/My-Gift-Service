@@ -1,5 +1,6 @@
 package com.epam.esm.dal;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.epam.esm.entity.GiftCertificate;
@@ -19,7 +20,7 @@ public interface CertificateDao {
 
 	void deleteCertificate(long id);
 	
-	Double getCertificatesTotalCost(List<Long> certificateIds);
+	BigDecimal getCertificatesTotalCost(List<Long> certificateIds);
 	
 	boolean certificatesExistForPurchase(List<Long> certificateIds);
 	

@@ -1,5 +1,6 @@
 package com.epam.esm.dal.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -80,8 +81,8 @@ public class CertificateDaoSql implements CertificateDao {
 	}
 
 	@Override
-	public Double getCertificatesTotalCost(List<Long> certificateIds) {
-		return (Double) entityManager.createQuery(GET_SUM_PRICE_OF_CERTIFICATES).setParameter(1, certificateIds)
+	public BigDecimal getCertificatesTotalCost(List<Long> certificateIds) {
+		return (BigDecimal) entityManager.createQuery(GET_SUM_PRICE_OF_CERTIFICATES).setParameter(1, certificateIds)
 				.getSingleResult();
 	}
 

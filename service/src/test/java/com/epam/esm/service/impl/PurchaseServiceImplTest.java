@@ -138,7 +138,7 @@ class PurchaseServiceImplTest {
 		ids.add(2L);
 		Mockito.when(userDao.findUser(Mockito.anyLong())).thenReturn(new User());
 		Mockito.when(certificateDao.certificatesExistForPurchase(Mockito.any())).thenReturn(true);
-		Mockito.when(certificateDao.getCertificatesTotalCost(ids)).thenReturn(PURCHASE_COST_FIRST.doubleValue());
+		Mockito.when(certificateDao.getCertificatesTotalCost(ids)).thenReturn(PURCHASE_COST_FIRST);
 		Mockito.when(purchaseDao.addPurchase(Mockito.any(Purchase.class))).thenReturn(purchase1);
 
 		assertNotNull(purchaseService.savePurchase(1L, getCertificatesWithIds()));

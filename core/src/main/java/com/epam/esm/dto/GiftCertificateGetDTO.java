@@ -1,5 +1,6 @@
 package com.epam.esm.dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,7 +33,7 @@ public class GiftCertificateGetDTO extends RepresentationModel<GiftCertificateGe
 	@NotNull
 	@DecimalMin("0.1")
 	@DecimalMax("10000.0")
-	private Double price;
+	private BigDecimal price;
 
 	@NotNull
 	@Min(value = 1)
@@ -71,11 +72,11 @@ public class GiftCertificateGetDTO extends RepresentationModel<GiftCertificateGe
 		this.description = description;
 	}
 
-	public Double getPrice() {
+	public BigDecimal getPrice() {
 		return price;
 	}
 
-	public void setPrice(Double price) {
+	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
 

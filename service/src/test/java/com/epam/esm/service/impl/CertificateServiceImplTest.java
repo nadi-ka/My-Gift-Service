@@ -2,6 +2,7 @@ package com.epam.esm.service.impl;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +55,7 @@ class CertificateServiceImplTest {
 	private static final String NAME_YACHTING = "YACHTING";
 	private static final String DESCRIPTION_CHOCOLATIER = "Two hours master-class for couple";
 	private static final String DESCRIPTION_YACHTING = "Romantic journey for couple";
-	private static final Double CERT_PRICE = 92.90;
+	private static final BigDecimal CERT_PRICE = new BigDecimal(92.90);
 	private static final int CERT_DURATION = 100;
 	private static final long ID_ABSENT = 9999;
 

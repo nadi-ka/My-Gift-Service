@@ -65,8 +65,8 @@ public class PurchaseServiceImpl implements PurchaseService {
 			throw new EntityNotFoundServiceException("One or more certificates to bound purchase with not exists");
 		}
 		Purchase purchase = new Purchase(creationTime, new User(userId), certificatesWithIds);
-		Double cost = certificateDao.getCertificatesTotalCost(certificateIds);
-		purchase.setCost(new BigDecimal(cost));
+		BigDecimal cost = certificateDao.getCertificatesTotalCost(certificateIds);
+		purchase.setCost(cost);
 		Purchase createdPurchase = purchaseDao.addPurchase(purchase);
 		createdPurchase.setCertificates(new ArrayList<GiftCertificate>());
 		return convertToDto(createdPurchase);

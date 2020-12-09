@@ -2,6 +2,7 @@ package com.epam.esm.dal.impl;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -44,7 +45,7 @@ class CertificateDaoImplTest {
 	private static final String NAME_CHOCOLATIER = "Master-class from chocolatier";
 	private static final String NAME_SKYDIVING = "Skydiving";
 	private static final String DESCRIPTION_CHOCOLATIER = "Two hours master-class for couple";
-	private static final Double CERT_PRICE = 92.90;
+	private static final BigDecimal CERT_PRICE = new BigDecimal(92.90);
 	private static final int CERT_DURATION = 100;
 	private static final String FORMAT_PATTERN = "yyyy-MM-dd HH:mm:ss";
 	private static final String ZONE = "Europe/Minsk";
@@ -171,7 +172,7 @@ class CertificateDaoImplTest {
 		ids.add(2L);
 		Double sumExpected = 140.0;
 		
-		assertEquals(sumExpected, certificateDao.getCertificatesTotalCost(ids));
+		assertTrue(sumExpected == certificateDao.getCertificatesTotalCost(ids).doubleValue());
 	}
 	
 	@Test

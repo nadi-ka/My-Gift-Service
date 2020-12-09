@@ -1,5 +1,6 @@
 package com.epam.esm.dto;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.validation.constraints.DecimalMax;
@@ -25,7 +26,7 @@ public class GiftCertificateCreateDTO {
 	@NotNull
 	@DecimalMin("0.1")
 	@DecimalMax("10000.0")
-	private Double price;
+	private BigDecimal price;
 
 	@NotNull
 	@Min(value = 1)
@@ -39,7 +40,7 @@ public class GiftCertificateCreateDTO {
 
 	public GiftCertificateCreateDTO(long id, @NotBlank @Size(max = 45) String name,
 			@NotBlank @Size(max = 100) String description,
-			@NotNull @DecimalMin("0.1") @DecimalMax("10000.0") Double price,
+			@NotNull @DecimalMin("0.1") @DecimalMax("10000.0") BigDecimal price,
 			@NotNull @Min(value = 1) @Max(value = 1000) Integer duration, List<TagDTO> tags) {
 		this.id = id;
 		this.name = name;
@@ -73,11 +74,11 @@ public class GiftCertificateCreateDTO {
 		this.description = description;
 	}
 
-	public Double getPrice() {
+	public BigDecimal getPrice() {
 		return price;
 	}
 
-	public void setPrice(Double price) {
+	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
 

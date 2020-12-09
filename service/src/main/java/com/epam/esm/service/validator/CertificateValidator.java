@@ -1,5 +1,6 @@
 package com.epam.esm.service.validator;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.epam.esm.dto.GiftCertificateUpdateDTO;
@@ -26,8 +27,8 @@ public class CertificateValidator {
 		return (description != null) && (!description.isEmpty()) && (description.length() <= DESCRIPTION_MAX_LENGTH);
 	}
 
-	private boolean validCertificatePrice(Double price) {
-		return (price != null) && (price > 0.1) && (price < CERT_MAX_PRICE);
+	private boolean validCertificatePrice(BigDecimal price) {
+		return (price != null) && (price.doubleValue() > 0.1) && (price.doubleValue() < CERT_MAX_PRICE);
 	}
 
 	private boolean validCertificateDuration(Integer duration) {

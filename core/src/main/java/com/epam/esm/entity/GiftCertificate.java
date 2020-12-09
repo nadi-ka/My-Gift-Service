@@ -1,5 +1,6 @@
 package com.epam.esm.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ public class GiftCertificate {
 	private String description;
 
 	@Column(name = "Price")
-	private double price;
+	private BigDecimal price;
 
 	@Column(name = "CreateDate")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Minsk")
@@ -59,7 +60,7 @@ public class GiftCertificate {
 	public GiftCertificate() {
 	}
 
-	public GiftCertificate(long id, String name, String description, double price, LocalDateTime creationDate,
+	public GiftCertificate(long id, String name, String description, BigDecimal price, LocalDateTime creationDate,
 			LocalDateTime lastUpdateDate, int duration) {
 		this.id = id;
 		this.name = name;
@@ -70,7 +71,7 @@ public class GiftCertificate {
 		this.duration = duration;
 	}
 
-	public GiftCertificate(long id, String name, String description, double price, LocalDateTime creationDate,
+	public GiftCertificate(long id, String name, String description, BigDecimal price, LocalDateTime creationDate,
 			LocalDateTime lastUpdateDate, int duration, List<Tag> tags) {
 		this(id, name, description, price, creationDate, lastUpdateDate, duration);
 		this.tags = tags;
@@ -100,11 +101,11 @@ public class GiftCertificate {
 		this.description = description;
 	}
 
-	public double getPrice() {
+	public BigDecimal getPrice() {
 		return price;
 	}
 
-	public void setPrice(double price) {
+	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
 
@@ -167,9 +168,7 @@ public class GiftCertificate {
 		result = prime * result + ((lastUpdateDate == null) ? 0 : lastUpdateDate.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((purchases == null) ? 0 : purchases.hashCode());
-		long temp;
-		temp = Double.doubleToLongBits(price);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((price == null) ? 0 : price.hashCode());
 		result = prime * result + ((tags == null) ? 0 : tags.hashCode());
 		return result;
 	}
@@ -212,7 +211,10 @@ public class GiftCertificate {
 				return false;
 		} else if (!purchases.equals(other.purchases))
 			return false;
-		if (Double.doubleToLongBits(price) != Double.doubleToLongBits(other.price))
+		if (price == null) {
+			if (other.price != null)
+				return false;
+		} else if (!price.equals(other.price))
 			return false;
 		if (tags == null) {
 			if (other.tags != null)
