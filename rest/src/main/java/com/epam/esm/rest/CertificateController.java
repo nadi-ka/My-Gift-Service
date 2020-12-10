@@ -187,14 +187,10 @@ public class CertificateController {
 	public ResponseEntity<?> deleteCertificate(@PathVariable long certificateId) {
 		GiftCertificateGetDTO certificate = certificateService.getCertificate(certificateId);
 		if (certificate == null) {
-			return ResponseEntity.status(HttpStatus.OK)
-					.body(messageSource.getMessage((MessageKeyHolder.CERTIFICATE_ABSENT_KEY),
-							new Object[] { certificateId }, LocaleContextHolder.getLocale()));
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
 		certificateService.deleteCertificate(certificateId);
-		return ResponseEntity.status(HttpStatus.NO_CONTENT)
-				.body(messageSource.getMessage((MessageKeyHolder.CERTIFICATE_DELETED_KEY),
-						new Object[] { certificateId }, LocaleContextHolder.getLocale()));
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
 	/**

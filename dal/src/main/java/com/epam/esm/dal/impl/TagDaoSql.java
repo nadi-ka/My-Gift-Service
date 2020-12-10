@@ -29,27 +29,22 @@ public class TagDaoSql implements TagDao {
 	private static final String FIND_TAGS = "FROM Tag";
 	private static final String FIND_CERTIFICATE_ID_BY_TAG_ID = "SELECT c "
 			+ "FROM GiftCertificate c JOIN c.tags t WHERE t.id  = :tagId";
-	private static final String FIND_TAG_BY_NAME = "FROM Tag WHERE name = :tagName";
+	private static final String FIND_TAG_BY_NAME = "SELECT t FROM Tag t WHERE name = :tagName";
 	private static final String PARAM_TAG_ID = "tagId";
 	private static final String PARAM_TAG_NAME = "tagName";
-//	private static final String FIND_MOST_POPULAR_TAG = "FROM Tag t "
-//			+ "JOIN GiftCertificate gc "
-//			+ "JOIN Purchase p "
-//			+ "JOIN User u "
-//			+ "WHERE u.id = (SELECT t1.Id_user FROM "
-//			+ "(SELECT p.Id_user, SUM(p.cost) totalCost "
-//			+ "FROM Purchase p GROUP BY p.Id_user) t1 "
-//			+ "WHERE t1.totalCost = (SELECT MAX(t2.totalCost) FROM "
-//			+ "(SELECT p.Id_user, sum(p.cost) totalCost "
-//			+ "FROM Purchase p GROUP BY p.Id_user) t2)) "
-//			+ "GROUP BY t.id ORDER BY count(t.id) desc";
-	
-	private static final String FIND_MOST_POPULAR_TAG = "select t FROM Tag t "
-			+ "JOIN t.certificates tc "
-			+ "JOIN tc.purchases gp "
-			+ "JOIN gp.user u "
-			+ "WHERE u.id = 1";
-	
+	private static final String FIND_MOST_POPULAR_TAG = "SELECT Tag.Id, Tag.Name, Tag.Created_on, Tag.Updated_on "
+			+ "FROM Certificate_service.Tag "
+			+ "JOIN Certificate_service.Tag_Certificate ON Tag.Id = Tag_Certificate.IdTag "
+			+ "JOIN Certificate_service.GiftCertificate ON Tag_Certificate.IdCertificate = GiftCertificate.Id "
+			+ "JOIN Certificate_service.Purchase_Certificate ON GiftCertificate.Id = Purchase_Certificate.Id_certificate "
+			+ "JOIN Certificate_service.Purchase ON Purchase_Certificate.Id_order = Purchase.Id "
+			+ "JOIN Certificate_service.User ON Purchase.Id_user = User.Id WHERE User.Id = " + "(SELECT t.Id_user FROM "
+			+ "(SELECT Purchase.Id_user, sum(Purchase.Cost) AS totalCost "
+			+ "FROM Certificate_service.Purchase GROUP BY Purchase.Id_user) t "
+			+ "WHERE t.totalCost = (SELECT max(t1.totalCost) FROM "
+			+ "(SELECT Purchase.Id_user, sum(Purchase.Cost) AS totalCost "
+			+ "FROM Certificate_service.Purchase GROUP BY Purchase.Id_user) t1)) "
+			+ "GROUP BY Tag.Id ORDER BY count(Tag.Id) desc";
 
 	@Autowired
 	public TagDaoSql(EntityManager entityManager) {
@@ -96,8 +91,8 @@ public class TagDaoSql implements TagDao {
 
 	@Override
 	public Tag findTagByName(String name) {
-		List<Tag> tags = entityManager.createQuery(FIND_TAG_BY_NAME, Tag.class)
-				.setParameter(PARAM_TAG_NAME, name).getResultList();
+		List<Tag> tags = entityManager.createQuery(FIND_TAG_BY_NAME, Tag.class).setParameter(PARAM_TAG_NAME, name)
+				.getResultList();
 		if (tags.isEmpty()) {
 			return null;
 		}
@@ -106,19 +101,9 @@ public class TagDaoSql implements TagDao {
 
 	@Override
 	public Tag findMostPopularTagOfUserWithHighestCostOfAllPurchases() {
-//		List<Tag> tags = entityManager.createNativeQuery(FIND_MOST_POPULAR_TAG, Tag.class)
-//				.getResultList();
-//		if (tags.isEmpty()) {
-//			return null;
-//		}
-//		return tags.get(0);
-		
-//		return (Tag)entityManager.createQuery(FIND_MOST_POPULAR_TAG, Tag.class).setFirstResult(0)
-//				.setMaxResults(1).getResultList();
-		
-		List<Tag> tags = entityManager.createQuery(FIND_MOST_POPULAR_TAG, Tag.class).setFirstResult(0)
+		List<Tag> tags = entityManager.createNativeQuery(FIND_MOST_POPULAR_TAG, Tag.class).setFirstResult(0)
 				.setMaxResults(1).getResultList();
-		return tags.get(0);
+		return (tags.isEmpty() ? null : tags.get(0));
 	}
 
 }

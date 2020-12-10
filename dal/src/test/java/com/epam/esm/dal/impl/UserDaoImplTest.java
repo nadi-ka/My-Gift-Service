@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import com.epam.esm.dal.UserDao;
@@ -22,6 +23,7 @@ import com.epam.esm.entity.User;
 @SpringBootTest
 @EnableAutoConfiguration
 @SpringJUnitConfig(DalSpringConfig.class)
+@ActiveProfiles("test")
 class UserDaoImplTest {
 
 	@PersistenceContext

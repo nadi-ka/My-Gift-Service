@@ -19,7 +19,7 @@ import com.epam.esm.transferobj.Pagination;
 @Transactional
 public class PurchaseDaoImpl implements PurchaseDao {
 
-	private static final String GET_PURCHASES_BY_USER_ID = "FROM Purchase WHERE Id_user = :userId";
+	private static final String GET_PURCHASES_BY_USER_ID = "SELECT p FROM Purchase p JOIN p.user u WHERE u.id = :userId";
 	private static final String PARAM_USER_ID = "userId";
 
 	@PersistenceContext

@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import com.epam.esm.dal.CertificateDao;
@@ -34,6 +35,7 @@ import com.epam.esm.transferobj.Pagination;
 @SpringBootTest
 @EnableAutoConfiguration
 @SpringJUnitConfig(DalSpringConfig.class)
+@ActiveProfiles("test")
 class CertificateDaoImplTest {
 
 	@PersistenceContext

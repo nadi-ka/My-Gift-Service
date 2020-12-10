@@ -1,7 +1,6 @@
 package com.epam.esm.rest;
 
 import java.util.List;
-import java.util.Locale;
 
 import javax.validation.Valid;
 
@@ -144,8 +143,7 @@ public class TagController {
 	public ResponseEntity<?> deleteTag(@PathVariable long tagId) {
 		TagDTO tag = tagService.getTag(tagId);
 		if (tag == null) {
-			return ResponseEntity.status(HttpStatus.OK).body(messageSource.getMessage((MessageKeyHolder.TAG_ABSENT_KEY),
-					new Object[] { tagId }, LocaleContextHolder.getLocale()));
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
 		try {
 			tagService.deleteTag(tagId);
@@ -153,10 +151,9 @@ public class TagController {
 			LOG.log(Level.WARN,
 					"The tag couldn't be deleted as it's bounded with one or more certificates - tagId" + tagId, e);
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(messageSource
-					.getMessage((MessageKeyHolder.TAG_BOUNDED_KEY), new Object[] { tagId }, Locale.getDefault()));
+					.getMessage((MessageKeyHolder.TAG_BOUNDED_KEY), new Object[] { tagId }, LocaleContextHolder.getLocale()));
 		}
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(messageSource.getMessage((MessageKeyHolder.TAG_DELETED_KEY),
-				new Object[] { tagId }, LocaleContextHolder.getLocale()));
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
 	/**

@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import com.epam.esm.dal.TagDao;
@@ -23,6 +24,7 @@ import com.epam.esm.transferobj.Pagination;
 @SpringBootTest
 @EnableAutoConfiguration
 @SpringJUnitConfig(DalSpringConfig.class)
+@ActiveProfiles("test")
 class TagDaoImplTest {
 
 	@PersistenceContext
@@ -59,14 +61,6 @@ class TagDaoImplTest {
 		assertNotNull(savedTag);
 		assertEquals(NAME_SPA, tag.getName());
 		tagDao.deleteTag(savedTag.getId());
-	}
-
-	@Test
-	void testAddTag_Not_Created() {
-		IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> tagDao.addTag(null),
-				"Expected addTag() to throw, but it didn't");
-
-		assertTrue(thrown.getMessage().contains("attempt to create saveOrUpdate event with null entity"));
 	}
 
 	/**
