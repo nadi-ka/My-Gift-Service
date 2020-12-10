@@ -14,8 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.epam.esm.dal.TagDao;
 import com.epam.esm.entity.GiftCertificate;
-import com.epam.esm.entity.Pagination;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.transferobj.Pagination;
 
 @Repository("tagDao")
 @Transactional
@@ -46,11 +46,10 @@ public class TagDaoSql implements TagDao {
 	
 	private static final String FIND_MOST_POPULAR_TAG = "select t FROM Tag t "
 			+ "JOIN t.certificates tc "
-			+ "JOIN tc.GiftCertificate gc "
-			+ "JOIN gc.purchases gp "
-			+ "JOIN gp.Purchase p "
-			+ "JOIN User u "
+			+ "JOIN tc.purchases gp "
+			+ "JOIN gp.user u "
 			+ "WHERE u.id = 1";
+	
 
 	@Autowired
 	public TagDaoSql(EntityManager entityManager) {

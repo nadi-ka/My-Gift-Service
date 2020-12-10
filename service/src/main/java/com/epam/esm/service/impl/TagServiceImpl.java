@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 
 import com.epam.esm.dal.TagDao;
 import com.epam.esm.dto.TagDTO;
-import com.epam.esm.entity.Pagination;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.exception.IllegalOperationServiceException;
 import com.epam.esm.service.exception.ServiceValidationException;
+import com.epam.esm.transferobj.Pagination;
 
 @Service
 public class TagServiceImpl implements TagService {

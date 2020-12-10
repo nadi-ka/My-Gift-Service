@@ -5,10 +5,10 @@ import java.util.List;
 import com.epam.esm.dto.GiftCertificateCreateDTO;
 import com.epam.esm.dto.GiftCertificateGetDTO;
 import com.epam.esm.dto.GiftCertificateUpdateDTO;
-import com.epam.esm.entity.Pagination;
 import com.epam.esm.service.exception.ServiceValidationException;
 import com.epam.esm.transferobj.FilterParam;
 import com.epam.esm.transferobj.OrderParam;
+import com.epam.esm.transferobj.Pagination;
 
 public interface CertificateService {
 

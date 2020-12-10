@@ -22,9 +22,9 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import com.epam.esm.dal.PurchaseDao;
 import com.epam.esm.dal.config.DalSpringConfig;
-import com.epam.esm.entity.Pagination;
 import com.epam.esm.entity.Purchase;
 import com.epam.esm.entity.User;
+import com.epam.esm.transferobj.Pagination;
 
 @SpringBootTest
 @EnableAutoConfiguration
@@ -62,7 +62,7 @@ class PurchaseDaoImplTest {
 	}
 
 	/**
-	 * Test method for {@link com.epam.esm.dal.impl.PurchaseDaoImpl#findPurchsesByUserId(long, com.epam.esm.entity.Pagination)}.
+	 * Test method for {@link com.epam.esm.dal.impl.PurchaseDaoImpl#findPurchsesByUserId(long, com.epam.esm.transferobj.Pagination)}.
 	 */
 	@Test
 	void testFindPurchsesByUserId_Positive_Result() {

@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.epam.esm.dto.GiftCertificateIdsOnlyDTO;
 import com.epam.esm.dto.PurchaseDTO;
-import com.epam.esm.entity.Pagination;
+import com.epam.esm.transferobj.Pagination;
 
 public interface PurchaseService {
 	

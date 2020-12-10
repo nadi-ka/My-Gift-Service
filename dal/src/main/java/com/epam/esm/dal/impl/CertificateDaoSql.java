@@ -17,10 +17,10 @@ import com.epam.esm.dal.CertificateDao;
 import com.epam.esm.dal.TagDao;
 import com.epam.esm.dal.util.SqlQueryBuilder;
 import com.epam.esm.entity.GiftCertificate;
-import com.epam.esm.entity.Pagination;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.transferobj.FilterParam;
 import com.epam.esm.transferobj.OrderParam;
+import com.epam.esm.transferobj.Pagination;
 
 @Repository("certificateDao")
 @Transactional

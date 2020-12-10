@@ -26,10 +26,10 @@ import com.epam.esm.dal.TagDao;
 import com.epam.esm.dal.config.DalSpringConfig;
 import com.epam.esm.dal.util.SqlQueryBuilder;
 import com.epam.esm.entity.GiftCertificate;
-import com.epam.esm.entity.Pagination;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.transferobj.FilterParam;
 import com.epam.esm.transferobj.OrderParam;
+import com.epam.esm.transferobj.Pagination;
 
 @SpringBootTest
 @EnableAutoConfiguration
@@ -110,7 +110,7 @@ class CertificateDaoImplTest {
 
 	/**
 	 * Test method for
-	 * {@link com.epam.esm.dal.impl.CertificateDaoSql#findCertificates(java.util.List, java.util.List, com.epam.esm.entity.Pagination)}.
+	 * {@link com.epam.esm.dal.impl.CertificateDaoSql#findCertificates(java.util.List, java.util.List, com.epam.esm.transferobj.Pagination)}.
 	 */
 	@Test
 	void testfindCertificates() {
@@ -207,7 +207,7 @@ class CertificateDaoImplTest {
 	
 	/**
 	 * Test method for
-	 * {@link com.epam.esm.dal.impl.CertificateDaoSql#findCertificatesByTags(java.util.List, com.epam.esm.entity.Pagination)}.
+	 * {@link com.epam.esm.dal.impl.CertificateDaoSql#findCertificatesByTags(java.util.List, com.epam.esm.transferobj.Pagination)}.
 	 */
 	@Test
 	void findCertificatesByTags() {

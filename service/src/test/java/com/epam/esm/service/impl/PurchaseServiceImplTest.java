@@ -24,13 +24,13 @@ import com.epam.esm.dal.CertificateDao;
 import com.epam.esm.dal.PurchaseDao;
 import com.epam.esm.dal.UserDao;
 import com.epam.esm.dto.GiftCertificateIdsOnlyDTO;
-import com.epam.esm.entity.Pagination;
 import com.epam.esm.entity.Purchase;
 import com.epam.esm.entity.User;
 import com.epam.esm.service.PurchaseService;
 import com.epam.esm.service.config.ServiceSpringConfig;
 import com.epam.esm.service.exception.EntityNotFoundServiceException;
 import com.epam.esm.service.util.DateTimeFormatterISO;
+import com.epam.esm.transferobj.Pagination;
 
 @ExtendWith(MockitoExtension.class)
 @SpringJUnitConfig(ServiceSpringConfig.class)
@@ -90,7 +90,7 @@ class PurchaseServiceImplTest {
 
 	/**
 	 * Test method for
-	 * {@link com.epam.esm.service.impl.PurchaseServiceImpl#getPurchasesByUserId(long, com.epam.esm.entity.Pagination)}.
+	 * {@link com.epam.esm.service.impl.PurchaseServiceImpl#getPurchasesByUserId(long, com.epam.esm.transferobj.Pagination)}.
 	 */
 	@Test
 	void testGetPurchasesByUserId_Positive_Result() {

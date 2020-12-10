@@ -14,7 +14,6 @@ import com.epam.esm.dto.GiftCertificateCreateDTO;
 import com.epam.esm.dto.GiftCertificateGetDTO;
 import com.epam.esm.dto.GiftCertificateUpdateDTO;
 import com.epam.esm.entity.GiftCertificate;
-import com.epam.esm.entity.Pagination;
 import com.epam.esm.service.CertificateService;
 import com.epam.esm.service.exception.ServiceValidationException;
 import com.epam.esm.service.util.DateTimeFormatterISO;
@@ -22,6 +21,7 @@ import com.epam.esm.service.validator.CertificateValidator;
 import com.epam.esm.service.validator.RequestParamsValidator;
 import com.epam.esm.transferobj.FilterParam;
 import com.epam.esm.transferobj.OrderParam;
+import com.epam.esm.transferobj.Pagination;
 
 @Service
 public class CertificateServiceImpl implements CertificateService {

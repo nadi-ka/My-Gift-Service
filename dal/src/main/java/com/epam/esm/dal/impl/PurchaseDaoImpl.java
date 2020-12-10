@@ -12,8 +12,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.epam.esm.dal.PurchaseDao;
-import com.epam.esm.entity.Pagination;
 import com.epam.esm.entity.Purchase;
+import com.epam.esm.transferobj.Pagination;
 
 @Repository("purchaseDao")
 @Transactional

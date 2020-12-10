@@ -3,8 +3,8 @@ package com.epam.esm.service;
 import java.util.List;
 
 import com.epam.esm.dto.TagDTO;
-import com.epam.esm.entity.Pagination;
 import com.epam.esm.service.exception.IllegalOperationServiceException;
+import com.epam.esm.transferobj.Pagination;
 
 public interface TagService {
 

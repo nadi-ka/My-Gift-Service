@@ -21,11 +21,11 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import com.epam.esm.dal.TagDao;
 import com.epam.esm.dto.TagDTO;
-import com.epam.esm.entity.Pagination;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.config.ServiceSpringConfig;
 import com.epam.esm.service.exception.IllegalOperationServiceException;
+import com.epam.esm.transferobj.Pagination;
 
 @ExtendWith(MockitoExtension.class)
 @SpringJUnitConfig(ServiceSpringConfig.class)
@@ -66,7 +66,7 @@ class TagServiceImplTest {
 
 	/**
 	 * Test method for
-	 * {@link com.epam.esm.service.impl.TagServiceImpl#getTags(com.epam.esm.entity.Pagination)}.
+	 * {@link com.epam.esm.service.impl.TagServiceImpl#getTags(com.epam.esm.transferobj.Pagination)}.
 	 */
 	@Test
 	void testGetTags() {

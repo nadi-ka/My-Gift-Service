@@ -25,12 +25,12 @@ import org.springframework.web.bind.annotation.RestController;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 import com.epam.esm.dto.TagDTO;
-import com.epam.esm.entity.Pagination;
 import com.epam.esm.rest.exception.NotFoundException;
 import com.epam.esm.rest.messagekey.MessageKeyHolder;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.exception.IllegalOperationServiceException;
 import com.epam.esm.service.exception.ServiceValidationException;
+import com.epam.esm.transferobj.Pagination;
 
 @RestController
 @RequestMapping("/tags")

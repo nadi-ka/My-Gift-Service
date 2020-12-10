@@ -16,12 +16,12 @@ import com.epam.esm.dal.UserDao;
 import com.epam.esm.dto.GiftCertificateIdsOnlyDTO;
 import com.epam.esm.dto.PurchaseDTO;
 import com.epam.esm.entity.GiftCertificate;
-import com.epam.esm.entity.Pagination;
 import com.epam.esm.entity.Purchase;
 import com.epam.esm.entity.User;
 import com.epam.esm.service.PurchaseService;
 import com.epam.esm.service.exception.EntityNotFoundServiceException;
 import com.epam.esm.service.util.DateTimeFormatterISO;
+import com.epam.esm.transferobj.Pagination;
 
 @Service
 public class PurchaseServiceImpl implements PurchaseService {

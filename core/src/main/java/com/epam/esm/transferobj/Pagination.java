@@ -1,4 +1,4 @@
-package com.epam.esm.entity;
+package com.epam.esm.transferobj;
 
 import javax.validation.constraints.PositiveOrZero;
 
@@ -9,6 +9,8 @@ public class Pagination {
 	@PositiveOrZero
 	private int offset;
 	
+	private static final int LIMIT_DEFAULT = 5;
+	
 	public Pagination() {}
 	
 	public Pagination(@PositiveOrZero int limit, @PositiveOrZero int offset) {
@@ -17,6 +19,9 @@ public class Pagination {
 	}
 
 	public int getLimit() {
+		if (limit == 0) {
+			return LIMIT_DEFAULT;
+		}
 		return limit;
 	}
 

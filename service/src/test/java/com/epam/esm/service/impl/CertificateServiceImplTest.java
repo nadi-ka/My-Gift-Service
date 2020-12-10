@@ -27,7 +27,6 @@ import com.epam.esm.dto.GiftCertificateGetDTO;
 import com.epam.esm.dto.GiftCertificateUpdateDTO;
 import com.epam.esm.dto.TagDTO;
 import com.epam.esm.entity.GiftCertificate;
-import com.epam.esm.entity.Pagination;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.service.CertificateService;
 import com.epam.esm.service.config.ServiceSpringConfig;
@@ -35,6 +34,7 @@ import com.epam.esm.service.exception.ServiceValidationException;
 import com.epam.esm.service.util.DateTimeFormatterISO;
 import com.epam.esm.transferobj.FilterParam;
 import com.epam.esm.transferobj.OrderParam;
+import com.epam.esm.transferobj.Pagination;
 
 @ExtendWith(MockitoExtension.class)
 @SpringJUnitConfig(ServiceSpringConfig.class)
@@ -102,7 +102,7 @@ class CertificateServiceImplTest {
 
 	/**
 	 * Test method for
-	 * {@link com.epam.esm.service.impl.CertificateServiceImpl#getCertificates(java.util.List, java.util.List, com.epam.esm.entity.Pagination)}.
+	 * {@link com.epam.esm.service.impl.CertificateServiceImpl#getCertificates(java.util.List, java.util.List, com.epam.esm.transferobj.Pagination)}.
 	 */
 	@Test
 	void testGetCertificates() throws ServiceValidationException {
@@ -181,7 +181,7 @@ class CertificateServiceImplTest {
 	
 	/**
 	 * Test method for
-	 * {@link com.epam.esm.service.impl.CertificateServiceImpl#getCertificatesByTags(Long[], com.epam.esm.entity.Pagination)}.
+	 * {@link com.epam.esm.service.impl.CertificateServiceImpl#getCertificatesByTags(Long[], com.epam.esm.transferobj.Pagination)}.
 	 */
 	@Test
 	void testGetCertificatesByTags() {

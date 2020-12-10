@@ -4,9 +4,9 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.epam.esm.entity.GiftCertificate;
-import com.epam.esm.entity.Pagination;
 import com.epam.esm.transferobj.FilterParam;
 import com.epam.esm.transferobj.OrderParam;
+import com.epam.esm.transferobj.Pagination;
 
 public interface CertificateDao {
 

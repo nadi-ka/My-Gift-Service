@@ -17,8 +17,8 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import com.epam.esm.dal.TagDao;
 import com.epam.esm.dal.config.DalSpringConfig;
-import com.epam.esm.entity.Pagination;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.transferobj.Pagination;
 
 @SpringBootTest
 @EnableAutoConfiguration
@@ -82,7 +82,7 @@ class TagDaoImplTest {
 	}
 
 	/**
-	 * Test method for {@link com.epam.esm.dal.impl.TagDaoSql#findAllTags(com.epam.esm.entity.Pagination)}.
+	 * Test method for {@link com.epam.esm.dal.impl.TagDaoSql#findAllTags(com.epam.esm.transferobj.Pagination)}.
 	 */
 	@Test
 	void testFindAllTags() {

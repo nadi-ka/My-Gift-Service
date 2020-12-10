@@ -48,8 +48,7 @@ public class GiftCertificate {
 	@Column(name = "Duration")
 	private int duration;
 
-	@ManyToMany(cascade = {CascadeType.MERGE, CascadeType.DETACH,
-			CascadeType.REFRESH }, fetch = FetchType.LAZY)
+	@ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY)
 	@JoinTable(name = "Tag_Certificate", schema = "Certificate_service", 
 	joinColumns = @JoinColumn(name = "IdCertificate"), inverseJoinColumns = @JoinColumn(name = "IdTag"))
 	private List<Tag> tags;

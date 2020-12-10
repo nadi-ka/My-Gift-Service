@@ -21,13 +21,13 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 import com.epam.esm.dto.GiftCertificateIdsOnlyDTO;
 import com.epam.esm.dto.PurchaseDTO;
 import com.epam.esm.dto.UserDTO;
-import com.epam.esm.entity.Pagination;
 import com.epam.esm.rest.exception.InvalidRequestParametersException;
 import com.epam.esm.rest.exception.NotFoundException;
 import com.epam.esm.rest.messagekey.MessageKeyHolder;
 import com.epam.esm.service.PurchaseService;
 import com.epam.esm.service.UserService;
 import com.epam.esm.service.exception.EntityNotFoundServiceException;
+import com.epam.esm.transferobj.Pagination;
 
 @Validated
 @RestController

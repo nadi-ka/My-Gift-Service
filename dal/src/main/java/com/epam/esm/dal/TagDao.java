@@ -2,8 +2,8 @@ package com.epam.esm.dal;
 
 import java.util.List;
 
-import com.epam.esm.entity.Pagination;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.transferobj.Pagination;
 
 public interface TagDao {
 
