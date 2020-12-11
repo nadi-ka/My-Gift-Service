@@ -169,15 +169,6 @@ class CertificateServiceImplTest {
 		assertNotNull(actual);
 		assertEquals(NAME_CHOCOLATIER, actual.getName());
 	}
-
-	@Test
-	void testUpdateCertificate_NegativeResult_NotUpdated() {
-		Mockito.when(certificateDao.updateCertificate(Mockito.anyLong(), Mockito.any())).thenReturn(null);
-		GiftCertificateGetDTO actual = certificateService.updateCertificate(ID_ABSENT, getCertificateUpdateDTO());
-
-		assertNotNull(actual);
-		assertNull(actual.getName());
-	}
 	
 	/**
 	 * Test method for
