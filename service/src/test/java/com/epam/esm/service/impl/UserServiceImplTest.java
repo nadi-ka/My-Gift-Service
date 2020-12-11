@@ -84,7 +84,7 @@ class UserServiceImplTest {
 	void testGetUser_Not_Found() {
 		Mockito.when(userDao.findUser(ID_ABSENT)).thenReturn(null);
 		
-		assertNull(userService.getUser(ID_ABSENT).getLastName());
+		assertNull(userService.getUser(ID_ABSENT));
 	}
 	
 	private UserDTO getUserDTO() {

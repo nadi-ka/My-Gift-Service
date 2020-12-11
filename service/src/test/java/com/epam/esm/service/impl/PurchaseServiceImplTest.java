@@ -122,9 +122,9 @@ class PurchaseServiceImplTest {
 
 	@Test
 	void testGetPurchaseById_Not_Found() {
-		Mockito.when(purchaseDao.findPurchseById(Mockito.anyLong())).thenReturn(new Purchase());
+		Mockito.when(purchaseDao.findPurchseById(ID_ABSENT)).thenReturn(null);
 
-		assertNull(purchaseService.getPurchaseById(1L).getCost());
+		assertNull(purchaseService.getPurchaseById(ID_ABSENT));
 	}
 
 	/**

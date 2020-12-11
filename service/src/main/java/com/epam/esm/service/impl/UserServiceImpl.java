@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
 	public UserDTO getUser(long id) {
 		User user = userDao.findUser(id);
 		if (user == null) {
-			return new UserDTO();
+			return null;
 		}
 		return convertToDto(user);
 	}

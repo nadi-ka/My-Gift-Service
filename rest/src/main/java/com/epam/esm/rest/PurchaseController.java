@@ -55,8 +55,7 @@ public class PurchaseController {
 	 */
 	@GetMapping("/users/{userId}/purchases")
 	public List<PurchaseDTO> getPurchases(@PathVariable long userId, @Valid Pagination pagination) {
-		UserDTO userDTO = userService.getUser(userId);
-		if (userDTO == null) {
+		if (userService.getUser(userId) == null) {
 			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.USER_NOT_FOUND_KEY),
 					new Object[] { userId }, LocaleContextHolder.getLocale()));
 		}
@@ -77,7 +76,7 @@ public class PurchaseController {
 	@GetMapping("/purchases/{purchaseId}")
 	public EntityModel<PurchaseDTO> getPurchase(@PathVariable long purchaseId) {
 		PurchaseDTO purchaseDTO = purchaseService.getPurchaseById(purchaseId);
-		if (purchaseDTO.getId() == 0) {
+		if (purchaseDTO == null) {
 			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.PURCHASE_NOT_FOUND_KEY),
 					new Object[] { purchaseId }, LocaleContextHolder.getLocale()));
 		}

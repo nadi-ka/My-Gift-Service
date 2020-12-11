@@ -56,7 +56,7 @@ public class UserController {
 	@GetMapping("{userId}")
 	public EntityModel<UserDTO> getUser(@PathVariable long userId) {
 		UserDTO userDTO = userService.getUser(userId);
-		if (userDTO.getId() == 0) {
+		if (userDTO == null) {
 			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.USER_NOT_FOUND_KEY),
 					new Object[] { userId }, LocaleContextHolder.getLocale()));
 		}

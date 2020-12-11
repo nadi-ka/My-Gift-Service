@@ -48,7 +48,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 	public PurchaseDTO getPurchaseById(long purchaseId) {
 		Purchase purchase = purchaseDao.findPurchseById(purchaseId);
 		if (purchase == null) {
-			return new PurchaseDTO();
+			return null;
 		}
 		return convertToDto(purchase);
 	}
