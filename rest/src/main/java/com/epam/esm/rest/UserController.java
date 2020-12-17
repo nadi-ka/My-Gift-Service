@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,7 @@ import com.epam.esm.dto.UserDTO;
 import com.epam.esm.rest.exception.NotFoundException;
 import com.epam.esm.rest.messagekey.MessageKeyHolder;
 import com.epam.esm.service.UserService;
+import com.epam.esm.service.exception.NotUniqueParameterServiceException;
 
 @RestController
 @RequestMapping("/users")
@@ -25,11 +27,13 @@ public class UserController {
 
 	private UserService userService;
 	private MessageSource messageSource;
+	private PasswordEncoder passwordEncoder;
 
 	@Autowired
-	public UserController(UserService userService, MessageSource messageSource) {
+	public UserController(UserService userService, MessageSource messageSource, PasswordEncoder encoder) {
 		this.userService = userService;
 		this.messageSource = messageSource;
+		this.passwordEncoder = encoder;
 	}
 
 	/**
@@ -39,11 +43,23 @@ public class UserController {
 	 * @return {@link UserDTO} (in case of success, the method returns Status Code =
 	 *         200 and the response body contains new user)
 	 */
-	@PostMapping
-	public EntityModel<UserDTO> addUser(@Valid @RequestBody UserDTO userDTO) {
-		UserDTO createdUser = userService.saveUser(userDTO);
-		EntityModel<UserDTO> entityModel = new EntityModel<>(createdUser);
-		return entityModel.add(linkTo(methodOn(UserController.class).getUser(createdUser.getId())).withSelfRel());
+//	@PostMapping
+//	public EntityModel<UserDTO> addUser(@Valid @RequestBody UserDTO userDTO) {
+//		UserDTO createdUser = userService.saveUser(userDTO);
+//		EntityModel<UserDTO> entityModel = new EntityModel<>(createdUser);
+//		return entityModel.add(linkTo(methodOn(UserController.class).getUser(createdUser.getId())).withSelfRel());
+//	}
+	
+	@PostMapping("/signup")
+	public UserDTO signUp(@Valid @RequestBody UserDTO user) {
+		String encodedPassword = passwordEncoder.encode(user.getPassword());
+		user.setPassword(encodedPassword);
+		try {
+		return userService.saveUser(user);
+		}catch (NotUniqueParameterServiceException e) {
+			throw new NotUniqueParameterServiceException(messageSource.getMessage((MessageKeyHolder.USER_LOGIN_NOT_UNIQUE),
+					new Object[] { user.getLogin() }, LocaleContextHolder.getLocale()));
+		}
 	}
 
 	/**

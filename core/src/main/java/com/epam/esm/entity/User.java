@@ -7,6 +7,8 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,6 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.epam.esm.audit.Audit;
+import com.epam.esm.entity.role.Role;
 
 @Entity
 @Table(name="User", schema = "Certificate_service")
@@ -37,11 +40,15 @@ public class User {
 	@Column(name="Email")
 	private String email;
 	
-//	private String login;
-//	
-//    private String password;
-//    
-//    private Role role;
+	@Column(name="Login")
+	private String login;
+	
+	@Column(name = "Password")
+    private String password;
+    
+	@Column(name = "Role")
+	@Enumerated(EnumType.STRING)
+    private Role role;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
 	private List<Purchase> purchases;
@@ -100,16 +107,40 @@ public class User {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}	
+	
+	public String getLogin() {
+		return login;
 	}
 
-	public List<Purchase> getOrders() {
+	public void setLogin(String login) {
+		this.login = login;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+	public List<Purchase> getPurchases() {
 		return purchases;
 	}
 
-	public void setOrders(List<Purchase> orders) {
-		this.purchases = orders;
+	public void setPurchases(List<Purchase> purchases) {
+		this.purchases = purchases;
 	}
-	
+
 	public void addOrder(Purchase theOrder) {
 		
 		if (purchases == null) {
@@ -127,7 +158,10 @@ public class User {
 		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
+		result = prime * result + ((login == null) ? 0 : login.hashCode());
+		result = prime * result + ((password == null) ? 0 : password.hashCode());
 		result = prime * result + ((purchases == null) ? 0 : purchases.hashCode());
+		result = prime * result + ((role == null) ? 0 : role.hashCode());
 		return result;
 	}
 
@@ -162,10 +196,22 @@ public class User {
 				return false;
 		} else if (!lastName.equals(other.lastName))
 			return false;
+		if (login == null) {
+			if (other.login != null)
+				return false;
+		} else if (!login.equals(other.login))
+			return false;
+		if (password == null) {
+			if (other.password != null)
+				return false;
+		} else if (!password.equals(other.password))
+			return false;
 		if (purchases == null) {
 			if (other.purchases != null)
 				return false;
 		} else if (!purchases.equals(other.purchases))
+			return false;
+		if (role != other.role)
 			return false;
 		return true;
 	}
@@ -173,7 +219,7 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", dateOfBirth=" + dateOfBirth
-				+ ", email=" + email + "]";
+				+ ", email=" + email + ", login=" + login + ", role=" + role + "]";
 	}
 
 }

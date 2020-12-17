@@ -10,7 +10,9 @@ import javax.validation.constraints.Size;
 
 import org.springframework.hateoas.RepresentationModel;
 
+import com.epam.esm.entity.role.Role;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class UserDTO extends RepresentationModel<UserDTO>{
 	
@@ -33,6 +35,16 @@ public class UserDTO extends RepresentationModel<UserDTO>{
 	@Email
 	private String email;
 	
+	@NotBlank
+	private String login;
+	
+	@NotBlank
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	private String password;
+	
+	@NotNull
+	private Role role;
+	
 	public UserDTO() {}
 
 	public UserDTO(String firstName, String lastName, LocalDate dateOfBirth, String email) {
@@ -40,6 +52,13 @@ public class UserDTO extends RepresentationModel<UserDTO>{
 		this.lastName = lastName;
 		this.dateOfBirth = dateOfBirth;
 		this.email = email;
+	}
+	
+	public UserDTO(String firstName, String lastName, LocalDate dateOfBirth, String email, String login, String password, Role role) {
+		this(firstName, lastName, dateOfBirth, email);
+		this.login = login;
+		this.password = password;
+		this.role = role;
 	}
 
 	public long getId() {
@@ -82,10 +101,34 @@ public class UserDTO extends RepresentationModel<UserDTO>{
 		this.email = email;
 	}
 
+	public String getLogin() {
+		return login;
+	}
+
+	public void setLogin(String login) {
+		this.login = login;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
 	@Override
 	public String toString() {
 		return "UserDTO [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", dateOfBirth="
-				+ dateOfBirth + ", email=" + email + "]";
+				+ dateOfBirth + ", email=" + email + ", login=" + login + ", role=" + role + "]";
 	}
 
 }

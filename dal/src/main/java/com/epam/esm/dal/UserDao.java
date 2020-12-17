@@ -7,5 +7,7 @@ public interface UserDao {
 	User addUser(User user);
 	
 	User findUser(long id);
+	
+	User findUserByLogin(String login);
 
 }

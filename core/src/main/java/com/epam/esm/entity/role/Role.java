@@ -1,8 +1,8 @@
-package com.epam.esm.entity;
+package com.epam.esm.entity.role;
 
 public enum Role {
 
-	GUEST("GUEST"), USER("USER"), ADMINISTRATOR("ADMINISTRATOR");
+	USER("ROLE_USER"), ADMINISTRATOR("ROLE_ADMIN");
 
 	private String value;
 
