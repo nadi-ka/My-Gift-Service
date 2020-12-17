@@ -219,7 +219,6 @@ class CertificateDaoImplTest {
 		assertTrue(certificateDao.findCertificatesByTags(ids, new Pagination(2, 0)).size() == sizeExpected);
 	}
 	
-
 	private LocalDateTime getTimestamp() {
 		ZonedDateTime zoneEuropeMinsk = ZonedDateTime.now(ZoneId.of(ZONE));
 		LocalDateTime ldt = zoneEuropeMinsk.toLocalDateTime();

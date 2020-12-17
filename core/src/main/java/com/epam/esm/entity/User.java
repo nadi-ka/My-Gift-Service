@@ -37,6 +37,12 @@ public class User {
 	@Column(name="Email")
 	private String email;
 	
+//	private String login;
+//	
+//    private String password;
+//    
+//    private Role role;
+	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
 	private List<Purchase> purchases;
 	
@@ -112,7 +118,6 @@ public class User {
 		purchases.add(theOrder);
 	}
 
-	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
