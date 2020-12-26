@@ -60,7 +60,7 @@ public class PurchaseController {
 		}
 		List<PurchaseDTO> purchases = purchaseService.getPurchasesByUserId(userId, pagination);
 		purchases.forEach(purchase -> purchase
-				.add(linkTo(methodOn(PurchaseController.class).getPurchase(purchase.getId())).withSelfRel()));
+				.add(linkTo(methodOn(PurchaseController.class).getPurchase(userId, purchase.getId())).withSelfRel()));
 		return purchases;
 	}
 
@@ -72,15 +72,15 @@ public class PurchaseController {
 	 *         not found, the method returns Status Code = 404)
 	 * @throws NotFoundException
 	 */
-	@GetMapping("/purchases/{purchaseId}")
-	public EntityModel<PurchaseDTO> getPurchase(@PathVariable long purchaseId) {
-		PurchaseDTO purchaseDTO = purchaseService.getPurchaseById(purchaseId);
+	@GetMapping("/users/{userId}/purchases/{purchaseId}")
+	public EntityModel<PurchaseDTO> getPurchase(@PathVariable long userId, @PathVariable long purchaseId) {
+		PurchaseDTO purchaseDTO = purchaseService.getPurchaseById(purchaseId, userId);
 		if (purchaseDTO == null) {
 			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.PURCHASE_NOT_FOUND_KEY),
 					new Object[] { purchaseId }, LocaleContextHolder.getLocale()));
 		}
 		return new EntityModel<>(purchaseDTO)
-				.add(linkTo(methodOn(PurchaseController.class).getPurchase(purchaseId)).withSelfRel());
+				.add(linkTo(methodOn(PurchaseController.class).getPurchase(userId, purchaseId)).withSelfRel());
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class PurchaseController {
 	 */
 	@PostMapping("/users/{userId}/purchases")
 	public EntityModel<PurchaseDTO> addPurchase(@PathVariable long userId,
-			@RequestBody @NotEmpty List<@Valid GiftCertificateIdsOnlyDTO> certificates) {
+			@RequestBody List<@Valid GiftCertificateIdsOnlyDTO> certificates) {
 		if (certificates.isEmpty()) {
 			throw new InvalidRequestParametersException(messageSource.getMessage(
 					(MessageKeyHolder.PURCHASE_EMPTY_CERTIFICATES_KEY), null, LocaleContextHolder.getLocale()));
@@ -101,7 +101,7 @@ public class PurchaseController {
 		try {
 		PurchaseDTO purchaseDTO = purchaseService.savePurchase(userId, certificates);
 		return new EntityModel<>(purchaseDTO)
-				.add(linkTo(methodOn(PurchaseController.class).getPurchase(purchaseDTO.getId())).withSelfRel());
+				.add(linkTo(methodOn(PurchaseController.class).getPurchase(userId, purchaseDTO.getId())).withSelfRel());
 		}catch (EntityNotFoundServiceException e) {
 			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.PURCHASE_NOT_CREATED),
 					new Object[] { userId }, LocaleContextHolder.getLocale()));

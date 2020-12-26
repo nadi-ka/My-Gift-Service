@@ -8,18 +8,20 @@ public class UserWithJwt {
 	
 	private long id;
 	private String login;
-    private String userName;
+	private String firstName;
+	private String lastName;
     private Collection<? extends GrantedAuthority> grantedAuthorities;
     private String tokenType;
     private String jwt;
     
     public UserWithJwt() {}
 
-	public UserWithJwt(long id, String login, String userName,
+	public UserWithJwt(long id, String login, String firstName, String lastName,
 			Collection<? extends GrantedAuthority> grantedAuthorities, String tokenType, String jwt) {
 		this.id = id;
 		this.login = login;
-		this.userName = userName;
+		this.firstName = firstName;
+		this.lastName = lastName;
 		this.grantedAuthorities = grantedAuthorities;
 		this.tokenType = tokenType;
 		this.jwt = jwt;
@@ -41,12 +43,20 @@ public class UserWithJwt {
 		this.login = login;
 	}
 
-	public String getUserName() {
-		return userName;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 	public Collection<? extends GrantedAuthority> getGrantedAuthorities() {

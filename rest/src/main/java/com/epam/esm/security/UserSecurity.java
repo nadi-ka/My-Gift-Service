@@ -9,16 +9,17 @@ import com.epam.esm.userdetails.CustomUserDetails;
 
 @Component
 public class UserSecurity {
-	
+
 	private UserDetailsService userDetailsService;
-	
+
 	@Autowired
 	public UserSecurity(UserDetailsService userDetailsService) {
 		this.userDetailsService = userDetailsService;
 	}
-	
+
 	public boolean hasUserId(Authentication authentication, long userId) {
-		CustomUserDetails userDetails = (CustomUserDetails) userDetailsService.loadUserByUsername(authentication.getName());
+		CustomUserDetails userDetails = (CustomUserDetails) userDetailsService
+				.loadUserByUsername(authentication.getName());
 		return userDetails.getId() == userId;
 	}
 

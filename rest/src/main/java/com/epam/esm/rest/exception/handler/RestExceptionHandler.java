@@ -13,6 +13,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import com.epam.esm.rest.exception.InvalidRequestParametersException;
 import com.epam.esm.rest.exception.JsonPatchProcessingException;
 import com.epam.esm.rest.exception.NotFoundException;
+import com.epam.esm.service.exception.NotUniqueParameterServiceException;
 import com.epam.esm.service.exception.ServiceValidationException;
 
 @ControllerAdvice
@@ -94,6 +95,13 @@ public class RestExceptionHandler {
 		ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), exc.getMessage(),
 				System.currentTimeMillis());
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<ErrorResponse> handleNotUniqueParameterServiceException(NotUniqueParameterServiceException exc) {
+		ErrorResponse error = new ErrorResponse(HttpStatus.CONFLICT.value(), exc.getMessage(),
+				System.currentTimeMillis());
+		return new ResponseEntity<>(error, HttpStatus.CONFLICT);
 	}
 
 }

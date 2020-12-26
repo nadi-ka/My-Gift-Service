@@ -115,16 +115,16 @@ class PurchaseServiceImplTest {
 	 */
 	@Test
 	void testGetPurchaseById_Positive_Result() {
-		Mockito.when(purchaseDao.findPurchseById(Mockito.anyLong())).thenReturn(purchase1);
+		Mockito.when(purchaseDao.findPurchseById(Mockito.anyLong(), Mockito.anyLong())).thenReturn(purchase1);
 
-		assertTrue(PURCHASE_COST_FIRST.doubleValue() == purchaseService.getPurchaseById(1L).getCost().doubleValue());
+		assertTrue(PURCHASE_COST_FIRST.doubleValue() == purchaseService.getPurchaseById(1L, 1L).getCost().doubleValue());
 	}
 
 	@Test
 	void testGetPurchaseById_Not_Found() {
-		Mockito.when(purchaseDao.findPurchseById(ID_ABSENT)).thenReturn(null);
+		Mockito.when(purchaseDao.findPurchseById(ID_ABSENT, 1L)).thenReturn(null);
 
-		assertNull(purchaseService.getPurchaseById(ID_ABSENT));
+		assertNull(purchaseService.getPurchaseById(ID_ABSENT, 1L));
 	}
 
 	/**

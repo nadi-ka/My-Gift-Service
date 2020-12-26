@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.hateoas.RepresentationModel;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class PurchaseDTO extends RepresentationModel<PurchaseDTO> {
@@ -16,7 +15,7 @@ public class PurchaseDTO extends RepresentationModel<PurchaseDTO> {
 	private LocalDateTime creationDate;
 
 	private BigDecimal cost;
-
+	private UserDTO user;
 	private List<GiftCertificateGetDTO> certificates;
 
 	public long getId() {
@@ -49,6 +48,14 @@ public class PurchaseDTO extends RepresentationModel<PurchaseDTO> {
 
 	public void setCost(BigDecimal cost) {
 		this.cost = cost;
+	}
+
+	public UserDTO getUser() {
+		return user;
+	}
+
+	public void setUser(UserDTO user) {
+		this.user = user;
 	}
 
 	@Override

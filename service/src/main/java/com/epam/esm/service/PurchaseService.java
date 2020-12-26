@@ -10,7 +10,7 @@ public interface PurchaseService {
 	
 	List<PurchaseDTO> getPurchasesByUserId(long userId, Pagination pagination);
 	
-	PurchaseDTO getPurchaseById(long purchaseId);
+	PurchaseDTO getPurchaseById(long purchaseId, long userId);
 	
 	PurchaseDTO savePurchase(long userId, List<GiftCertificateIdsOnlyDTO> certificates);
 

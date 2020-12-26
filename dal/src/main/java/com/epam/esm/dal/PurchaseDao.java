@@ -11,6 +11,6 @@ public interface PurchaseDao {
 	
 	Purchase addPurchase(Purchase purchase);
 	
-	Purchase findPurchseById(long purchaseId);
+	Purchase findPurchseById(long purchaseId, long userId);
 
 }

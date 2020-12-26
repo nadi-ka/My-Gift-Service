@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 
 import com.epam.esm.dal.UserDao;
 import com.epam.esm.dto.UserDTO;
+import com.epam.esm.dto.UserRegisterDTO;
 import com.epam.esm.entity.User;
+import com.epam.esm.entity.role.Role;
 import com.epam.esm.service.UserService;
 import com.epam.esm.service.exception.NotUniqueParameterServiceException;
 
@@ -23,14 +25,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserDTO saveUser(UserDTO userDTO) {
+	public UserDTO saveUser(UserRegisterDTO userDTO) {
 		if (userDao.findUserByLogin(userDTO.getLogin()) != null) {
 			throw new NotUniqueParameterServiceException("The login is already exists");
 		}
-		if (userDTO.getId() != 0) {
-			userDTO.setId(0);
-		}
-		User user = userDao.addUser(convertToEntity(userDTO));
+		User userToSave = convertToEntity(userDTO);
+		userToSave.setRole(Role.USER);
+		User user = userDao.addUser(userToSave);
 		return convertToDto(user);
 	}
 
@@ -46,8 +47,8 @@ public class UserServiceImpl implements UserService {
 	private UserDTO convertToDto(User user) {
 		return modelMapper.map(user, UserDTO.class);
 	}
-
-	private User convertToEntity(UserDTO userDTO) {
+	
+	private User convertToEntity(UserRegisterDTO userDTO) {
 		return modelMapper.map(userDTO, User.class);
 	}
 

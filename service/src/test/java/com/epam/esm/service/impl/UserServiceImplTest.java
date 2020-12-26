@@ -19,7 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import com.epam.esm.dal.UserDao;
-import com.epam.esm.dto.UserDTO;
+import com.epam.esm.dto.UserRegisterDTO;
 import com.epam.esm.entity.User;
 import com.epam.esm.service.UserService;
 import com.epam.esm.service.config.ServiceSpringConfig;
@@ -38,6 +38,8 @@ class UserServiceImplTest {
 	private static final String USER_LAST_NAME = "Smith";
 	private static final String USER_DATE_OF_BIRTH = "1987-05-05";
 	private static final String USER_EMAIL = "ann87@gmail.com";
+	private static final String USER_LOGIN = "smith";
+	private static final String USER_PASSWORD = "$2y$12$mtvrCDOczbEHT04GXOTwg.k02XtCNM40HJp38Gt4GMYHhKmB5N2Je ";
 	private static final long ID_ABSENT = 9999;
 	
 	@InjectMocks
@@ -87,8 +89,8 @@ class UserServiceImplTest {
 		assertNull(userService.getUser(ID_ABSENT));
 	}
 	
-	private UserDTO getUserDTO() {
-		return new UserDTO(USER_FIRST_NAME, USER_LAST_NAME, LocalDate.parse(USER_DATE_OF_BIRTH), USER_EMAIL);
+	private UserRegisterDTO getUserDTO() {
+		return new UserRegisterDTO(USER_FIRST_NAME, USER_LAST_NAME, LocalDate.parse(USER_DATE_OF_BIRTH), USER_EMAIL, USER_LOGIN, USER_PASSWORD);
 	}
 
 }

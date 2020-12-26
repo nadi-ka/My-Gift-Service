@@ -1,12 +1,15 @@
 package com.epam.esm.dto;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 public class UserLoginPasswordDTO {
 
 	@NotBlank
+	@Size(max = 20)
 	private String login;
 	@NotBlank
+	@Size(max = 20)
 	private String password;
 	
 	public UserLoginPasswordDTO() {}

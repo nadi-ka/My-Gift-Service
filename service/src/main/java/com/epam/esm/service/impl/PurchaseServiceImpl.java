@@ -45,8 +45,8 @@ public class PurchaseServiceImpl implements PurchaseService {
 	}
 
 	@Override
-	public PurchaseDTO getPurchaseById(long purchaseId) {
-		Purchase purchase = purchaseDao.findPurchseById(purchaseId);
+	public PurchaseDTO getPurchaseById(long purchaseId, long userId) {
+		Purchase purchase = purchaseDao.findPurchseById(purchaseId, userId);
 		if (purchase == null) {
 			return null;
 		}
@@ -55,7 +55,8 @@ public class PurchaseServiceImpl implements PurchaseService {
 
 	@Override
 	public PurchaseDTO savePurchase(long userId, List<GiftCertificateIdsOnlyDTO> certificates) {
-		if (userDao.findUser(userId) == null) {
+		User user = userDao.findUser(userId);
+		if (user == null) {
 			throw new EntityNotFoundServiceException("User not exists, id=" + userId);
 		}
 		LocalDateTime creationTime = DateTimeFormatterISO.createAndformatDateTime();
@@ -64,7 +65,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 		if (!certificateDao.certificatesExistForPurchase(certificateIds)) {
 			throw new EntityNotFoundServiceException("One or more certificates to bound purchase with not exists");
 		}
-		Purchase purchase = new Purchase(creationTime, new User(userId), certificatesWithIds);
+		Purchase purchase = new Purchase(creationTime, user, certificatesWithIds);
 		BigDecimal cost = certificateDao.getCertificatesTotalCost(certificateIds);
 		purchase.setCost(cost);
 		Purchase createdPurchase = purchaseDao.addPurchase(purchase);

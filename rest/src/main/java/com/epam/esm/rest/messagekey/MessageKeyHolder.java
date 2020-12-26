@@ -23,6 +23,8 @@ public final class MessageKeyHolder {
 	
 	public static final String USER_NOT_FOUND_KEY = "exception.user.not_found";
 	public static final String USER_LOGIN_NOT_UNIQUE = "exception.not_unique_login";
+	public static final String USER_AUTH_FAILED = "exception.authentification.failed";
+	public static final String USER_ACCESS_DENIED = "exception.access.denied";
 	
 	public static final String PURCHASE_NOT_FOUND_KEY = "exception.purchase.not_found";
 	public static final String PURCHASE_EMPTY_CERTIFICATES_KEY = "exception.purchase.empty.certificates";

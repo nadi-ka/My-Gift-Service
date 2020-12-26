@@ -2,7 +2,7 @@ package com.epam.esm.entity.role;
 
 public enum Role {
 
-	USER("ROLE_USER"), ADMINISTRATOR("ROLE_ADMIN");
+	USER("ROLE_USER"), ADMIN("ROLE_ADMIN");
 
 	private String value;
 

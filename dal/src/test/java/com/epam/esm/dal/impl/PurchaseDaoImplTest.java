@@ -41,6 +41,7 @@ class PurchaseDaoImplTest {
 	private static final String FORMAT_PATTERN = "yyyy-MM-dd HH:mm:ss";
 	private static final String ZONE = "Europe/Minsk";
 	private static final BigDecimal PURCHASE_COST = new BigDecimal(150.00);
+	private static final long USER_ID = 1;
 	private static final long ID_ABSENT = 9999;
 	
 	@Autowired
@@ -88,15 +89,14 @@ class PurchaseDaoImplTest {
 	 */
 	@Test
 	void testFindPurchseById_Positive_Result() {
-		System.out.println("*********");
 
-		assertTrue(PURCHASE_COST.doubleValue() == purchaseDao.findPurchseById(1).getCost().doubleValue());
+		assertTrue(PURCHASE_COST.doubleValue() == purchaseDao.findPurchseById(1, USER_ID).getCost().doubleValue());
 	}
 	
 	@Test
 	void testFindPurchseById_Not_Found() {
 
-		assertNull(purchaseDao.findPurchseById(ID_ABSENT));
+		assertNull(purchaseDao.findPurchseById(ID_ABSENT, USER_ID));
 	}
 
 	/**

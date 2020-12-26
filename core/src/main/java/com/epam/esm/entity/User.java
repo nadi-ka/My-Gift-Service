@@ -1,7 +1,6 @@
 package com.epam.esm.entity;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -139,14 +138,6 @@ public class User {
 
 	public void setPurchases(List<Purchase> purchases) {
 		this.purchases = purchases;
-	}
-
-	public void addOrder(Purchase theOrder) {
-		
-		if (purchases == null) {
-			purchases = new ArrayList<Purchase>();
-		}
-		purchases.add(theOrder);
 	}
 
 	@Override

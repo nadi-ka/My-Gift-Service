@@ -62,6 +62,9 @@ CREATE TABLE IF NOT EXISTS `Certificate_service`.`User` (
   `Last_name` VARCHAR(45) NOT NULL,
   `Date_of_birth` DATE NOT NULL,
   `Email` VARCHAR(45) NOT NULL,
+  `Login` VARCHAR(45) NOT NULL,
+  `Password` VARCHAR(72) NOT NULL,
+  `Role` VARCHAR(45) NOT NULL,
   `Created_on` TIMESTAMP NULL,
   `Updated_on` TIMESTAMP NULL,
   PRIMARY KEY (`Id`));
@@ -130,8 +133,8 @@ INSERT INTO `Certificate_service`.`Tag_Certificate` (`IdTag`, `IdCertificate`) V
 -- Data for table `Certificate_service`.`User`
 -- -----------------------------------------------------
 USE `Certificate_service`;
-INSERT INTO `Certificate_service`.`User` (`Id`, `First_name`, `Last_name`, `Date_of_birth`, `Email`, `Created_on`, `Updated_on`) VALUES (1, 'Marry', 'Smith', '1987-06-06', 'marry@gmail.com', NULL, NULL);
-INSERT INTO `Certificate_service`.`User` (`Id`, `First_name`, `Last_name`, `Date_of_birth`, `Email`, `Created_on`, `Updated_on`) VALUES (2, 'Peter', 'Varga', '1965-07-07', 'varga@gmail.com', NULL, NULL);
+INSERT INTO `Certificate_service`.`User` (`Id`, `First_name`, `Last_name`, `Date_of_birth`, `Email`, `Login`, `Password`, `Role`, `Created_on`, `Updated_on`) VALUES (1, 'Marry', 'Smith', '1987-06-06', 'marry@gmail.com', 'Smith', '$2y$12$mtvrCDOczbEHT04GXOTwg.k02XtCNM40HJp38Gt4GMYHhKmB5N2Je ', 'USER', NULL, NULL);
+INSERT INTO `Certificate_service`.`User` (`Id`, `First_name`, `Last_name`, `Date_of_birth`, `Email`, `Login`, `Password`, `Role`, `Created_on`, `Updated_on`) VALUES (2, 'Peter', 'Varga', '1965-07-07', 'varga@gmail.com', 'Varga', '$2y$12$ir2H6bsj.yTZD4kmPcd0YOsMcPpmknQ5dhr2thUb45bOXaBnievwi ', 'ADMIN', NULL, NULL);
 
 -- -----------------------------------------------------
 -- Data for table `Certificate_service`.`Purchase`
