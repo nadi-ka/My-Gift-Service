@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,8 +22,10 @@ public class PurchaseDaoImpl implements PurchaseDao {
 
 	private static final String GET_PURCHASES_BY_USER_ID = "SELECT p FROM Purchase p JOIN p.user u WHERE u.id = :userId";
 	private static final String GET_PURCHASE = "SELECT p FROM Purchase p JOIN p.user u WHERE p.id = :purchaseId AND u.id = :userId";
+	private static final String FIND_PURCHASE_FOR_CERTIFICATE = "SELECT p FROM Purchase p JOIN p.certificates c WHERE c.id = :certId";
 	private static final String PARAM_USER_ID = "userId";
 	private static final String PARAM_PURCHASE_ID = "purchaseId";
+	private static final String PARAM_CERTIFICATE_ID = "certId";
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -51,6 +54,13 @@ public class PurchaseDaoImpl implements PurchaseDao {
 	public Purchase addPurchase(Purchase purchase) {
 		entityManager.persist(purchase);
 		return purchase;
+	}
+
+	@Override
+	public boolean purchaseExistsForCertificate(long certificateId) {
+		TypedQuery<Purchase> query = entityManager.createQuery(FIND_PURCHASE_FOR_CERTIFICATE, Purchase.class)
+				.setParameter(PARAM_CERTIFICATE_ID, certificateId);
+		return !query.getResultList().isEmpty();
 	}
 
 }

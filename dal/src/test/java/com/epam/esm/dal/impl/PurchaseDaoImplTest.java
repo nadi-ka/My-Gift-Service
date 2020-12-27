@@ -108,6 +108,15 @@ class PurchaseDaoImplTest {
 		assertNotNull(purchaseDao.addPurchase(purchase));
 	}
 	
+	/**
+	 * Test method for {@link com.epam.esm.dal.impl.PurchaseDaoImpl#purchaseExistsForCertificate(long)}.
+	 */
+	@Test
+	void testPurchaseExistsForCertificate() {
+		
+		assertTrue(purchaseDao.purchaseExistsForCertificate(1L));
+	}
+	
 	private LocalDateTime getTimestamp() {
 		ZonedDateTime zoneEuropeMinsk = ZonedDateTime.now(ZoneId.of(ZONE));
 		LocalDateTime ldt = zoneEuropeMinsk.toLocalDateTime();

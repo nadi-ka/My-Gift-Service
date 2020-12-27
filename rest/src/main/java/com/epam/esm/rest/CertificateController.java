@@ -35,6 +35,7 @@ import com.epam.esm.rest.exception.JsonPatchProcessingException;
 import com.epam.esm.rest.exception.NotFoundException;
 import com.epam.esm.rest.messagekey.MessageKeyHolder;
 import com.epam.esm.service.CertificateService;
+import com.epam.esm.service.exception.IllegalOperationServiceException;
 import com.epam.esm.service.exception.ServiceValidationException;
 import com.epam.esm.transferobj.FilterParam;
 import com.epam.esm.transferobj.OrderParam;
@@ -171,8 +172,8 @@ public class CertificateController {
 							new Object[] { certificateId }, LocaleContextHolder.getLocale()));
 		} catch (ServiceValidationException e) {
 			LOG.log(Level.ERROR, "Certificate properties are not valid", e);
-			throw new ServiceValidationException(messageSource.getMessage(
-					(MessageKeyHolder.CERTIFICATE_NOT_VALID), null, LocaleContextHolder.getLocale()));
+			throw new ServiceValidationException(messageSource.getMessage((MessageKeyHolder.CERTIFICATE_NOT_VALID),
+					null, LocaleContextHolder.getLocale()));
 		}
 	}
 
@@ -185,11 +186,20 @@ public class CertificateController {
 	 */
 	@DeleteMapping("{certificateId}")
 	public ResponseEntity<?> deleteCertificate(@PathVariable long certificateId) {
-		GiftCertificateGetDTO certificate = certificateService.getCertificate(certificateId);
-		if (certificate == null) {
+		if (certificateService.getCertificate(certificateId) == null) {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
-		certificateService.deleteCertificate(certificateId);
+		try {
+			certificateService.deleteCertificate(certificateId);
+		} catch (IllegalOperationServiceException e) {
+			LOG.log(Level.WARN,
+					"The certificate couldn't be deleted as it's bounded with one or more purchases, certificateId="
+							+ certificateId,
+					e);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN)
+					.body(messageSource.getMessage((MessageKeyHolder.CERTIFICATE_BOUNDED_KEY),
+							new Object[] { certificateId }, LocaleContextHolder.getLocale()));
+		}
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 

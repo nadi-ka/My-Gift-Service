@@ -66,8 +66,7 @@ public class TagServiceImpl implements TagService {
 
 	@Override
 	public void deleteTag(long id) throws IllegalOperationServiceException {
-		boolean tagBoundedWithCertificate = tagDao.certificatesExistForTag(id);
-		if (tagBoundedWithCertificate) {
+		if (tagDao.certificatesExistForTag(id)) {
 			throw new IllegalOperationServiceException(
 					"The tag is bounded with one or more certififcates and coudn't be deleted, tagId - " + id);
 		}

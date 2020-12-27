@@ -22,6 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import com.epam.esm.dal.CertificateDao;
+import com.epam.esm.dal.PurchaseDao;
 import com.epam.esm.dto.GiftCertificateCreateDTO;
 import com.epam.esm.dto.GiftCertificateGetDTO;
 import com.epam.esm.dto.GiftCertificateUpdateDTO;
@@ -30,6 +31,7 @@ import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.service.CertificateService;
 import com.epam.esm.service.config.ServiceSpringConfig;
+import com.epam.esm.service.exception.IllegalOperationServiceException;
 import com.epam.esm.service.exception.ServiceValidationException;
 import com.epam.esm.service.util.DateTimeFormatterISO;
 import com.epam.esm.transferobj.FilterParam;
@@ -44,6 +46,8 @@ class CertificateServiceImplTest {
 
 	@Mock
 	private CertificateDao certificateDao;
+	@Mock
+	private PurchaseDao purchaseDao;
 	private ModelMapper modelMapper;
 	private LocalDateTime timeStamp;
 	private GiftCertificate certificate1;
@@ -61,7 +65,8 @@ class CertificateServiceImplTest {
 
 	@InjectMocks
 	@Autowired
-	private CertificateService certificateService = new CertificateServiceImpl(certificateDao, modelMapper);
+	private CertificateService certificateService = new CertificateServiceImpl(certificateDao, purchaseDao,
+			modelMapper);
 
 	@BeforeEach
 	void setUp() {
@@ -169,15 +174,29 @@ class CertificateServiceImplTest {
 		assertNotNull(actual);
 		assertEquals(NAME_CHOCOLATIER, actual.getName());
 	}
-	
+
+	/**
+	 * Test method for
+	 * {@link com.epam.esm.service.impl.CertificateServiceImpl#deleteCertificate(long)}.
+	 */
+	@Test
+	void testDeleteCertificate_NotDeleted_AsBoundWithPurchase() {
+		Mockito.when(purchaseDao.purchaseExistsForCertificate(Mockito.anyLong())).thenReturn(true);
+		IllegalOperationServiceException thrown = assertThrows(IllegalOperationServiceException.class,
+				() -> certificateService.deleteCertificate(1L), "Expected deleteCertificate() to throw, but it didn't");
+		
+		assertTrue(thrown.getMessage().contains("The certificate is bounded with one or more purchases"));
+	}
+
 	/**
 	 * Test method for
 	 * {@link com.epam.esm.service.impl.CertificateServiceImpl#getCertificatesByTags(Long[], com.epam.esm.transferobj.Pagination)}.
 	 */
 	@Test
 	void testGetCertificatesByTags() {
-		Mockito.when(certificateDao.findCertificatesByTags(Mockito.any(), Mockito.any(Pagination.class))).thenReturn(certificates);
-		Long[] ids = {1L};
+		Mockito.when(certificateDao.findCertificatesByTags(Mockito.any(), Mockito.any(Pagination.class)))
+				.thenReturn(certificates);
+		Long[] ids = { 1L };
 		List<GiftCertificateGetDTO> actual = certificateService.getCertificatesByTags(ids, new Pagination(2, 0));
 		int sizeExpected = 2;
 

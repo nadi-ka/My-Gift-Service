@@ -10,11 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.epam.esm.dal.CertificateDao;
+import com.epam.esm.dal.PurchaseDao;
 import com.epam.esm.dto.GiftCertificateCreateDTO;
 import com.epam.esm.dto.GiftCertificateGetDTO;
 import com.epam.esm.dto.GiftCertificateUpdateDTO;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.service.CertificateService;
+import com.epam.esm.service.exception.IllegalOperationServiceException;
 import com.epam.esm.service.exception.ServiceValidationException;
 import com.epam.esm.service.util.DateTimeFormatterISO;
 import com.epam.esm.service.validator.CertificateValidator;
@@ -27,11 +29,13 @@ import com.epam.esm.transferobj.Pagination;
 public class CertificateServiceImpl implements CertificateService {
 
 	private CertificateDao certificateDao;
+	private PurchaseDao purchaseDao;
 	private ModelMapper modelMapper;
 
 	@Autowired
-	public CertificateServiceImpl(CertificateDao certificateDao, ModelMapper modelMapper) {
+	public CertificateServiceImpl(CertificateDao certificateDao, PurchaseDao purchaseDao, ModelMapper modelMapper) {
 		this.certificateDao = certificateDao;
+		this.purchaseDao = purchaseDao;
 		this.modelMapper = modelMapper;
 	}
 
@@ -82,6 +86,11 @@ public class CertificateServiceImpl implements CertificateService {
 
 	@Override
 	public void deleteCertificate(long id) {
+		if (purchaseDao.purchaseExistsForCertificate(id)) {
+			throw new IllegalOperationServiceException(
+					"The certificate is bounded with one or more purchases and coudn't be deleted, certificateId - "
+							+ id);
+		}
 		certificateDao.deleteCertificate(id);
 	}
 

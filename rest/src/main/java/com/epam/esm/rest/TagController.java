@@ -141,8 +141,7 @@ public class TagController {
 	 */
 	@DeleteMapping("{tagId}")
 	public ResponseEntity<?> deleteTag(@PathVariable long tagId) {
-		TagDTO tag = tagService.getTag(tagId);
-		if (tag == null) {
+		if (tagService.getTag(tagId) == null) {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
 		try {

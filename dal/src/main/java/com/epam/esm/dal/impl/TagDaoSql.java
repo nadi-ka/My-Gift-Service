@@ -27,7 +27,7 @@ public class TagDaoSql implements TagDao {
 	private static final Logger LOG = LogManager.getLogger(TagDaoSql.class);
 
 	private static final String FIND_TAGS = "FROM Tag";
-	private static final String FIND_CERTIFICATE_ID_BY_TAG_ID = "SELECT c "
+	private static final String FIND_CERTIFICATE_FOR_TAG = "SELECT c "
 			+ "FROM GiftCertificate c JOIN c.tags t WHERE t.id  = :tagId";
 	private static final String FIND_TAG_BY_NAME = "SELECT t FROM Tag t WHERE name = :tagName";
 	private static final String PARAM_TAG_ID = "tagId";
@@ -82,10 +82,8 @@ public class TagDaoSql implements TagDao {
 
 	@Override
 	public boolean certificatesExistForTag(long tagId) {
-		TypedQuery<GiftCertificate> query = entityManager.createQuery(FIND_CERTIFICATE_ID_BY_TAG_ID,
-				GiftCertificate.class);
-		query.setParameter(PARAM_TAG_ID, tagId);
-		query.setMaxResults(1);
+		TypedQuery<GiftCertificate> query = entityManager.createQuery(FIND_CERTIFICATE_FOR_TAG, GiftCertificate.class)
+				.setParameter(PARAM_TAG_ID, tagId).setMaxResults(1);
 		return (!query.getResultList().isEmpty());
 	}
 

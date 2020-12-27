@@ -20,6 +20,7 @@ public final class MessageKeyHolder {
 	public static final String CERTIFICATE_ABSENT_KEY = "exception.certificate.absent";
 	public static final String CERTIFICATE_DELETED_KEY = "message.certificate.successfully.deleted";
 	public static final String CERTIFICATE_INVALID_REQUEST_PARAM_KEY = "exception.certificate.invalid.params";
+	public static final String CERTIFICATE_BOUNDED_KEY = "exception.certificate.bounded";
 	
 	public static final String USER_NOT_FOUND_KEY = "exception.user.not_found";
 	public static final String USER_LOGIN_NOT_UNIQUE = "exception.not_unique_login";
