@@ -7,8 +7,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,8 +26,6 @@ public class JwtFilter extends OncePerRequestFilter {
 	private static final String AUTHORIZATION = "Authorization";
 	private static final String BEARER = "Bearer ";
 	private static final String EMPTY_STRING = "";
-	
-	private static final Logger LOG = LogManager.getLogger(JwtFilter.class);
 
 	public JwtFilter(UserDetailsService userDetailsService, JwtProvider jwtProvider) {
 		this.userDetailsService = userDetailsService;
@@ -41,7 +37,6 @@ public class JwtFilter extends OncePerRequestFilter {
 			throws ServletException, IOException {
 		Claims claims = null;
 		String token = getTokenFromRequest(request);
-		LOG.info(">>>>>>>>>>>>>>>>>Filter: " + token);
 		if (!token.isEmpty()) {
 			claims = jwtProvider.decodeToken(token);
 		}

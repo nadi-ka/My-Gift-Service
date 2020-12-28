@@ -67,6 +67,13 @@ public class User {
 		this.dateOfBirth = dateOfBirth;
 		this.email = email;
 	}
+	
+	public User(String firstName, String lastName, LocalDate dateOfBirth, String email, String login, String password, Role role) {
+		this(firstName, lastName, dateOfBirth, email);
+		this.login = login;
+		this.password = password;
+		this.role = role;
+	}
 
 	public long getId() {
 		return id;

@@ -2,8 +2,6 @@ package com.epam.esm.rest;
 
 import javax.validation.Valid;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -42,7 +40,6 @@ public class UserController {
 	private AuthenticationManager authenticationManager;
 	private JwtProvider jwtProvider;
 	private static final String BEARER = "Bearer";
-	private static final Logger LOG = LogManager.getLogger(PurchaseController.class);
 
 	@Autowired
 	public UserController(UserService userService, MessageSource messageSource, PasswordEncoder encoder,
@@ -57,17 +54,11 @@ public class UserController {
 	/**
 	 * POST method which creates new user;
 	 * 
-	 * @param userDTO
+	 * @param user
 	 * @return {@link UserDTO} (in case of success, the method returns Status Code =
 	 *         200 and the response body contains new user)
+	 * @throws NotUniqueParameterServiceException
 	 */
-//	@PostMapping
-//	public EntityModel<UserDTO> addUser(@Valid @RequestBody UserDTO userDTO) {
-//		UserDTO createdUser = userService.saveUser(userDTO);
-//		EntityModel<UserDTO> entityModel = new EntityModel<>(createdUser);
-//		return entityModel.add(linkTo(methodOn(UserController.class).getUser(createdUser.getId())).withSelfRel());
-//	}
-
 	@PostMapping("/signup")
 	public UserDTO signUp(@Valid @RequestBody UserRegisterDTO user) {
 		String encodedPassword = passwordEncoder.encode(user.getPassword());
@@ -81,16 +72,21 @@ public class UserController {
 		}
 	}
 
+	/**
+	 * POST method which logIn the user;
+	 * 
+	 * @param user
+	 * @return {@link UserWithJwt} (in case of success, the method returns Status Code =
+	 *         200 and the response body contains new user with valid token)
+	 */
 	@PostMapping("/login")
 	public UserWithJwt logIn(@Valid @RequestBody UserLoginPasswordDTO user) {
-		LOG.info("<<<<<<<<<<<<<<<<<<<<<<BeforeAuthent");
 		Authentication authentication = authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(user.getLogin(), user.getPassword()));
-		LOG.info("<<<<<<<<<<<<<<<<<<<<<<AfterAuthent");
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 		String token = jwtProvider.generateToken(userDetails);
-		return new UserWithJwt(userDetails.getId(), userDetails.getUsername(), userDetails.getFirstName(), 
+		return new UserWithJwt(userDetails.getId(), userDetails.getUsername(), userDetails.getFirstName(),
 				userDetails.getLastName(), userDetails.getAuthorities(), BEARER, token);
 	}
 

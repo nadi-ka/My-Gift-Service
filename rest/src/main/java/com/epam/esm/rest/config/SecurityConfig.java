@@ -1,7 +1,5 @@
 package com.epam.esm.rest.config;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,8 +28,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private CustomAccessDeniedHandler customAccessDeniedHandler;
 	private static final String ROLE_USER = "USER";
 	private static final String ROLE_ADMIN = "ADMIN";
-	
-	private static final Logger LOG = LogManager.getLogger(SecurityConfig.class);
 
 	@Autowired
 	public SecurityConfig(JwtFilter jwtFilter, UserDetailsService userDetailsService,
@@ -45,8 +41,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().and().csrf().disable();
-		
-		LOG.info("&&&&&&&&&&&&&&&&&&&&&&&&&FROM_SEC_CONFIG");
 
 		http.authorizeRequests().antMatchers(HttpMethod.POST, "/users/login", "/users/signup").permitAll()
 				.antMatchers(HttpMethod.GET, "/certificates").permitAll()

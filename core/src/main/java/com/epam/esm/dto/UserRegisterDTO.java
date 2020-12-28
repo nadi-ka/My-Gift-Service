@@ -31,9 +31,11 @@ public class UserRegisterDTO {
 	private String email;
 	
 	@NotBlank
+	@Size(min = 5, max = 20)
 	private String login;
 	
 	@NotBlank
+	@Size(min = 5, max = 20)
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String password;
 	

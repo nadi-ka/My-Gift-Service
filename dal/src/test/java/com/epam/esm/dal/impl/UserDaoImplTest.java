@@ -19,6 +19,7 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import com.epam.esm.dal.UserDao;
 import com.epam.esm.dal.config.DalSpringConfig;
 import com.epam.esm.entity.User;
+import com.epam.esm.entity.role.Role;
 
 @SpringBootTest
 @EnableAutoConfiguration
@@ -33,7 +34,11 @@ class UserDaoImplTest {
 	private static final String FIRST_USER_LAST_NAME = "Smith";
 	private static final String USER_DATE_OF_BIRTH = "1987-05-05";
 	private static final String USER_EMAIL = "ann87@gmail.com";
+	private static final String USER_LOGIN = "Smith";
+	private static final String USER_PASSWORD = "$2y$12$mtvrCDOczbEHT04GXOTwg.k02XtCNM40HJp38Gt4GMYHhKmB5N2Ws ";
+	private static final Role USER_ROLE = Role.USER;
 	private static final long ID_ABSENT = 9999;
+	private static final String LOGIN_ABSENT = "77777";
 
 	@Autowired
 	private UserDao userDao = new UserDaoImpl(entityManager);
@@ -43,7 +48,8 @@ class UserDaoImplTest {
 	 */
 	@BeforeEach
 	void setUp() throws Exception {
-		user = new User(USER_FIRST_NAME, FIRST_USER_LAST_NAME, LocalDate.parse(USER_DATE_OF_BIRTH), USER_EMAIL);
+		user = new User(USER_FIRST_NAME, FIRST_USER_LAST_NAME, LocalDate.parse(USER_DATE_OF_BIRTH), USER_EMAIL,
+				USER_LOGIN, USER_PASSWORD, USER_ROLE);
 	}
 
 	/**
@@ -60,7 +66,7 @@ class UserDaoImplTest {
 	 */
 	@Test
 	void testAddUser() {
-		
+
 		assertEquals(USER_FIRST_NAME, userDao.addUser(user).getFirstName());
 	}
 
@@ -77,6 +83,22 @@ class UserDaoImplTest {
 	void testFindUser_Not_Found() {
 
 		assertNull(userDao.findUser(ID_ABSENT));
+	}
+
+	/**
+	 * Test method for
+	 * {@link com.epam.esm.dal.impl.UserDaoImpl#findUserByLogin(String)}.
+	 */
+	@Test
+	void testFindUserByLogin_Positive_Result() {
+
+		assertNotNull(userDao.findUserByLogin(USER_LOGIN));
+	}
+
+	@Test
+	void testFindUserByLogin_NOT_FOUND() {
+
+		assertNull(userDao.findUserByLogin(LOGIN_ABSENT));
 	}
 
 }

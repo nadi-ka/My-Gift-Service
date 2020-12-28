@@ -3,6 +3,7 @@ package com.epam.esm.rest.exception.handler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -102,6 +103,13 @@ public class RestExceptionHandler {
 		ErrorResponse error = new ErrorResponse(HttpStatus.CONFLICT.value(), exc.getMessage(),
 				System.currentTimeMillis());
 		return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<ErrorResponse> handleBadCredentialsException(BadCredentialsException exc) {
+		ErrorResponse error = new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), exc.getMessage(),
+				System.currentTimeMillis());
+		return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
 	}
 
 }
