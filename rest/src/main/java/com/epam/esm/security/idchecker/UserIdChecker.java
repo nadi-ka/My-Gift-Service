@@ -1,4 +1,4 @@
-package com.epam.esm.security;
+package com.epam.esm.security.idchecker;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -8,12 +8,12 @@ import org.springframework.stereotype.Component;
 import com.epam.esm.userdetails.CustomUserDetails;
 
 @Component
-public class UserSecurity {
+public class UserIdChecker {
 
 	private UserDetailsService userDetailsService;
 
 	@Autowired
-	public UserSecurity(UserDetailsService userDetailsService) {
+	public UserIdChecker(UserDetailsService userDetailsService) {
 		this.userDetailsService = userDetailsService;
 	}
 

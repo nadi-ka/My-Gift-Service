@@ -25,7 +25,7 @@ import com.epam.esm.dto.UserRegisterDTO;
 import com.epam.esm.dto.UserWithJwt;
 import com.epam.esm.rest.exception.NotFoundException;
 import com.epam.esm.rest.messagekey.MessageKeyHolder;
-import com.epam.esm.security.JwtProvider;
+import com.epam.esm.security.jwt.JwtProvider;
 import com.epam.esm.service.UserService;
 import com.epam.esm.service.exception.NotUniqueParameterServiceException;
 import com.epam.esm.userdetails.CustomUserDetails;

@@ -14,8 +14,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.epam.esm.rest.exception.handler.CustomAccessDeniedHandler;
-import com.epam.esm.rest.exception.handler.CustomSecurityEntryPoint;
+import com.epam.esm.security.exceptionhandler.CustomAccessDeniedHandler;
+import com.epam.esm.security.exceptionhandler.CustomSecurityEntryPoint;
 import com.epam.esm.security.filter.JwtFilter;
 
 @EnableWebSecurity

@@ -1,4 +1,4 @@
-package com.epam.esm.security;
+package com.epam.esm.security.jwt;
 
 import java.util.Date;
 

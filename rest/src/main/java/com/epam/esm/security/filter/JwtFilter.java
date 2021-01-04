@@ -14,7 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.epam.esm.security.JwtProvider;
+import com.epam.esm.security.jwt.JwtProvider;
 
 import io.jsonwebtoken.Claims;
 
@@ -48,7 +48,7 @@ public class JwtFilter extends OncePerRequestFilter {
 			SecurityContextHolder.getContext().setAuthentication(auth);
 		}
 		filterChain.doFilter(request, response);
-	}
+	}	
 
 	private String getTokenFromRequest(HttpServletRequest request) {
 		String token = request.getHeader(AUTHORIZATION);
