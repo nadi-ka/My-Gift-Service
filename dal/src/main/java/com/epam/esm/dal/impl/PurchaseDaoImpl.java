@@ -6,8 +6,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,8 +27,6 @@ public class PurchaseDaoImpl implements PurchaseDao {
 
 	@PersistenceContext
 	private EntityManager entityManager;
-
-	private static final Logger LOG = LogManager.getLogger(PurchaseDaoImpl.class);
 
 	@Autowired
 	public PurchaseDaoImpl(EntityManager entityManager) {

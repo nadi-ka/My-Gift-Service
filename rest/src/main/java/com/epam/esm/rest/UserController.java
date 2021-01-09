@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,7 +28,8 @@ import com.epam.esm.rest.exception.NotFoundException;
 import com.epam.esm.rest.messagekey.MessageKeyHolder;
 import com.epam.esm.security.jwt.JwtProvider;
 import com.epam.esm.service.UserService;
-import com.epam.esm.service.exception.NotUniqueParameterServiceException;
+import com.epam.esm.service.exception.NotUniqueEmailException;
+import com.epam.esm.service.exception.NotUniqueLoginException;
 import com.epam.esm.userdetails.CustomUserDetails;
 
 @RestController
@@ -57,7 +59,7 @@ public class UserController {
 	 * @param user
 	 * @return {@link UserDTO} (in case of success, the method returns Status Code =
 	 *         200 and the response body contains new user)
-	 * @throws NotUniqueParameterServiceException
+	 * @throws NotUniqueLoginException
 	 */
 	@PostMapping("/signup")
 	public UserDTO signUp(@Valid @RequestBody UserRegisterDTO user) {
@@ -65,9 +67,13 @@ public class UserController {
 		user.setPassword(encodedPassword);
 		try {
 			return userService.saveUser(user);
-		} catch (NotUniqueParameterServiceException e) {
-			throw new NotUniqueParameterServiceException(
+		} catch (NotUniqueLoginException e) {
+			throw new NotUniqueLoginException(
 					messageSource.getMessage((MessageKeyHolder.USER_LOGIN_NOT_UNIQUE), new Object[] { user.getLogin() },
+							LocaleContextHolder.getLocale()));
+		}catch (NotUniqueEmailException e) {
+			throw new NotUniqueEmailException(
+					messageSource.getMessage((MessageKeyHolder.USER_EMAIL_NOT_UNIQUE), new Object[] { user.getEmail() },
 							LocaleContextHolder.getLocale()));
 		}
 	}
@@ -98,6 +104,7 @@ public class UserController {
 	 * @throws NotFoundException
 	 */
 	@GetMapping("{userId}")
+	@PreAuthorize("@userIdChecker.hasUserId(authentication, #userId) or hasRole('ROLE_ADMIN')")
 	public EntityModel<UserDTO> getUser(@PathVariable long userId) {
 		UserDTO userDTO = userService.getUser(userId);
 		if (userDTO == null) {

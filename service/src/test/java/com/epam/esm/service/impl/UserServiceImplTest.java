@@ -24,7 +24,8 @@ import com.epam.esm.entity.User;
 import com.epam.esm.entity.role.Role;
 import com.epam.esm.service.UserService;
 import com.epam.esm.service.config.ServiceSpringConfig;
-import com.epam.esm.service.exception.NotUniqueParameterServiceException;
+import com.epam.esm.service.exception.NotUniqueEmailException;
+import com.epam.esm.service.exception.NotUniqueLoginException;
 
 @ExtendWith(MockitoExtension.class)
 @SpringJUnitConfig(ServiceSpringConfig.class)
@@ -72,7 +73,8 @@ class UserServiceImplTest {
 	 */
 	@Test
 	void testSaveUser_Successfully_saved() {
-		Mockito.when(userDao.findUserByLogin(USER_LOGIN)).thenReturn(null);
+		Mockito.when(userDao.findUserByLogin(Mockito.anyString())).thenReturn(null);
+		Mockito.when(userDao.findUserByLogin(Mockito.anyString())).thenReturn(null);
 		Mockito.when(userDao.addUser(Mockito.any(User.class))).thenReturn(user);
 
 		assertEquals(USER_LAST_NAME, userService.saveUser(getUserDTO()).getLastName());
@@ -81,10 +83,20 @@ class UserServiceImplTest {
 	@Test
 	void testSaveUser_ExceptionThrown_AsLoginAlreadyExists() {
 		Mockito.when(userDao.findUserByLogin(Mockito.anyString())).thenReturn(user);
-		NotUniqueParameterServiceException thrown = assertThrows(NotUniqueParameterServiceException.class,
+		NotUniqueLoginException thrown = assertThrows(NotUniqueLoginException.class,
 				() -> userService.saveUser(getUserDTO()), "Expected saveUser() to throw, but it didn't");
 
 		assertTrue(thrown.getMessage().contains("The login is already exists"));
+	}
+	
+	@Test
+	void testSaveUser_ExceptionThrown_AsEmailAlreadyExists() {
+		Mockito.when(userDao.findUserByLogin(Mockito.anyString())).thenReturn(null);
+		Mockito.when(userDao.findUserByEmail(Mockito.anyString())).thenReturn(user);
+		NotUniqueEmailException thrown = assertThrows(NotUniqueEmailException.class,
+				() -> userService.saveUser(getUserDTO()), "Expected saveUser() to throw, but it didn't");
+
+		assertTrue(thrown.getMessage().contains("The email is already exists"));
 	}
 
 	/**

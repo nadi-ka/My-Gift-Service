@@ -13,6 +13,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -56,6 +57,7 @@ public class TagController {
 	 *         empty list;
 	 */
 	@GetMapping
+	@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
 	public List<TagDTO> getTags(@Valid Pagination pagination) {
 		List<TagDTO> tags = tagService.getTags(pagination);
 		tags.forEach(tag -> tag.add(linkTo(methodOn(TagController.class).getTag(tag.getId())).withSelfRel()));
@@ -71,6 +73,7 @@ public class TagController {
 	 * @throws NotFoundException
 	 */
 	@GetMapping("{tagId}")
+	@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
 	public EntityModel<TagDTO> getTag(@PathVariable long tagId) {
 		TagDTO tag = tagService.getTag(tagId);
 		if (tag == null) {
@@ -90,6 +93,7 @@ public class TagController {
 	 *         200 and the response body contains the tag with the generated Id)
 	 */
 	@PostMapping
+	@PreAuthorize("hasRole('ADMIN')")
 	public EntityModel<TagDTO> addTag(@Valid @RequestBody TagDTO tag) {
 		try {
 		TagDTO createdTag = tagService.saveTag(tag);
@@ -111,6 +115,7 @@ public class TagController {
 	 * @throws NotFoundException
 	 */
 	@PutMapping("{tagId}")
+	@PreAuthorize("hasRole('ADMIN')")
 	public EntityModel<TagDTO> updateTag(@PathVariable long tagId, @Valid @RequestBody TagDTO tag) {
 		TagDTO tagDTO = tagService.getTag(tagId);
 		if (tagDTO == null) {
@@ -140,6 +145,7 @@ public class TagController {
 	 *         found, the method returns Status Code = 200)
 	 */
 	@DeleteMapping("{tagId}")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> deleteTag(@PathVariable long tagId) {
 		if (tagService.getTag(tagId) == null) {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -163,6 +169,7 @@ public class TagController {
 	 * @throws NotFoundException
 	 */
 	@GetMapping("/most-popular-tag")
+	@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
 	public TagDTO getMostPopularTagOfUserWithHighestCostOfPurchases() {
 		TagDTO tagDTO = tagService.getMostPopularTagOfUserWithHighestCostOfAllPurchases();
 		if (tagDTO.getId() == 0) {

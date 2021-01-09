@@ -9,5 +9,7 @@ public interface UserDao {
 	User findUser(long id);
 	
 	User findUserByLogin(String login);
+	
+	User findUserByEmail(String email);
 
 }

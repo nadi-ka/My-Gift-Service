@@ -14,6 +14,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -92,6 +93,7 @@ public class CertificateController {
 	 * @throws InvalidRequestParametersException
 	 */
 	@PostMapping
+	@PreAuthorize("hasRole('ADMIN')")
 	public EntityModel<GiftCertificateGetDTO> addCertificate(@Valid @RequestBody GiftCertificateCreateDTO certificate) {
 		if (certificate.getTags() == null || certificate.getTags().isEmpty()) {
 			throw new InvalidRequestParametersException(messageSource.getMessage(
@@ -116,6 +118,7 @@ public class CertificateController {
 	 * @throws NotFoundException
 	 */
 	@PutMapping("{certificateId}")
+	@PreAuthorize("hasRole('ADMIN')")
 	public EntityModel<GiftCertificateGetDTO> updateCertificate(@PathVariable long certificateId,
 			@Valid @RequestBody GiftCertificateUpdateDTO certificate) {
 		GiftCertificateGetDTO giftCertificateGetDTO = certificateService.getCertificate(certificateId);
@@ -141,6 +144,7 @@ public class CertificateController {
 	 * @throws NotFoundException, JsonPatchProcessingException
 	 */
 	@PatchMapping("{certificateId}")
+	@PreAuthorize("hasRole('ADMIN')")
 	public EntityModel<GiftCertificateGetDTO> partialUpdateCertificate(@PathVariable long certificateId,
 			@Valid @RequestBody JsonPatch patch) {
 		try {
@@ -185,6 +189,7 @@ public class CertificateController {
 	 *         Id is not found, the method returns Status Code = 200 OK)
 	 */
 	@DeleteMapping("{certificateId}")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> deleteCertificate(@PathVariable long certificateId) {
 		if (certificateService.getCertificate(certificateId) == null) {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);

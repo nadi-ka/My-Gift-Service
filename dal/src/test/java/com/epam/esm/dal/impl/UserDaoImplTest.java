@@ -32,6 +32,7 @@ class UserDaoImplTest {
 	private User user;
 	private static final String USER_FIRST_NAME = "Ann";
 	private static final String FIRST_USER_LAST_NAME = "Smith";
+	private static final String FIRST_USER_EMAIL = "marry@gmail.com";
 	private static final String USER_DATE_OF_BIRTH = "1987-05-05";
 	private static final String USER_EMAIL = "ann87@gmail.com";
 	private static final String USER_LOGIN = "Smith";
@@ -39,6 +40,7 @@ class UserDaoImplTest {
 	private static final Role USER_ROLE = Role.USER;
 	private static final long ID_ABSENT = 9999;
 	private static final String LOGIN_ABSENT = "77777";
+	private static final String EMAIL_ABSENT = "nnn@nnn.nn";
 
 	@Autowired
 	private UserDao userDao = new UserDaoImpl(entityManager);
@@ -99,6 +101,22 @@ class UserDaoImplTest {
 	void testFindUserByLogin_NOT_FOUND() {
 
 		assertNull(userDao.findUserByLogin(LOGIN_ABSENT));
+	}
+	
+	/**
+	 * Test method for
+	 * {@link com.epam.esm.dal.impl.UserDaoImpl#findUserByEmail(String)}.
+	 */
+	@Test
+	void testFindUserByEmail_Positive_Result() {
+
+		assertNotNull(userDao.findUserByEmail(FIRST_USER_EMAIL));
+	}
+
+	@Test
+	void testFindUserByEmail_NOT_FOUND() {
+
+		assertNull(userDao.findUserByLogin(EMAIL_ABSENT));
 	}
 
 }

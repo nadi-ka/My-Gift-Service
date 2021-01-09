@@ -7,8 +7,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaQuery;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,8 +31,6 @@ public class CertificateDaoSql implements CertificateDao {
 
 	private static final String GET_SUM_PRICE_OF_CERTIFICATES = "SELECT SUM(price) FROM GiftCertificate c WHERE c.id IN (?1)";
 	private static final String GET_CERTIFICATES_AMOUNT_BY_IDS = "SELECT count(id) FROM GiftCertificate c WHERE c.id IN (?1)";
-
-	private static final Logger LOG = LogManager.getLogger(CertificateDaoSql.class);
 
 	@Autowired
 	public CertificateDaoSql(EntityManager entityManager, SqlQueryBuilder builder, TagDao tagDao) {

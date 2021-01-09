@@ -17,7 +17,9 @@ import com.epam.esm.entity.User;
 public class UserDaoImpl implements UserDao {
 
 	private static final String FIND_USER_BY_LOGIN = "SELECT u FROM User u WHERE login = :userLogin";
+	private static final String FIND_USER_BY_EMAIL = "SELECT u FROM User u WHERE email = :userEmail";
 	private static final String PARAM_USER_LOGIN = "userLogin";
+	private static final String PARAM_USER_EMAIL = "userEmail";
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -42,6 +44,12 @@ public class UserDaoImpl implements UserDao {
 	public User findUserByLogin(String login) {
 		List<User> users = entityManager.createQuery(FIND_USER_BY_LOGIN, User.class)
 				.setParameter(PARAM_USER_LOGIN, login).getResultList();
+		return (!users.isEmpty() ? users.get(0) : null);
+	}
+
+	@Override
+	public User findUserByEmail(String email) {
+		List<User> users = entityManager.createQuery(FIND_USER_BY_EMAIL, User.class).setParameter(PARAM_USER_EMAIL, email).getResultList();
 		return (!users.isEmpty() ? users.get(0) : null);
 	}
 

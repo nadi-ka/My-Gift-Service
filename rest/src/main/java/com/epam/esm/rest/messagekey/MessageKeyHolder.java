@@ -24,6 +24,7 @@ public final class MessageKeyHolder {
 	
 	public static final String USER_NOT_FOUND_KEY = "exception.user.not_found";
 	public static final String USER_LOGIN_NOT_UNIQUE = "exception.not_unique_login";
+	public static final String USER_EMAIL_NOT_UNIQUE = "exception.not_unique_email";
 	public static final String USER_AUTH_FAILED = "exception.authentification.failed";
 	public static final String USER_ACCESS_DENIED = "exception.access.denied";
 	

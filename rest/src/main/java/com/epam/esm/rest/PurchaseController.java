@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,6 +53,7 @@ public class PurchaseController {
 	 * @throws NotFoundException
 	 */
 	@GetMapping("/users/{userId}/purchases")
+	@PreAuthorize("@userIdChecker.hasUserId(authentication, #userId) or hasRole('ROLE_ADMIN')")
 	public List<PurchaseDTO> getPurchases(@PathVariable long userId, @Valid Pagination pagination) {
 		if (userService.getUser(userId) == null) {
 			throw new NotFoundException(messageSource.getMessage((MessageKeyHolder.USER_NOT_FOUND_KEY),
@@ -72,6 +74,7 @@ public class PurchaseController {
 	 * @throws NotFoundException
 	 */
 	@GetMapping("/users/{userId}/purchases/{purchaseId}")
+	@PreAuthorize("@userIdChecker.hasUserId(authentication, #userId) or hasRole('ROLE_ADMIN')")
 	public EntityModel<PurchaseDTO> getPurchase(@PathVariable long userId, @PathVariable long purchaseId) {
 		PurchaseDTO purchaseDTO = purchaseService.getPurchaseById(purchaseId, userId);
 		if (purchaseDTO == null) {
@@ -91,6 +94,7 @@ public class PurchaseController {
 	 * @throws NotFoundException (in case when the user with given id is not found)
 	 */
 	@PostMapping("/users/{userId}/purchases")
+	@PreAuthorize("@userIdChecker.hasUserId(authentication, #userId) or hasRole('ADMIN')")
 	public EntityModel<PurchaseDTO> addPurchase(@PathVariable long userId,
 			@RequestBody List<@Valid GiftCertificateIdsOnlyDTO> certificates) {
 		if (certificates.isEmpty()) {
