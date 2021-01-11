@@ -1,5 +1,7 @@
 package com.epam.esm.rest.exception.handler;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -9,6 +11,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BindException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -50,7 +53,13 @@ public class RestExceptionHandler {
 
 	@ExceptionHandler
 	public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException exc) {
-		ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), exc.getMessage(),
+		List<FieldError> fieldErrors = exc.getBindingResult().getFieldErrors();
+		String message = null;
+		String emptyString = " ";
+		for (FieldError fieldError: fieldErrors) {
+			message = fieldError.getField() + emptyString + fieldError.getDefaultMessage();
+		}
+		ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), message,
 				System.currentTimeMillis());
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
