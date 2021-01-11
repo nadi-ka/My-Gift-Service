@@ -1,0 +1,17 @@
+package com.epam.esm.service;
+
+import java.util.List;
+
+import com.epam.esm.dto.GiftCertificateIdsOnlyDTO;
+import com.epam.esm.dto.PurchaseDTO;
+import com.epam.esm.transferobj.Pagination;
+
+public interface PurchaseService {
+	
+	List<PurchaseDTO> getPurchasesByUserId(long userId, Pagination pagination);
+	
+	PurchaseDTO getPurchaseById(long purchaseId, long userId);
+	
+	PurchaseDTO savePurchase(long userId, List<GiftCertificateIdsOnlyDTO> certificates);
+
+}

@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  
+  <parent>
+    <groupId>com.epam.esm</groupId>
+    <artifactId>gift-service</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  
+  <groupId>com.epam.esm</groupId>
+  <artifactId>rest</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>war</packaging>
+  
+  <name>rest Maven Webapp</name>
+  
+  <dependencies>
+  
+  	<dependency>
+   		<groupId>com.epam.esm</groupId>
+   		<artifactId>service</artifactId>
+   		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  	
+  	<dependency>
+    	<groupId>com.github.java-json-tools</groupId>
+    	<artifactId>json-patch</artifactId>
+    	<version>1.12</version>
+	</dependency>
+	
+	<!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt -->
+	<dependency>
+    	<groupId>io.jsonwebtoken</groupId>
+    	<artifactId>jjwt</artifactId>
+    	<version>0.9.1</version>
+	</dependency>
+	
+    
+  </dependencies>
+  
+  <build>
+  
+    <finalName>gift-service</finalName>
+    
+	<plugins>
+	
+		<plugin>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-maven-plugin</artifactId>
+		</plugin>
+
+	</plugins>
+   
+  </build>
+  
+</project>
