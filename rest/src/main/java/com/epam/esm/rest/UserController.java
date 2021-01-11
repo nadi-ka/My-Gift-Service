@@ -61,7 +61,7 @@ public class UserController {
 	 *         200 and the response body contains new user)
 	 * @throws NotUniqueLoginException
 	 */
-	@PostMapping("/signup")
+	@PostMapping
 	public UserDTO signUp(@Valid @RequestBody UserRegisterDTO user) {
 		String encodedPassword = passwordEncoder.encode(user.getPassword());
 		user.setPassword(encodedPassword);
