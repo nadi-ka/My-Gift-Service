@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +33,8 @@ import com.epam.esm.transferobj.Pagination;
 @EnableAutoConfiguration
 @SpringJUnitConfig(DalSpringConfig.class)
 @ActiveProfiles("test")
-@Transactional
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+//@Transactional
 class PurchaseDaoImplTest {
 	
 	@PersistenceContext

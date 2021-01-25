@@ -12,7 +12,7 @@
   <groupId>com.epam.esm</groupId>
   <artifactId>rest</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
+  <packaging>war</packaging>
   
   <name>rest Maven Webapp</name>
   
@@ -49,7 +49,7 @@
 		<plugin>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-maven-plugin</artifactId>
-		</plugin>
+		</plugin> 
 
 	</plugins>
    
