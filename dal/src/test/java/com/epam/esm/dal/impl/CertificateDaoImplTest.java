@@ -81,7 +81,7 @@ class CertificateDaoImplTest {
 	public void tearDown() {
 		timeStamp = null;
 		certificate = null;
-	}
+	}	
 
 	/**
 	 * Test method for

@@ -77,6 +77,8 @@ class UserDaoImplTest {
 	 */
 	@Test
 	void testFindUser_Positive_Result() {
+		
+		System.out.println("Hi!");
 
 		assertEquals(FIRST_USER_LAST_NAME, userDao.findUser(1L).getLastName());
 	}
